@@ -1,12 +1,10 @@
 #pragma once
-#include "hash.hpp"
-#include "types.hpp"
-#include <vector>
-#include <string>
+#include "crypto/hash.hpp"
 
-class SHA256Hash : public IHashAlgorithm {
+class Sha256Hash : public IHashAlgorithm {
 public:
     std::string name() const override;
-    size_t digestSize() const override;
-    std::array<uint8_t, 32> hash(const std::vector<uint8_t>& data) const override;
+    size_t digest_size() const override;
+    std::vector<uint8_t> hash(const std::vector<uint8_t>& data) const override;
 };
+

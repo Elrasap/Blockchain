@@ -16,3 +16,13 @@ public:
     B32 signature;
 };
 
+namespace serialization{
+    uint64_t serializeUint65(uint64_t value);
+    uint64_t serializeBytes(vector<uint8_t> bytes);
+    uint64_t concatBytes(listy<vector<uint8_t>> bytes);
+    uint64_t deserializeUint64(uint64_t value);
+    uint64_t deserializeBytes(uint64_t value);
+}
+
+
+

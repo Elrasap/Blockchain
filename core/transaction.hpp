@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <string>
 #include "crypto/hash.hpp"
@@ -7,24 +8,19 @@
 class Transaction {
 public:
     B32 senderPubkey;
-    B65 nonce;
+    B64 nonce;
     B32 payload;
     B64 signature;
     B64 fee;
-
-    SHA256 getHash() const {
-        SHA256Hash hasher;
-        auto bytes = serializeWithoutSignature();
-        return hasher.hash(bytes);
-    }
-
     std::vector<uint8_t> serializeWithoutSignature() const;
+    std::vector<uint8_t> serialize() const;
+    void deserialize(const std::vector<uint8_t>& data);
 
-    void serializeSize() const;
-    void serialize() const;
-    void deserialize();
+    B32 hash(IHashAlgorithm& hasher) const;
+    B32 getHash() const;
     bool verifySignature() const;
-    void estimateFeeImpact() const;
-};
 
+    uint64_t estimateFeeImpact() const;
+    std::string toString() const;
+};
 
