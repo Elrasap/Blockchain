@@ -1,0 +1,1 @@
+1. This project serves as a playgrp for the cryptography concepts and algorithms used in the blockchain. So far, the project has implemented the SHA256 algorithm and the BLAKE3 algorithm. It will use mainly the BLAKE3 algorithm for the hashing of the data. THe SHA256 will be just there as option.
