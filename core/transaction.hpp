@@ -26,3 +26,5 @@ public:
     bool verifySignature() const;
     void estimateFeeImpact() const;
 };
+
+
