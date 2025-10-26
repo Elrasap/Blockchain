@@ -6,8 +6,6 @@
 #include "crypto/types.hpp"
 #include "core/block.hpp"
 
-namespace storage {
-
 class BlockStore {
 public:
     void appendBlock(const Block& block);
