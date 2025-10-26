@@ -23,6 +23,3 @@ namespace serialization{
     uint64_t deserializeUint64(uint64_t value);
     uint64_t deserializeBytes(uint64_t value);
 }
-
-
-

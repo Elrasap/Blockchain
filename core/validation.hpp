@@ -12,3 +12,6 @@ namespace validation {
     bool validateTransaction(const Transaction& transaction);
     bool validateChain(const Block& block);
 }
+
+bool validateTransacton(const Transaction& tx) {
+

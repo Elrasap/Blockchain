@@ -4,6 +4,9 @@
 #include <string>
 #include "crypto/hash.hpp"
 #include "crypto/types.hpp"
+#include "crypto/signature.hpp"
+
+using namespace std;
 
 class Transaction {
 public:
@@ -12,15 +15,15 @@ public:
     B32 payload;
     B64 signature;
     B64 fee;
-    std::vector<uint8_t> serializeWithoutSignature() const;
-    std::vector<uint8_t> serialize() const;
-    void deserialize(const std::vector<uint8_t>& data);
 
+    vector<uint8_t> serializeWithoutSignature() const;
+    vector<uint8_t> serialize() const;
+    void deserialize(const vector<uint8_t>& data);
     B32 hash(IHashAlgorithm& hasher) const;
     B32 getHash() const;
-    bool verifySignature() const;
-
-    uint64_t estimateFeeImpact() const;
-    std::string toString() const;
+    uint64_t timestampImpact() const;
+    string toString() const;
+    bool sign(const KeyPair& keyPair, const IHashAlgorithm& hash);
+    bool verifySignature(const IHashAlgorithm& hash) const;
+    B32 getSenderAddress() const;
 };
-

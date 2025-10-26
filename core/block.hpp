@@ -15,7 +15,7 @@ public:
     uint64_t timestamp;
     uint64_t consensusTag;
     B32 nonceOrTerm;
-    std:string hashAlgoId;
+    string hashAlgoId;
 
     vector<uint8_t> serializeHeader() const;
     B32 calcMerkelRoot(const vector<B32>& txHashes) const;
