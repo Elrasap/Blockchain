@@ -14,12 +14,17 @@ struct RtoRecord {
 class HistoryStore {
 public:
     explicit HistoryStore(const std::string& dbPath);
+
     bool init();
     bool insertReliability(const ReliabilityStatus& s);
-    bool insertRtoRecords(const std::vector<RunMetrics>& runs);
-    std::vector<RtoRecord> loadRecentRto(int limit = 20);
+    bool insertRtoRecords(const std::vector<RtoRecord>& runs);
+
+    std::vector<RtoRecord> loadRecentRto(int limit);
+
+private:
+    bool exec(const std::string& sql);
+
 private:
     std::string path;
-    bool exec(const std::string& sql);
 };
 

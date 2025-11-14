@@ -1,0 +1,6 @@
+{
+  "binary": "build/blockchain_node",
+  "sha256": "69f492145d6f7daccb1fc18f0b810f49277c16671b2ed779be895d3bfa17fef2",
+  "signature": "6c378bd0f9d01a88a808be15fd8870ddd84ca0c2b97145a5c87280607c82750a7f49a78e3d8cd047ed5748ed4d4417d4e62ce1f3e4ebac3dfc2848006c570d0c",
+  "pubkey": "ebd7deceebb13791e35bb00994f45c11da115bb8b635db96a55129bc36f2465d"
+}

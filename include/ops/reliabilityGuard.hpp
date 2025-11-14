@@ -5,14 +5,16 @@
 #include "analytics/forecaster.hpp"
 
 struct ReliabilityStatus {
-    bool integrityOk;
-    bool perfOk;
-    bool chaosOk;
-    bool forecastOk;
-    double avgRto;
-    double passRate;
-    int anomalies;
+    bool integrityOk = false;
+    bool perfOk = false;
+    bool chaosOk = false;
+    bool forecastOk = false;
+
+    double avgRto = 0.0;
+    double passRate = 0.0;
+    int anomalies = 0;
 };
+
 
 class ReliabilityGuard {
 public:

@@ -3,14 +3,19 @@
 #include <vector>
 #include <ctime>              // <-- ADD THIS
 
+
 struct RunMetrics {
     std::string filename;
-    bool passed;
-    double rto_ms;              // time from ClusterCrash.start -> Restore.end
-    double snapshot_ms;
-    double restore_ms;
-    double verify_ms;
+
+    double rto_ms = 0.0;        // Main Recovery Time
+    double snapshot_ms = 0.0;   // Snapshot phase duration
+    double restore_ms = 0.0;    // Restore phase duration
+    double verify_ms = 0.0;     // Verification phase duration
+
+    bool passed = false;        // Whether the run passed checks
 };
+
+
 
 class RtoRpoAnalyzer {
 public:

@@ -47,7 +47,8 @@ bool HistoryStore::insertReliability(const ReliabilityStatus& s) {
     return exec(oss.str());
 }
 
-bool HistoryStore::insertRtoRecords(const std::vector<RunMetrics>& runs) {
+bool HistoryStore::insertRtoRecords(const std::vector<RtoRecord>& runs){
+
     sqlite3* db = nullptr;
     if (sqlite3_open(path.c_str(), &db) != SQLITE_OK) return false;
     const char* sql = "INSERT INTO rto_history(filename,rto_ms,restore_ms,passed) VALUES(?,?,?,?);";
@@ -58,6 +59,7 @@ bool HistoryStore::insertRtoRecords(const std::vector<RunMetrics>& runs) {
         sqlite3_bind_double(stmt, 2, r.rto_ms);
         sqlite3_bind_double(stmt, 3, r.restore_ms);
         sqlite3_bind_int(stmt, 4, r.passed ? 1 : 0);
+
         sqlite3_step(stmt);
         sqlite3_reset(stmt);
     }
