@@ -1,7 +1,8 @@
-#include "pipeline/security_pipeline.hpp"
+#include "pipeline/securityPipeline.hpp"
 #include <fstream>
 #include <chrono>
 #include <ctime>
+#include <iostream>
 
 SecurityPipeline::SecurityPipeline(const std::string& releaseDir)
     : dir(releaseDir) {}

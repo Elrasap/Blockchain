@@ -1,4 +1,4 @@
-#include "tests/regression_runner.hpp"
+#include "tests/regressionRunner.hpp"
 #include "core/crypto.hpp"
 
 RegressionRunner::RegressionRunner(GoldenFileManager* g) : gm(g) {}

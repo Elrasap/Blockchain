@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "ops/reliability_guard.hpp"
-#include "analytics/rto_rpo_analyzer.hpp"
+#include "ops/reliabilityGuard.hpp"
+#include "analytics/rtoRpoAnalyzer.hpp"
 
 struct RtoRecord {
     std::string filename;

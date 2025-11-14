@@ -3,7 +3,7 @@
 #include <string>
 #include <chrono>
 #include <map>
-#include "chaos/chaos_fault.hpp"
+#include "chaos/chaosFault.hpp"
 
 struct ChaosMetrics {
     int crashes = 0;

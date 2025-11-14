@@ -1,4 +1,4 @@
-#include "upgrade/schema_registry.hpp"
+#include "upgrade/schemaRegistry.hpp"
 
 SchemaRegistry& SchemaRegistry::instance() {
     static SchemaRegistry inst;

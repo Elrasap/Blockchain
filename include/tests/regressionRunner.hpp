@@ -2,10 +2,10 @@
 #include <string>
 #include <vector>
 #include <array>
-#include "upgrade/golden_file_manager.hpp"
-#include "upgrade/schema_registry.hpp"
-#include "upgrade/state_validator.hpp"
-#include "tests/regression_reporter.hpp"
+#include "upgrade/goldenFileManager.hpp"
+#include "upgrade/schemaRegistry.hpp"
+#include "upgrade/stateValidator.hpp"
+#include "tests/regressionReporter.hpp"
 
 class RegressionRunner {
 public:

@@ -1,6 +1,6 @@
-#include "ops/export_agent.hpp"
-#include "ops/reliability_guard.hpp"
-#include "analytics/trend_analyzer.hpp"
+#include "ops/exportAgent.hpp"
+#include "ops/reliabilityGuard.hpp"
+#include "analytics/trendAnalyzer.hpp"
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
 #include <iostream>

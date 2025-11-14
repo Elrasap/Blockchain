@@ -1,4 +1,4 @@
-#include "tests/regression_reporter.hpp"
+#include "tests/regressionReporter.hpp"
 #include <sstream>
 
 void RegressionReporter::add(const RegressionResult& r) {

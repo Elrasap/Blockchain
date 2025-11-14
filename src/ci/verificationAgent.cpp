@@ -1,8 +1,9 @@
-#include "ci/verification_agent.hpp"
+#include "ci/verificationAgent.hpp"
 #include "obs/metrics.hpp"
-#include "tests/regression_runner.hpp"
-#include "upgrade/golden_file_manager.hpp"
+#include "tests/regressionRunner.hpp"
+#include "upgrade/goldenFileManager.hpp"
 #include "core/logger.hpp"
+#include <iostream>
 
 bool VerificationAgent::buildProject() {
     buildOk = true;
@@ -23,8 +24,8 @@ bool VerificationAgent::runRegressionTests(GoldenFileManager& gm) {
     for (int i = 0; i < 3; ++i) {
         Block b;
         b.header.height = i;
-        b.header.prev_hash = prev;
-        b.header.merkle_root = sha256({'T',(uint8_t)i});
+        b.header.prevHash = prev;
+        b.header.merkleRoot = sha256({'T',(uint8_t)i});
         store.appendBlock(b);
         prev = b.hash();
     }

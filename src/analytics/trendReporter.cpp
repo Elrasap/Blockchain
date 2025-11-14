@@ -1,4 +1,4 @@
-#include "analytics/trend_reporter.hpp"
+#include "analytics/trendReporter.hpp"
 #include <fstream>
 #include <algorithm>
 #include <iomanip>

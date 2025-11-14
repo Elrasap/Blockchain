@@ -1,6 +1,6 @@
-#include "node/lifecycle_manager.hpp"
+#include "node/lifecycleManager.hpp"
 #include "core/logger.hpp"
-#include "obs/health_checker.hpp"
+#include "obs/healthChecker.hpp"
 
 LifecycleManager& LifecycleManager::instance() {
     static LifecycleManager inst;

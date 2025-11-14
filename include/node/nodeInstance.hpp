@@ -3,9 +3,9 @@
 #include <thread>
 #include <atomic>
 #include "core/logger.hpp"
-#include "obs/health_checker.hpp"
-#include "node/lifecycle_manager.hpp"
-#include "node/recovery_controller.hpp"
+#include "obs/healthChecker.hpp"
+#include "node/lifecycleManager.hpp"
+#include "node/recoveryController.hpp"
 
 enum class NodeState { Ready, Draining, Restarting, Rejoining, Healthy };
 

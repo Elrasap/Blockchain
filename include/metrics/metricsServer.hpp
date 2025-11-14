@@ -1,12 +1,18 @@
 #pragma once
-#include <map>
-#include <string>
+#include <thread>
+#include <atomic>
 
 class MetricsServer {
 public:
     explicit MetricsServer(int port);
-    void serve(const std::map<std::string,double>& metrics);
+    ~MetricsServer();
+
+    void start();
+    void stop();
+
 private:
     int port;
+    std::atomic<bool> running;
+    std::thread serverThread;
 };
 

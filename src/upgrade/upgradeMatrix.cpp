@@ -1,4 +1,4 @@
-#include "upgrade/upgrade_matrix.hpp"
+#include "upgrade/upgradeMatrix.hpp"
 #include <sstream>
 
 void UpgradeMatrix::addResult(int from, int to, bool ok) {

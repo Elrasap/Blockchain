@@ -1,4 +1,4 @@
-#include "chaos/experiment_report.hpp"
+#include "upgrade/experimentReport.hpp"
 #include <fstream>
 
 bool ExperimentReport::writeJson(const std::string& path, const std::vector<ScenarioOutcome>& outcomes) {

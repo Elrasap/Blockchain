@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "analytics/rto_rpo_analyzer.hpp"
+#include "analytics/rtoRpoAnalyzer.hpp"
 #include "analytics/forecaster.hpp"
 
 struct ForecastSummary {

@@ -1,6 +1,6 @@
-#include "web/metrics_endpoint.hpp"
-#include "ops/reliability_guard.hpp"
-#include "analytics/trend_analyzer.hpp"
+#include "web/metricsEndpoint.hpp"
+#include "ops/reliabilityGuard.hpp"
+#include "analytics/trendAnalyzer.hpp"
 #include <sstream>
 #include <iomanip>
 

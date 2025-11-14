@@ -1,4 +1,4 @@
-#include "chaos/scenario_runner.hpp"
+#include "chaos/scenarioRunner.hpp"
 #include <thread>
 
 ScenarioRunner::ScenarioRunner(ChaosEngine* engine) : /*NOLINT*/ engine(engine) {}

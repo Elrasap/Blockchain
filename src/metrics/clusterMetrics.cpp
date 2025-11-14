@@ -1,4 +1,4 @@
-#include "metrics/cluster_metrics.hpp"
+#include "metrics/clusterMetrics.hpp"
 #include <random>
 
 ClusterMetrics::ClusterMetrics(int clusterSize) {

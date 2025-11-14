@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
 #include <array>
-#include "upgrade/golden_file_manager.hpp"
-#include "upgrade/schema_registry.hpp"
-#include "upgrade/state_validator.hpp"
+#include "upgrade/goldenFileManager.hpp"
+#include "upgrade/schemaRegistry.hpp"
+#include "upgrade/stateValidator.hpp"
 
 struct SafetyReport {
     std::string from_version;

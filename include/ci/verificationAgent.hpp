@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "tests/regression_runner.hpp"
+#include "tests/regressionRunner.hpp"
 #include "obs/metrics.hpp"
 #include "core/logger.hpp"
 

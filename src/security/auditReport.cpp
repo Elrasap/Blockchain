@@ -1,4 +1,4 @@
-#include "security/audit_report.hpp"
+#include "security/auditReport.hpp"
 #include <fstream>
 
 bool AuditReport::writeJson(const std::string& path, const std::vector<PolicyRule>& rules) {

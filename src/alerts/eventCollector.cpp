@@ -1,4 +1,4 @@
-#include "alerts/event_collector.hpp"
+#include "alerts/eventCollector.hpp"
 
 void EventCollector::addEvent(const Event& e) {
     events.push_back(e);

@@ -1,4 +1,4 @@
-#include "dashboard/forecast_dashboard.hpp"
+#include "analytics/forecastDashboard.hpp"
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <iomanip>

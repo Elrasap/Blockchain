@@ -1,13 +1,13 @@
-#include "web/dashboard_server.hpp"
-#include "ops/reliability_guard.hpp"
-#include "analytics/rto_rpo_analyzer.hpp"
-#include "analytics/trend_analyzer.hpp"
-#include <httplib.h>
+#include "web/dashboardServer.hpp"
+#include "ops/reliabilityGuard.hpp"
+#include "analytics/rtoRpoAnalyzer.hpp"
+#include "analytics/trendAnalyzer.hpp"
+#include <thirdparty/httplib.h>
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <iostream>
 #include <filesystem>
-#include "web/metrics_endpoint.hpp"
+#include "web/metricsEndpoint.hpp"
 
 
 using json = nlohmann::json;

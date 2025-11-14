@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "chaos/scenario_runner.hpp"
+#include "chaos/scenarioRunner.hpp"
 
 class ExperimentReport {
 public:

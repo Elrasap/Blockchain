@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
-#include "cluster/cluster_node.hpp"
+#include "cluster/clusterNode.hpp"
 
 class ClusterManager {
 public:

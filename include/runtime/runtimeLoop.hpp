@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include "runtime/node_health_monitor.hpp"
-#include "runtime/upgrade_manager.hpp"
+#include "runtime/nodeHealthMonitor.hpp"
+#include "runtime/upgradeManager.hpp"
 
 class RuntimeLoop {
 public:

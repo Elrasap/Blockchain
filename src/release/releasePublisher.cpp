@@ -1,5 +1,5 @@
-#include "release/release_publisher.hpp"
-#include "release/release_verifier.hpp"
+#include "release/releasePublisher.hpp"
+#include "release/releaseVerifier.hpp"
 #include <nlohmann/json.hpp>
 #include <curl/curl.h>
 #include <fstream>

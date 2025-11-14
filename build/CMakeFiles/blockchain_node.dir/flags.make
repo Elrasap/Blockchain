@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/elrasap/programmieren/Blockchain/include
+CXX_INCLUDES = -I/home/elrasap/programmieren/Blockchain/include -I/home/elrasap/programmieren/Blockchain/external -I/home/elrasap/programmieren/Blockchain/external/httplib
 
-CXX_FLAGS = -std=c++20 -Wall -Wextra -Wpedantic
+CXX_FLAGS = -std=gnu++20 -DWITH_GZFILEOP
 

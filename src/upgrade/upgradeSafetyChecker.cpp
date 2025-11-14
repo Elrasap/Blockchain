@@ -1,12 +1,7 @@
-#include "upgrade/upgrade_safety_checker.hpp"
+#include "upgrade/upgradeSafetyChecker.hpp"
 #include "core/crypto.hpp"
 #include <sstream>
 
-static std::string toHex(const std::array<uint8_t,32>& a) {
-    std::ostringstream ss;
-    for (auto b : a) ss << std::hex << (int)b;
-    return ss.str();
-}
 
 SafetyReport UpgradeSafetyChecker::checkUpgrade(const std::string& fromVer,
                                                const std::string& toVer,

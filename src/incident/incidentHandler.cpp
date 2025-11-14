@@ -1,4 +1,4 @@
-#include "incident/incident_handler.hpp"
+#include "incident/incidentHandler.hpp"
 #include <iostream>
 
 IncidentHandler::IncidentHandler(const std::string& reportDir)

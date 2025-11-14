@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
-#include "security/security_scanner.hpp"
-#include "security/policy_enforcer.hpp"
-#include "security/audit_report.hpp"
+#include "security/securityScanner.hpp"
+#include "security/policyEnforcer.hpp"
+#include "security/auditReport.hpp"
 
 class SecurityPipeline {
 public:

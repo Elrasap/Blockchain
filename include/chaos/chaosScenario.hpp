@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <chrono>
-#include "chaos/chaos_fault.hpp"
+#include "chaos/chaosFault.hpp"
 
 struct ScenarioStep {
     std::chrono::milliseconds at;  // Zeitpunkt relativ zum Start

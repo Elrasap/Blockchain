@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include "chaos/chaos_scenario.hpp"
-#include "chaos/chaos_engine.hpp"
+#include "chaos/chaosScenario.hpp"
+#include "chaos/chaosEngine.hpp"
 
 struct ScenarioOutcome {
     std::string name;

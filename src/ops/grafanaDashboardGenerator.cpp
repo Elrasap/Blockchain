@@ -1,4 +1,4 @@
-#include "ops/grafana_dashboard_generator.hpp"
+#include "ops/grafanaDashboardGenerator.hpp"
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <iostream>

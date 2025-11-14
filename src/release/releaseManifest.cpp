@@ -1,4 +1,4 @@
-#include "release/release_manifest.hpp"
+#include "release/releaseManifest.hpp"
 #include <nlohmann/json.hpp>
 #include <openssl/sha.h>
 #include <sodium.h>

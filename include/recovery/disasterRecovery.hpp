@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "recovery/recovery_step.hpp"
+#include "recovery/recoveryStep.hpp"
 
 struct RecoveryOutcome {
     bool passed;
@@ -19,4 +19,3 @@ private:
     bool restoreFromSnapshots();
     bool verifyConsistency();
 };
-

@@ -1,6 +1,6 @@
 #pragma once
 #include "incident/incident.hpp"
-#include "incident/forensics_reporter.hpp"
+#include "incident/forensicsReporter.hpp"
 #include <vector>
 
 class IncidentHandler {

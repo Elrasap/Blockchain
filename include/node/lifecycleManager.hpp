@@ -4,7 +4,7 @@
 #include <functional>
 #include <string>
 #include "core/logger.hpp"
-#include "obs/health_checker.hpp"
+#include "obs/healthChecker.hpp"
 
 class LifecycleManager {
 public:

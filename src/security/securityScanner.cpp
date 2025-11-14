@@ -1,4 +1,4 @@
-#include "security/security_scanner.hpp"
+#include "security/securityScanner.hpp"
 #include <fstream>
 #include <sstream>
 #include <algorithm>

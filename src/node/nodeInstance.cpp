@@ -1,4 +1,4 @@
-#include "node/node_instance.hpp"
+#include "node/nodeInstance.hpp"
 #include <chrono>
 
 NodeInstance::NodeInstance(std::string n, int i)

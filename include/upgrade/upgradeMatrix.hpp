@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "upgrade/schema_registry.hpp"
+#include "upgrade/schemaRegistry.hpp"
 
 class UpgradeMatrix {
 public:

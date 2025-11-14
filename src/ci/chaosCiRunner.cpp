@@ -1,10 +1,10 @@
-#include "ci/chaos_ci_runner.hpp"
+#include "ci/chaosCiRunner.hpp"
 #include <filesystem>
 #include <iostream>
 #include <vector>
-#include "chaos/chaos_engine.hpp"
-#include "chaos/scenario_runner.hpp"
-#include "chaos/experiment_report.hpp"
+#include "chaos/chaosEngine.hpp"
+#include "chaos/scenarioRunner.hpp"
+#include "upgrade/experimentReport.hpp"
 
 namespace fs = std::filesystem;
 
@@ -68,9 +68,4 @@ int runChaosAndWriteReport(const std::string& outDir) {
     return 0;
 }
 
-int main(int argc, char** argv) {
-    std::string out = "artifacts";
-    if (argc > 1) out = argv[1];
-    return runChaosAndWriteReport(out);
-}
 

@@ -1,4 +1,4 @@
-#include "dashboard/perf_dashboard.hpp"
+#include "dashboard/perfDashboard.hpp"
 #include <filesystem>
 #include <fstream>
 #include <iostream>

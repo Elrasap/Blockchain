@@ -1,4 +1,4 @@
-#include "analytics/trend_analyzer.hpp"
+#include "analytics/trendAnalyzer.hpp"
 #include <sqlite3.h>
 #include <nlohmann/json.hpp>
 #include <fstream>
