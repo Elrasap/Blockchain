@@ -657,6 +657,102 @@ src/dashboard/perfDashboard.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.s
 .PHONY : src/dashboard/perfDashboard.cpp.s
 
+src/dnd/character.o: src/dnd/character.cpp.o
+.PHONY : src/dnd/character.o
+
+# target to build an object file
+src/dnd/character.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.o
+.PHONY : src/dnd/character.cpp.o
+
+src/dnd/character.i: src/dnd/character.cpp.i
+.PHONY : src/dnd/character.i
+
+# target to preprocess a source file
+src/dnd/character.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.i
+.PHONY : src/dnd/character.cpp.i
+
+src/dnd/character.s: src/dnd/character.cpp.s
+.PHONY : src/dnd/character.s
+
+# target to generate assembly for a file
+src/dnd/character.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.s
+.PHONY : src/dnd/character.cpp.s
+
+src/dnd/dndCharacterService.o: src/dnd/dndCharacterService.cpp.o
+.PHONY : src/dnd/dndCharacterService.o
+
+# target to build an object file
+src/dnd/dndCharacterService.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.o
+.PHONY : src/dnd/dndCharacterService.cpp.o
+
+src/dnd/dndCharacterService.i: src/dnd/dndCharacterService.cpp.i
+.PHONY : src/dnd/dndCharacterService.i
+
+# target to preprocess a source file
+src/dnd/dndCharacterService.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.i
+.PHONY : src/dnd/dndCharacterService.cpp.i
+
+src/dnd/dndCharacterService.s: src/dnd/dndCharacterService.cpp.s
+.PHONY : src/dnd/dndCharacterService.s
+
+# target to generate assembly for a file
+src/dnd/dndCharacterService.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.s
+.PHONY : src/dnd/dndCharacterService.cpp.s
+
+src/dnd/patch.o: src/dnd/patch.cpp.o
+.PHONY : src/dnd/patch.o
+
+# target to build an object file
+src/dnd/patch.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o
+.PHONY : src/dnd/patch.cpp.o
+
+src/dnd/patch.i: src/dnd/patch.cpp.i
+.PHONY : src/dnd/patch.i
+
+# target to preprocess a source file
+src/dnd/patch.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.i
+.PHONY : src/dnd/patch.cpp.i
+
+src/dnd/patch.s: src/dnd/patch.cpp.s
+.PHONY : src/dnd/patch.s
+
+# target to generate assembly for a file
+src/dnd/patch.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.s
+.PHONY : src/dnd/patch.cpp.s
+
+src/dnd/payload.o: src/dnd/payload.cpp.o
+.PHONY : src/dnd/payload.o
+
+# target to build an object file
+src/dnd/payload.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o
+.PHONY : src/dnd/payload.cpp.o
+
+src/dnd/payload.i: src/dnd/payload.cpp.i
+.PHONY : src/dnd/payload.i
+
+# target to preprocess a source file
+src/dnd/payload.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.i
+.PHONY : src/dnd/payload.cpp.i
+
+src/dnd/payload.s: src/dnd/payload.cpp.s
+.PHONY : src/dnd/payload.s
+
+# target to generate assembly for a file
+src/dnd/payload.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.s
+.PHONY : src/dnd/payload.cpp.s
+
 src/incident/chaosEngine.o: src/incident/chaosEngine.cpp.o
 .PHONY : src/incident/chaosEngine.o
 
@@ -2028,6 +2124,18 @@ help:
 	@echo "... src/dashboard/perfDashboard.o"
 	@echo "... src/dashboard/perfDashboard.i"
 	@echo "... src/dashboard/perfDashboard.s"
+	@echo "... src/dnd/character.o"
+	@echo "... src/dnd/character.i"
+	@echo "... src/dnd/character.s"
+	@echo "... src/dnd/dndCharacterService.o"
+	@echo "... src/dnd/dndCharacterService.i"
+	@echo "... src/dnd/dndCharacterService.s"
+	@echo "... src/dnd/patch.o"
+	@echo "... src/dnd/patch.i"
+	@echo "... src/dnd/patch.s"
+	@echo "... src/dnd/payload.o"
+	@echo "... src/dnd/payload.i"
+	@echo "... src/dnd/payload.s"
 	@echo "... src/incident/chaosEngine.o"
 	@echo "... src/incident/chaosEngine.i"
 	@echo "... src/incident/chaosEngine.s"

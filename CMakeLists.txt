@@ -1,69 +1,69 @@
 cmake_minimum_required(VERSION 3.16)
-project(blockchain_node LANGUAGES C CXX)
+project(BlockchainNode LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(CI_BUILD "Disable components that define extra mains" OFF)
-
-# ---------------------------------------
-# External Libraries
-# ---------------------------------------
-find_package(SQLite3 REQUIRED)
-find_package(OpenSSL REQUIRED)
-find_package(CURL REQUIRED)
-
-# libsodium (Ed25519)
-find_library(SODIUM_LIBRARY sodium REQUIRED)
-
-# ---------------------------------------
-# Includes
-# ---------------------------------------
+# Include directories
 include_directories(
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/external
-    ${PROJECT_SOURCE_DIR}/external/httplib
+    include
+    include/thirdparty
+    include/dnd
+    include/core
+    include/ops
+    include/analytics
+    include/storage
+    include/web
 )
 
-# ---------------------------------------
-# Collect sources
-# ---------------------------------------
-file(GLOB_RECURSE SRC_FILES src/*.cpp)
+# Source files
+set(SOURCES
 
-# Remove files that create multiple main() functions
-list(FILTER SRC_FILES EXCLUDE REGEX "chaosCiRunner.cpp")
-list(FILTER SRC_FILES EXCLUDE REGEX "testMain.cpp")
+    # MAIN
+    src/main.cpp
 
-# OBS contains duplicate MetricsServer -> remove one
-list(FILTER SRC_FILES EXCLUDE REGEX "src/obs/metricsServer.cpp")
+    # CORE
+    src/core/transaction.cpp
+    src/core/mempool.cpp
+    src/core/crypto.cpp
 
-# Some modules require the existence of ForensicsReporter.cpp (missing)
-# For now disable IncidentHandler if the file does not exist
-if(NOT EXISTS "${PROJECT_SOURCE_DIR}/src/incident/forensicsReporter.cpp")
-    list(FILTER SRC_FILES EXCLUDE REGEX "incidentHandler.cpp")
-endif()
+    # OPS
+    src/ops/reliabilityGuard.cpp
 
-# ---------------------------------------
-# Create executable
-# ---------------------------------------
-add_executable(blockchain_node ${SRC_FILES})
+    # ANALYTICS
+    src/analytics/rtoRpoAnalyzer.cpp
+    src/analytics/trendAnalyzer.cpp
+    src/analytics/trendReporter.cpp
 
-# ---------------------------------------
-# Link libs
-# ---------------------------------------
+    # STORAGE
+    src/storage/historyStore.cpp
+
+    # WEB
+    src/web/dashboardServer.cpp
+    src/web/dashboard_assets.cpp
+
+    # RELEASE
+    src/release/checksummer.cpp
+    src/release/releaseManifest.cpp
+
+    # DND SYSTEM
+    src/dnd/character.cpp
+    src/dnd/payload.cpp
+    src/dnd/patch.cpp
+    src/dnd/dndCharacterService.cpp
+
+    src/dnd/monster.cpp
+    src/dnd/encounter.cpp
+)
+
+# Build executable
+add_executable(blockchain_node ${SOURCES})
+
+# External libs
 target_link_libraries(blockchain_node
-    PRIVATE
-        SQLite::SQLite3
-        CURL::libcurl
-        OpenSSL::SSL
-        OpenSSL::Crypto
-        ${SODIUM_LIBRARY}
-        pthread
-        dl
+    pthread
 )
 
-# Output dir
-set_target_properties(blockchain_node PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/build"
-)
+# Optional: print summary
+message(STATUS "BlockchainNode build configured.")
 
