@@ -1,4 +1,4 @@
-#include "web/dashboardServer.hpp"
+ #include "web/dashboardServer.hpp"
 
 #include "ops/reliabilityGuard.hpp"
 #include "analytics/rtoRpoAnalyzer.hpp"
@@ -362,9 +362,7 @@ void DashboardServer::start() {
         }
         res.set_content(arr.dump(2),"application/json");
     });
-
-
-    // =========================
+   // =========================
     // 4) HTML-UI
     // =========================
 
