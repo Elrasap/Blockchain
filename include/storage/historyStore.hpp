@@ -26,5 +26,6 @@ private:
 
 private:
     std::string path;
+
 };
 

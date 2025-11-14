@@ -19,7 +19,7 @@ void CommitLog::append(const CommitEntry& entry) {
     lock_guard<mutex> lock(mtx);
     ofstream out(filePath, ios::app);
     if (!out.is_open()) return;
-    out << entry.height << " " << toHex(entry.hash) << " "
+    out << entry.height << " " << crypto::toHex(entry.hash) << " "
         << (entry.status == CommitStatus::Committed ? "committed" : "pending") << "\n";
 }
 
@@ -30,7 +30,7 @@ void CommitLog::markCommitted(const array<uint8_t, 32>& hash) {
 
     vector<string> lines;
     string line;
-    string hashHex = toHex(hash);
+    string hashHex = crypto::toHex(hash);
 
     while (getline(in, line)) {
         istringstream iss(line);

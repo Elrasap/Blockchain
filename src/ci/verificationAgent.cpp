@@ -4,6 +4,11 @@
 #include "upgrade/goldenFileManager.hpp"
 #include "core/logger.hpp"
 #include <iostream>
+#include "ci/verificationAgent.hpp"
+#include "storage/blockStore.hpp"
+#include "upgrade/goldenFileManager.hpp"
+#include <iostream>
+
 
 bool VerificationAgent::buildProject() {
     buildOk = true;
@@ -19,13 +24,13 @@ bool VerificationAgent::runRegressionTests(GoldenFileManager& gm) {
     RegressionRunner runner(&gm);
 
     BlockStore store("regression_tmp.dat");
-    store.clear();
+    store.reset();
     std::array<uint8_t,32> prev{};
     for (int i = 0; i < 3; ++i) {
         Block b;
         b.header.height = i;
         b.header.prevHash = prev;
-        b.header.merkleRoot = sha256({'T',(uint8_t)i});
+        b.header.merkleRoot = crypto::sha256(std::vector<uint8_t>{'T', (uint8_t)i});
         store.appendBlock(b);
         prev = b.hash();
     }

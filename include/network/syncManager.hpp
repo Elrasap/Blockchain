@@ -8,6 +8,9 @@
 #include "network/messages.hpp"
 #include "core/validation.hpp"
 
+class BlockStore;   // forward declaration
+
+
 class SyncManager {
 public:
     SyncManager(BlockStore* store);

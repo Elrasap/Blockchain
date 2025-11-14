@@ -10,6 +10,8 @@ public:
     std::vector<Block> loadAllBlocks() const;
     Block getLatestBlock() const;        // <-- hier ist die Deklaration
     void clear();
+    void reset();
+
 
 private:
     std::string file_path;

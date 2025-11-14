@@ -10,7 +10,7 @@ static std::array<uint8_t,32> concatHash(const std::array<uint8_t,32>& a, const 
     buf.reserve(64);
     buf.insert(buf.end(), a.begin(), a.end());
     buf.insert(buf.end(), b.begin(), b.end());
-    return sha256(buf);
+    return crypto::sha256(buf);
 }
 
 static MerkleProof buildProofFromLeaves(const std::vector<std::array<uint8_t,32>>& leaves, size_t index) {

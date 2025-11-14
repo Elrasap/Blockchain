@@ -2,6 +2,8 @@
 #include "core/transaction.hpp"
 #include "core/block.hpp"
 
+class Transaction;
+
 namespace Validation {
 
 bool validateTransaction(const Transaction& tx);

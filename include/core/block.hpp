@@ -4,6 +4,8 @@
 #include <string>
 #include "core/transaction.hpp"
 
+class Transaction;
+
 struct BlockHeader {
     std::array<uint8_t, 32> prevHash{};
     std::array<uint8_t, 32> merkleRoot{};

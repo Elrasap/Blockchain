@@ -1,14 +1,12 @@
 #pragma once
-#include <string>
-#include <vector>
 #include <array>
-#include "crypto/types.hpp"
+#include <cstdint>
 
-class KeyPair {
-public:
+struct KeyPair {
     std::array<uint8_t, 32> publicKey;
     std::array<uint8_t, 32> privateKey;
+
+    static KeyPair generate();
+    static KeyPair fromSeed(const std::array<uint8_t, 32>& seed);
 };
 
-array<uint8_t, 32> generate();
-array<uint8_t, 32> fromSeed(const array<uint8_t, 32>& bytes);

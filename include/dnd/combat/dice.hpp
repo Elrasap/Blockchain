@@ -9,11 +9,11 @@
 namespace dnd::combat {
 
 struct DiceRoll {
-    int total = 0;
-    int modifier = 0;
-    std::vector<int> rolls;   // Einzelwürfe (für 2d6 -> zwei Einträge)
-    std::string expr;         // z.B. "2d6+3"
+    int total;
+    int raw;
+    int modifier;
 };
+
 
 // Ergebnis eines W20-Rolls mit Advantage/Disadvantage
 struct D20Roll {
@@ -39,6 +39,7 @@ public:
 
     // Helper: einfacher Wurf XdY ohne +/-
     DiceRoll roll(int count, int sides, int modifier = 0);
+    int roll(const std::string& expr);
 
 private:
     std::mt19937 rng;

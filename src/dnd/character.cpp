@@ -56,6 +56,8 @@ Race raceFromString(const std::string& s) {
 
 } // namespace
 
+/* ---------- Default-Character ---------- */
+
 CharacterSheet makeDefaultCharacter(
     const std::string& id,
     const std::string& playerAddress,
@@ -64,15 +66,18 @@ CharacterSheet makeDefaultCharacter(
     Race race
 ) {
     CharacterSheet c;
-    c.id = id;
+    c.id            = id;
     c.playerAddress = playerAddress;
-    c.name = name;
-    c.cls = cls;
-    c.race = race;
-    c.level = 1;
-    c.hpMax = 10;
-    c.hpCurrent = 10;
-    c.xp = 0;
+    c.name          = name;
+    c.cls           = cls;
+    c.race          = race;
+
+    c.level      = 1;
+    c.hpMax      = 10;
+    c.hpCurrent  = 10;
+    c.armorClass = 10;
+    c.xp         = 0;
+
     c.stats = AbilityScores{};
     return c;
 }
@@ -131,6 +136,7 @@ void to_json(json& j, const CharacterSheet& c) {
         {"level",         c.level},
         {"hpCurrent",     c.hpCurrent},
         {"hpMax",         c.hpMax},
+        {"armorClass",    c.armorClass},
         {"xp",            c.xp},
         {"stats",         c.stats},
         {"inventory",     c.inventory},
@@ -146,12 +152,16 @@ void from_json(const json& j, CharacterSheet& c) {
     std::string clsStr, raceStr;
     j.at("class").get_to(clsStr);
     j.at("race").get_to(raceStr);
-    c.cls = classFromString(clsStr);
+    c.cls  = classFromString(clsStr);
     c.race = raceFromString(raceStr);
 
     j.at("level").get_to(c.level);
     j.at("hpCurrent").get_to(c.hpCurrent);
     j.at("hpMax").get_to(c.hpMax);
+
+    // armorClass optional, damit alte Saves noch laden
+    c.armorClass = j.value("armorClass", 10);
+
     j.at("xp").get_to(c.xp);
     j.at("stats").get_to(c.stats);
     j.at("inventory").get_to(c.inventory);

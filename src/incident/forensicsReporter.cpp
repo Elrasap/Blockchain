@@ -1,4 +1,4 @@
-#include "incident/forensics_reporter.hpp"
+#include "incident/forensicsReporter.hpp"
 #include <fstream>
 #include <sstream>
 #include <iomanip>

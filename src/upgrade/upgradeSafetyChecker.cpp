@@ -14,7 +14,7 @@ SafetyReport UpgradeSafetyChecker::checkUpgrade(const std::string& fromVer,
     std::string refSchema = ref["schema"];
 
     bool schema_ok = (refSchema == currentSchema);
-    bool state_ok = (refRoot == toHex(currentRoot));
+    bool state_ok = (refRoot == crypto::toHex(currentRoot));
 
     SafetyReport r;
     r.from_version = fromVer;

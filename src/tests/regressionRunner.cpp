@@ -8,7 +8,7 @@ bool RegressionRunner::run(const std::string& version,
                            const std::string& schemaHash) {
     testedVersion = version;
     auto root = StateValidator::computeStateRoot(chain);
-    std::string rootHex = toHex(root);
+    std::string rootHex = crypto::toHex(root);
 
     if (!gm->exists(version)) {
         gm->writeReference(version, root, schemaHash);

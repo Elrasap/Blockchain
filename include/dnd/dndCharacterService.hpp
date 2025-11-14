@@ -11,7 +11,16 @@ namespace dnd {
 
 class DndCharacterService {
 public:
-    std::unordered_map<std::string, CharacterSheet> characters;
+    explicit DndCharacterService(const std::string& storagePath = "characters.json");
+
+    bool load();
+    bool save() const;
+
+    bool getCharacter(const std::string& id, CharacterSheet& out) const;
+    bool upsertCharacter(const CharacterSheet& sheet);
+    bool removeCharacter(const std::string& id);
+
+    /// Public history log (ok)
     std::unordered_map<std::string, std::vector<nlohmann::json>> history;
 
     template<typename Block>
@@ -32,24 +41,28 @@ public:
     void applyTransaction(const Tx& t) {
         if (!t.isDndTransaction()) return;
         DndPayload p = deserializePayload(t.payload);
-        if (p.type == PayloadType::DND_CREATE_CHARACTER) {
+
+        if (p.type == PayloadType::DND_CREATE_CHARACTER)
             handleCreate(p.jsonData);
-        } else if (p.type == PayloadType::DND_UPDATE_CHARACTER) {
+        else if (p.type == PayloadType::DND_UPDATE_CHARACTER)
             handleUpdate(p.jsonData);
-        }
     }
 
     void applyCreateJson(const std::string& jsonData);
     void applyUpdateJson(const std::string& jsonData);
 
     std::vector<CharacterSheet> listCharacters() const;
-    bool getCharacter(const std::string& id, CharacterSheet& out) const;
-    void logDnDTx(const std::string& jsonString);
 
+    void logDnDTx(const std::string& jsonString);
 
 private:
     void handleCreate(const std::string& data);
     void handleUpdate(const std::string& data);
+
+    std::string path_;
+
+    // *** EINHEITLICHER STORAGE!!! ***
+    std::unordered_map<std::string, CharacterSheet> characters_;
 };
 
 }

@@ -7,11 +7,11 @@ static std::array<uint8_t,32> concatHash(const std::array<uint8_t,32>& a, const 
     buf.reserve(64);
     buf.insert(buf.end(), a.begin(), a.end());
     buf.insert(buf.end(), b.begin(), b.end());
-    return sha256(buf);
+    return crypto::sha256(buf);
 }
 
 std::array<uint8_t,32> StateValidator::computeStateRoot(const std::vector<Block>& blocks) {
-    if (blocks.empty()) return sha256(std::vector<uint8_t>{});
+    if (blocks.empty()) return crypto::sha256(std::vector<uint8_t>{});
     std::vector<std::array<uint8_t,32>> level;
     level.reserve(blocks.size());
     for (const auto& b : blocks) level.push_back(b.hash());
@@ -35,7 +35,7 @@ bool StateValidator::compareSnapshots(const std::string& snapAPath, const std::s
 
     std::vector<uint8_t> ba((std::istreambuf_iterator<char>(a)), std::istreambuf_iterator<char>());
     std::vector<uint8_t> bb((std::istreambuf_iterator<char>(b)), std::istreambuf_iterator<char>());
-    return sha256(ba) == sha256(bb);
+    return crypto::sha256(ba) == crypto::sha256(bb);
 }
 
 bool StateValidator::verifyStateEquality(const std::vector<Block>& chainA, const std::vector<Block>& chainB) {

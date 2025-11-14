@@ -27,8 +27,12 @@ struct LogEntry {
 };
 
 
+#pragma once
+#include <vector>
+#include <cstdint>
+
 struct KeyPair {
-    std::vector<uint8_t> pub;
-    std::vector<uint8_t> priv;
+    std::vector<uint8_t> publicKey;   // 32 bytes
+    std::vector<uint8_t> privateKey;  // 64 bytes
 };
 

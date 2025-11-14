@@ -5,7 +5,7 @@
 
 std::vector<uint8_t> signDigest(const std::array<uint8_t,32>& digest, const std::vector<uint8_t>& priv) {
     std::vector<uint8_t> msg(digest.begin(), digest.end());
-    return sign(msg, priv);
+    return crypto::sign(msg, priv);
 }
 
 bool writeSignatureFile(const std::string& sigPath, const std::vector<uint8_t>& sig) {

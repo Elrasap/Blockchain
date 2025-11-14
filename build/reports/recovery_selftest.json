@@ -1,9 +1,0 @@
-{
-  "passed": true,
-  "timeline": [
-    { "name": "ClusterCrash", "start_ts": 1700000000, "end_ts": 1700000001 },
-    { "name": "Snapshot",     "start_ts": 1700000001, "end_ts": 1700000010 },
-    { "name": "Restore",      "start_ts": 1700000010, "end_ts": 1700000020 },
-    { "name": "VerifyState",  "start_ts": 1700000020, "end_ts": 1700000030 }
-  ]
-}

@@ -5,9 +5,31 @@ namespace dnd {
 
 using json = nlohmann::json;
 
+DndCharacterService::DndCharacterService(const std::string& storagePath)
+    : path_(storagePath)
+{
+}
+
+bool DndCharacterService::getCharacter(const std::string& id, CharacterSheet& out) const {
+    auto it = characters_.find(id);
+    if (it == characters_.end()) return false;
+    out = it->second;
+    return true;
+}
+
+bool DndCharacterService::upsertCharacter(const CharacterSheet& sheet) {
+    characters_[sheet.id] = sheet;
+    return true;
+}
+
+bool DndCharacterService::removeCharacter(const std::string& id) {
+    return characters_.erase(id) > 0;
+}
+
 void DndCharacterService::handleCreate(const std::string& data) {
     CharacterSheet c = deserializeCharacter(data);
-    characters[c.id] = c;
+    characters_[c.id] = c;
+
     history[c.id].push_back(json{
         {"event", "create"},
         {"fullState", json(c)}
@@ -16,12 +38,16 @@ void DndCharacterService::handleCreate(const std::string& data) {
 
 void DndCharacterService::handleUpdate(const std::string& data) {
     CharacterPatch patch = json::parse(data).get<CharacterPatch>();
-    auto it = characters.find(patch.characterId);
-    if (it == characters.end()) return;
+
+    auto it = characters_.find(patch.characterId);
+    if (it == characters_.end()) return;
+
     CharacterSheet& c = it->second;
+
     for (auto& kv : patch.patchData.items()) {
         const std::string& key = kv.key();
         const json& value = kv.value();
+
         if (key == "name") c.name = value.get<std::string>();
         else if (key == "level") c.level = value.get<int>();
         else if (key == "hpCurrent") c.hpCurrent = value.get<int>();
@@ -35,14 +61,17 @@ void DndCharacterService::handleUpdate(const std::string& data) {
             if (value.contains("int")) c.stats.intl = value["int"].get<int>();
             if (value.contains("wis")) c.stats.wis = value["wis"].get<int>();
             if (value.contains("cha")) c.stats.cha = value["cha"].get<int>();
-        } else if (key == "addItem") {
+        }
+        else if (key == "addItem") {
             c.inventory.push_back(value.get<std::string>());
-        } else if (key == "removeItem") {
+        }
+        else if (key == "removeItem") {
             std::string item = value.get<std::string>();
             auto& inv = c.inventory;
             inv.erase(std::remove(inv.begin(), inv.end(), item), inv.end());
         }
     }
+
     history[patch.characterId].push_back(json{
         {"event", "update"},
         {"patch", patch.patchData}
@@ -59,17 +88,25 @@ void DndCharacterService::applyUpdateJson(const std::string& jsonData) {
 
 std::vector<CharacterSheet> DndCharacterService::listCharacters() const {
     std::vector<CharacterSheet> out;
-    out.reserve(characters.size());
-    for (auto& kv : characters) {
+    out.reserve(characters_.size());
+
+    for (auto& kv : characters_)
         out.push_back(kv.second);
-    }
+
     return out;
 }
 
-bool DndCharacterService::getCharacter(const std::string& id, CharacterSheet& out) const {
-    auto it = characters.find(id);
-    if (it == characters.end()) return false;
-    out = it->second;
+void DndCharacterService::logDnDTx(const std::string& jsonString) {
+    // optional hook, currently empty
+}
+
+bool DndCharacterService::load() {
+    // TODO if needed
+    return true;
+}
+
+bool DndCharacterService::save() const {
+    // TODO if needed
     return true;
 }
 

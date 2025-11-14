@@ -1,164 +1,194 @@
 #include "dnd/combat/dice.hpp"
-#include <sstream>
+#include <random>
 #include <stdexcept>
+#include <sstream>
 #include <cctype>
 
 namespace dnd::combat {
 
+// ----------------------------------------------------------
+// Constructor & Reseeding
+// ----------------------------------------------------------
+
 Dice::Dice()
-: rng(std::random_device{}()) {}
+    : rng(std::random_device{}())
+{
+}
 
 Dice::Dice(uint64_t seed)
-: rng(seed) {}
+    : rng(seed)
+{
+}
 
 void Dice::reseed(uint64_t seed) {
     rng.seed(seed);
 }
+
+// ----------------------------------------------------------
+// Helper
+// ----------------------------------------------------------
 
 int Dice::rollDie(int sides) {
     std::uniform_int_distribution<int> dist(1, sides);
     return dist(rng);
 }
 
+// ----------------------------------------------------------
+// roll(count, sides, modifier)
+// ----------------------------------------------------------
+
 DiceRoll Dice::roll(int count, int sides, int modifier) {
-    DiceRoll r;
-    r.expr = std::to_string(count) + "d" + std::to_string(sides);
-    r.modifier = modifier;
+    if (count <= 0 || sides <= 0) {
+        throw std::invalid_argument("Dice::roll: count and sides must be > 0");
+    }
+
+    DiceRoll out{};
+    out.raw = 0;
+    out.modifier = modifier;
 
     for (int i = 0; i < count; ++i) {
-        int v = rollDie(sides);
-        r.rolls.push_back(v);
-        r.total += v;
+        out.raw += rollDie(sides);
     }
-    r.total += modifier;
-    return r;
+
+    out.total = out.raw + modifier;
+    return out;
 }
 
-DiceRoll Dice::parseAndRoll(const std::string& expr) {
-    // sehr simple Parser-Logik:
-    //   [count] 'd' [sides] [+-modifier]
-    //   Beispiele: "d20+5", "2d6-1", "1d8", "3d4+0"
+// ----------------------------------------------------------
+// Expression parser: "XdY+Z" oder "d20-1"
+// ----------------------------------------------------------
+
+DiceRoll Dice::rollExpr(const std::string& expr) {
     int count = 1;
-    int sides = 20;
+    int sides = 0;
     int modifier = 0;
 
-    std::string s = expr;
-    for (auto& c : s) c = static_cast<char>(std::tolower(c));
+    // Beispiel-Patterns:
+    //  "1d20"
+    //  "d20"
+    //  "2d6+3"
+    //  "3d8-1"
 
-    // finde d
-    auto posD = s.find('d');
-    if (posD == std::string::npos) {
-        throw std::runtime_error("Invalid dice expr: " + expr);
-    }
+    size_t dpos = expr.find('d');
+    if (dpos == std::string::npos)
+        throw std::invalid_argument("Dice::rollExpr: invalid expression: " + expr);
 
-    // vor d: count
-    if (posD == 0) {
+    // vor dem 'd'
+    if (dpos == 0)
         count = 1;
-    } else {
-        count = std::stoi(s.substr(0, posD));
-    }
+    else
+        count = std::stoi(expr.substr(0, dpos));
 
-    // nach d: sides (+ optional + oder -)
-    int posSign = -1;
-    for (size_t i = posD + 1; i < s.size(); ++i) {
-        if (s[i] == '+' || s[i] == '-') {
-            posSign = static_cast<int>(i);
-            break;
-        }
-    }
+    // rest nach 'd'
+    std::string right = expr.substr(dpos + 1);
 
-    if (posSign == -1) {
-        sides = std::stoi(s.substr(posD + 1));
-        modifier = 0;
-    } else {
-        sides = std::stoi(s.substr(posD + 1, posSign - (posD + 1)));
-        modifier = std::stoi(s.substr(posSign));
+    // suche nach + oder -
+    size_t plus  = right.find('+');
+    size_t minus = right.find('-');
+
+    if (plus != std::string::npos) {
+        sides = std::stoi(right.substr(0, plus));
+        modifier = std::stoi(right.substr(plus + 1));
+    }
+    else if (minus != std::string::npos) {
+        sides = std::stoi(right.substr(0, minus));
+        modifier = -std::stoi(right.substr(minus + 1));
+    }
+    else {
+        sides = std::stoi(right);
     }
 
     return roll(count, sides, modifier);
 }
 
-DiceRoll Dice::rollExpr(const std::string& expr) {
-    DiceRoll r = parseAndRoll(expr);
-    r.expr = expr;
-    return r;
+// ----------------------------------------------------------
+// parseAndRoll() → einfach Alias auf rollExpr()
+// ----------------------------------------------------------
+
+DiceRoll Dice::parseAndRoll(const std::string& expr) {
+    return rollExpr(expr);
 }
+
+// ----------------------------------------------------------
+// roll("1d20") → nur total zurückgeben
+// ----------------------------------------------------------
+
+int Dice::roll(const std::string& expr) {
+    return rollExpr(expr).total;
+}
+
+// ----------------------------------------------------------
+// rollD20() mit Advantage/Disadvantage
+// ----------------------------------------------------------
 
 D20Roll Dice::rollD20(int modifier, AdvantageState adv) {
-    D20Roll res;
-    res.modifier = modifier;
-    res.advantage = adv;
-
     int r1 = rollDie(20);
-    int r2 = 0;
-    int nat = r1;
-    int total = r1 + modifier;
+    int r2 = rollDie(20);
 
-    if (adv == AdvantageState::Advantage || adv == AdvantageState::Disadvantage) {
-        r2 = rollDie(20);
-        res.altRoll = r2;
+    D20Roll out{};
+    out.modifier = modifier;
+    out.advantage = adv;
 
-        if (adv == AdvantageState::Advantage) {
-            nat = std::max(r1, r2);
-        } else {
-            nat = std::min(r1, r2);
-        }
-        total = nat + modifier;
+    switch (adv) {
+        case AdvantageState::Normal:
+            out.natural = r1;
+            out.total = r1 + modifier;
+            break;
+
+        case AdvantageState::Advantage:
+            out.natural = std::max(r1, r2);
+            out.altRoll = std::min(r1, r2);
+            out.total = out.natural + modifier;
+            break;
+
+        case AdvantageState::Disadvantage:
+            out.natural = std::min(r1, r2);
+            out.altRoll = std::max(r1, r2);
+            out.total = out.natural + modifier;
+            break;
     }
 
-    res.natural = nat;
-    res.total = total;
-    return res;
+    return out;
 }
 
-/* ------------- JSON für DiceRoll ------------- */
+// ----------------------------------------------------------
+// JSON
+// ----------------------------------------------------------
 
 void to_json(nlohmann::json& j, const DiceRoll& r) {
-    j = nlohmann::json{
+    j = {
         {"total", r.total},
-        {"modifier", r.modifier},
-        {"rolls", r.rolls},
-        {"expr", r.expr}
+        {"raw", r.raw},
+        {"modifier", r.modifier}
     };
 }
 
-void from_json(nlohmann::json& j, DiceRoll& r) {
+void from_json(const nlohmann::json& j, DiceRoll& r) {
     j.at("total").get_to(r.total);
+    j.at("raw").get_to(r.raw);
     j.at("modifier").get_to(r.modifier);
-    j.at("rolls").get_to(r.rolls);
-    if (j.contains("expr")) {
-        j.at("expr").get_to(r.expr);
-    } else {
-        r.expr = "";
-    }
 }
 
-/* ------------- JSON für D20Roll ------------- */
-
 void to_json(nlohmann::json& j, const D20Roll& r) {
-    j = nlohmann::json{
+    j = {
         {"total", r.total},
         {"natural", r.natural},
         {"modifier", r.modifier},
-        {"advantage", advantageToString(r.advantage)},
+        {"advantage", static_cast<int>(r.advantage)},
         {"altRoll", r.altRoll}
     };
 }
 
-void from_json(nlohmann::json& j, D20Roll& r) {
+void from_json(const nlohmann::json& j, D20Roll& r) {
     j.at("total").get_to(r.total);
     j.at("natural").get_to(r.natural);
     j.at("modifier").get_to(r.modifier);
-    if (j.contains("altRoll")) {
-        j.at("altRoll").get_to(r.altRoll);
-    } else {
-        r.altRoll = 0;
-    }
-    if (j.contains("advantage")) {
-        r.advantage = advantageFromString(j.at("advantage").get<std::string>());
-    } else {
-        r.advantage = AdvantageState::Normal;
-    }
+
+    int a = 0;
+    j.at("advantage").get_to(a);
+    r.advantage = static_cast<AdvantageState>(a);
+
+    j.at("altRoll").get_to(r.altRoll);
 }
 
 } // namespace dnd::combat

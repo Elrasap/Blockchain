@@ -249,6 +249,30 @@ src/analytics/trendReporter.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.s
 .PHONY : src/analytics/trendReporter.cpp.s
 
+src/ci/chaosCiRunner.o: src/ci/chaosCiRunner.cpp.o
+.PHONY : src/ci/chaosCiRunner.o
+
+# target to build an object file
+src/ci/chaosCiRunner.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/ci/chaosCiRunner.cpp.o
+.PHONY : src/ci/chaosCiRunner.cpp.o
+
+src/ci/chaosCiRunner.i: src/ci/chaosCiRunner.cpp.i
+.PHONY : src/ci/chaosCiRunner.i
+
+# target to preprocess a source file
+src/ci/chaosCiRunner.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/ci/chaosCiRunner.cpp.i
+.PHONY : src/ci/chaosCiRunner.cpp.i
+
+src/ci/chaosCiRunner.s: src/ci/chaosCiRunner.cpp.s
+.PHONY : src/ci/chaosCiRunner.s
+
+# target to generate assembly for a file
+src/ci/chaosCiRunner.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/ci/chaosCiRunner.cpp.s
+.PHONY : src/ci/chaosCiRunner.cpp.s
+
 src/ci/verificationAgent.o: src/ci/verificationAgent.cpp.o
 .PHONY : src/ci/verificationAgent.o
 
@@ -681,6 +705,174 @@ src/dnd/character.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.s
 .PHONY : src/dnd/character.cpp.s
 
+src/dnd/combat/combatLog.o: src/dnd/combat/combatLog.cpp.o
+.PHONY : src/dnd/combat/combatLog.o
+
+# target to build an object file
+src/dnd/combat/combatLog.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.o
+.PHONY : src/dnd/combat/combatLog.cpp.o
+
+src/dnd/combat/combatLog.i: src/dnd/combat/combatLog.cpp.i
+.PHONY : src/dnd/combat/combatLog.i
+
+# target to preprocess a source file
+src/dnd/combat/combatLog.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.i
+.PHONY : src/dnd/combat/combatLog.cpp.i
+
+src/dnd/combat/combatLog.s: src/dnd/combat/combatLog.cpp.s
+.PHONY : src/dnd/combat/combatLog.s
+
+# target to generate assembly for a file
+src/dnd/combat/combatLog.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.s
+.PHONY : src/dnd/combat/combatLog.cpp.s
+
+src/dnd/combat/combatService.o: src/dnd/combat/combatService.cpp.o
+.PHONY : src/dnd/combat/combatService.o
+
+# target to build an object file
+src/dnd/combat/combatService.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.o
+.PHONY : src/dnd/combat/combatService.cpp.o
+
+src/dnd/combat/combatService.i: src/dnd/combat/combatService.cpp.i
+.PHONY : src/dnd/combat/combatService.i
+
+# target to preprocess a source file
+src/dnd/combat/combatService.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.i
+.PHONY : src/dnd/combat/combatService.cpp.i
+
+src/dnd/combat/combatService.s: src/dnd/combat/combatService.cpp.s
+.PHONY : src/dnd/combat/combatService.s
+
+# target to generate assembly for a file
+src/dnd/combat/combatService.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.s
+.PHONY : src/dnd/combat/combatService.cpp.s
+
+src/dnd/combat/combat_payload.o: src/dnd/combat/combat_payload.cpp.o
+.PHONY : src/dnd/combat/combat_payload.o
+
+# target to build an object file
+src/dnd/combat/combat_payload.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.o
+.PHONY : src/dnd/combat/combat_payload.cpp.o
+
+src/dnd/combat/combat_payload.i: src/dnd/combat/combat_payload.cpp.i
+.PHONY : src/dnd/combat/combat_payload.i
+
+# target to preprocess a source file
+src/dnd/combat/combat_payload.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.i
+.PHONY : src/dnd/combat/combat_payload.cpp.i
+
+src/dnd/combat/combat_payload.s: src/dnd/combat/combat_payload.cpp.s
+.PHONY : src/dnd/combat/combat_payload.s
+
+# target to generate assembly for a file
+src/dnd/combat/combat_payload.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.s
+.PHONY : src/dnd/combat/combat_payload.cpp.s
+
+src/dnd/combat/dice.o: src/dnd/combat/dice.cpp.o
+.PHONY : src/dnd/combat/dice.o
+
+# target to build an object file
+src/dnd/combat/dice.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.o
+.PHONY : src/dnd/combat/dice.cpp.o
+
+src/dnd/combat/dice.i: src/dnd/combat/dice.cpp.i
+.PHONY : src/dnd/combat/dice.i
+
+# target to preprocess a source file
+src/dnd/combat/dice.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.i
+.PHONY : src/dnd/combat/dice.cpp.i
+
+src/dnd/combat/dice.s: src/dnd/combat/dice.cpp.s
+.PHONY : src/dnd/combat/dice.s
+
+# target to generate assembly for a file
+src/dnd/combat/dice.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.s
+.PHONY : src/dnd/combat/dice.cpp.s
+
+src/dnd/combat/encounter.o: src/dnd/combat/encounter.cpp.o
+.PHONY : src/dnd/combat/encounter.o
+
+# target to build an object file
+src/dnd/combat/encounter.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.o
+.PHONY : src/dnd/combat/encounter.cpp.o
+
+src/dnd/combat/encounter.i: src/dnd/combat/encounter.cpp.i
+.PHONY : src/dnd/combat/encounter.i
+
+# target to preprocess a source file
+src/dnd/combat/encounter.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.i
+.PHONY : src/dnd/combat/encounter.cpp.i
+
+src/dnd/combat/encounter.s: src/dnd/combat/encounter.cpp.s
+.PHONY : src/dnd/combat/encounter.s
+
+# target to generate assembly for a file
+src/dnd/combat/encounter.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.s
+.PHONY : src/dnd/combat/encounter.cpp.s
+
+src/dnd/combat/monster.o: src/dnd/combat/monster.cpp.o
+.PHONY : src/dnd/combat/monster.o
+
+# target to build an object file
+src/dnd/combat/monster.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.o
+.PHONY : src/dnd/combat/monster.cpp.o
+
+src/dnd/combat/monster.i: src/dnd/combat/monster.cpp.i
+.PHONY : src/dnd/combat/monster.i
+
+# target to preprocess a source file
+src/dnd/combat/monster.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.i
+.PHONY : src/dnd/combat/monster.cpp.i
+
+src/dnd/combat/monster.s: src/dnd/combat/monster.cpp.s
+.PHONY : src/dnd/combat/monster.s
+
+# target to generate assembly for a file
+src/dnd/combat/monster.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.s
+.PHONY : src/dnd/combat/monster.cpp.s
+
+src/dnd/combat/payloads.o: src/dnd/combat/payloads.cpp.o
+.PHONY : src/dnd/combat/payloads.o
+
+# target to build an object file
+src/dnd/combat/payloads.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.o
+.PHONY : src/dnd/combat/payloads.cpp.o
+
+src/dnd/combat/payloads.i: src/dnd/combat/payloads.cpp.i
+.PHONY : src/dnd/combat/payloads.i
+
+# target to preprocess a source file
+src/dnd/combat/payloads.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.i
+.PHONY : src/dnd/combat/payloads.cpp.i
+
+src/dnd/combat/payloads.s: src/dnd/combat/payloads.cpp.s
+.PHONY : src/dnd/combat/payloads.s
+
+# target to generate assembly for a file
+src/dnd/combat/payloads.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.s
+.PHONY : src/dnd/combat/payloads.cpp.s
+
 src/dnd/dndCharacterService.o: src/dnd/dndCharacterService.cpp.o
 .PHONY : src/dnd/dndCharacterService.o
 
@@ -800,6 +992,54 @@ src/incident/experimentReport.s: src/incident/experimentReport.cpp.s
 src/incident/experimentReport.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.s
 .PHONY : src/incident/experimentReport.cpp.s
+
+src/incident/forensicsReporter.o: src/incident/forensicsReporter.cpp.o
+.PHONY : src/incident/forensicsReporter.o
+
+# target to build an object file
+src/incident/forensicsReporter.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.o
+.PHONY : src/incident/forensicsReporter.cpp.o
+
+src/incident/forensicsReporter.i: src/incident/forensicsReporter.cpp.i
+.PHONY : src/incident/forensicsReporter.i
+
+# target to preprocess a source file
+src/incident/forensicsReporter.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.i
+.PHONY : src/incident/forensicsReporter.cpp.i
+
+src/incident/forensicsReporter.s: src/incident/forensicsReporter.cpp.s
+.PHONY : src/incident/forensicsReporter.s
+
+# target to generate assembly for a file
+src/incident/forensicsReporter.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.s
+.PHONY : src/incident/forensicsReporter.cpp.s
+
+src/incident/incidentHandler.o: src/incident/incidentHandler.cpp.o
+.PHONY : src/incident/incidentHandler.o
+
+# target to build an object file
+src/incident/incidentHandler.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.o
+.PHONY : src/incident/incidentHandler.cpp.o
+
+src/incident/incidentHandler.i: src/incident/incidentHandler.cpp.i
+.PHONY : src/incident/incidentHandler.i
+
+# target to preprocess a source file
+src/incident/incidentHandler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.i
+.PHONY : src/incident/incidentHandler.cpp.i
+
+src/incident/incidentHandler.s: src/incident/incidentHandler.cpp.s
+.PHONY : src/incident/incidentHandler.s
+
+# target to generate assembly for a file
+src/incident/incidentHandler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.s
+.PHONY : src/incident/incidentHandler.cpp.s
 
 src/incident/scenarioRunner.o: src/incident/scenarioRunner.cpp.o
 .PHONY : src/incident/scenarioRunner.o
@@ -1833,6 +2073,30 @@ src/storage/snapshotManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.s
 .PHONY : src/storage/snapshotManager.cpp.s
 
+src/testMain.o: src/testMain.cpp.o
+.PHONY : src/testMain.o
+
+# target to build an object file
+src/testMain.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/testMain.cpp.o
+.PHONY : src/testMain.cpp.o
+
+src/testMain.i: src/testMain.cpp.i
+.PHONY : src/testMain.i
+
+# target to preprocess a source file
+src/testMain.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/testMain.cpp.i
+.PHONY : src/testMain.cpp.i
+
+src/testMain.s: src/testMain.cpp.s
+.PHONY : src/testMain.s
+
+# target to generate assembly for a file
+src/testMain.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/testMain.cpp.s
+.PHONY : src/testMain.cpp.s
+
 src/tests/regressionReporter.o: src/tests/regressionReporter.cpp.o
 .PHONY : src/tests/regressionReporter.o
 
@@ -2073,6 +2337,9 @@ help:
 	@echo "... src/analytics/trendReporter.o"
 	@echo "... src/analytics/trendReporter.i"
 	@echo "... src/analytics/trendReporter.s"
+	@echo "... src/ci/chaosCiRunner.o"
+	@echo "... src/ci/chaosCiRunner.i"
+	@echo "... src/ci/chaosCiRunner.s"
 	@echo "... src/ci/verificationAgent.o"
 	@echo "... src/ci/verificationAgent.i"
 	@echo "... src/ci/verificationAgent.s"
@@ -2127,6 +2394,27 @@ help:
 	@echo "... src/dnd/character.o"
 	@echo "... src/dnd/character.i"
 	@echo "... src/dnd/character.s"
+	@echo "... src/dnd/combat/combatLog.o"
+	@echo "... src/dnd/combat/combatLog.i"
+	@echo "... src/dnd/combat/combatLog.s"
+	@echo "... src/dnd/combat/combatService.o"
+	@echo "... src/dnd/combat/combatService.i"
+	@echo "... src/dnd/combat/combatService.s"
+	@echo "... src/dnd/combat/combat_payload.o"
+	@echo "... src/dnd/combat/combat_payload.i"
+	@echo "... src/dnd/combat/combat_payload.s"
+	@echo "... src/dnd/combat/dice.o"
+	@echo "... src/dnd/combat/dice.i"
+	@echo "... src/dnd/combat/dice.s"
+	@echo "... src/dnd/combat/encounter.o"
+	@echo "... src/dnd/combat/encounter.i"
+	@echo "... src/dnd/combat/encounter.s"
+	@echo "... src/dnd/combat/monster.o"
+	@echo "... src/dnd/combat/monster.i"
+	@echo "... src/dnd/combat/monster.s"
+	@echo "... src/dnd/combat/payloads.o"
+	@echo "... src/dnd/combat/payloads.i"
+	@echo "... src/dnd/combat/payloads.s"
 	@echo "... src/dnd/dndCharacterService.o"
 	@echo "... src/dnd/dndCharacterService.i"
 	@echo "... src/dnd/dndCharacterService.s"
@@ -2142,6 +2430,12 @@ help:
 	@echo "... src/incident/experimentReport.o"
 	@echo "... src/incident/experimentReport.i"
 	@echo "... src/incident/experimentReport.s"
+	@echo "... src/incident/forensicsReporter.o"
+	@echo "... src/incident/forensicsReporter.i"
+	@echo "... src/incident/forensicsReporter.s"
+	@echo "... src/incident/incidentHandler.o"
+	@echo "... src/incident/incidentHandler.i"
+	@echo "... src/incident/incidentHandler.s"
 	@echo "... src/incident/scenarioRunner.o"
 	@echo "... src/incident/scenarioRunner.i"
 	@echo "... src/incident/scenarioRunner.s"
@@ -2271,6 +2565,9 @@ help:
 	@echo "... src/storage/snapshotManager.o"
 	@echo "... src/storage/snapshotManager.i"
 	@echo "... src/storage/snapshotManager.s"
+	@echo "... src/testMain.o"
+	@echo "... src/testMain.i"
+	@echo "... src/testMain.s"
 	@echo "... src/tests/regressionReporter.o"
 	@echo "... src/tests/regressionReporter.i"
 	@echo "... src/tests/regressionReporter.s"

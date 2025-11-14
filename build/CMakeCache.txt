@@ -14,9 +14,6 @@
 # EXTERNAL cache entries
 ########################
 
-//Disable components that define extra mains
-CI_BUILD:BOOL=OFF
-
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
 
@@ -25,7 +22,7 @@ CMAKE_AR:FILEPATH=/usr/bin/ar
 
 //Choose the type of build, options are: None Debug Release RelWithDebInfo
 // MinSizeRel ...
-CMAKE_BUILD_TYPE:STRING=Release
+CMAKE_BUILD_TYPE:STRING=
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
@@ -55,32 +52,6 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 
 //Flags used by the CXX compiler during RELWITHDEBINFO builds.
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
-
-//C compiler
-CMAKE_C_COMPILER:FILEPATH=/usr/bin/cc
-
-//A wrapper around 'ar' adding the appropriate '--plugin' option
-// for the GCC compiler
-CMAKE_C_COMPILER_AR:FILEPATH=/usr/bin/gcc-ar
-
-//A wrapper around 'ranlib' adding the appropriate '--plugin' option
-// for the GCC compiler
-CMAKE_C_COMPILER_RANLIB:FILEPATH=/usr/bin/gcc-ranlib
-
-//Flags used by the C compiler during all build types.
-CMAKE_C_FLAGS:STRING=
-
-//Flags used by the C compiler during DEBUG builds.
-CMAKE_C_FLAGS_DEBUG:STRING=-g
-
-//Flags used by the C compiler during MINSIZEREL builds.
-CMAKE_C_FLAGS_MINSIZEREL:STRING=-Os -DNDEBUG
-
-//Flags used by the C compiler during RELEASE builds.
-CMAKE_C_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
-
-//Flags used by the C compiler during RELWITHDEBINFO builds.
-CMAKE_C_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
 //Path to a program.
 CMAKE_DLLTOOL:FILEPATH=CMAKE_DLLTOOL-NOTFOUND
@@ -248,9 +219,6 @@ PKG_CONFIG_ARGN:STRING=
 //pkg-config executable
 PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
 
-//Path to a library.
-SODIUM_LIBRARY:FILEPATH=/usr/lib/libsodium.so
-
 //Path to a file.
 SQLite3_INCLUDE_DIR:PATH=/usr/include
 
@@ -271,6 +239,9 @@ pkgcfg_lib_PC_CURL_curl:FILEPATH=/usr/lib/libcurl.so
 
 //Path to a library.
 pkgcfg_lib_PC_SQLite3_sqlite3:FILEPATH=/usr/lib/libsqlite3.so
+
+//Path to a library.
+pkgcfg_lib_SODIUM_sodium:FILEPATH=/usr/lib/libsodium.so
 
 //Path to a library.
 pkgcfg_lib__OPENSSL_crypto:FILEPATH=/usr/lib/libcrypto.so
@@ -319,22 +290,6 @@ CMAKE_CXX_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_CXX_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_FLAGS_RELWITHDEBINFO
 CMAKE_CXX_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_C_COMPILER
-CMAKE_C_COMPILER-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_C_COMPILER_AR
-CMAKE_C_COMPILER_AR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_C_COMPILER_RANLIB
-CMAKE_C_COMPILER_RANLIB-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_C_FLAGS
-CMAKE_C_FLAGS-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_C_FLAGS_DEBUG
-CMAKE_C_FLAGS_DEBUG-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_C_FLAGS_MINSIZEREL
-CMAKE_C_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_C_FLAGS_RELEASE
-CMAKE_C_FLAGS_RELEASE-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: CMAKE_C_FLAGS_RELWITHDEBINFO
-CMAKE_C_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_DLLTOOL
 CMAKE_DLLTOOL-ADVANCED:INTERNAL=1
 //Path to cache edit program executable.
@@ -444,6 +399,8 @@ CURL_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 FIND_PACKAGE_MESSAGE_DETAILS_CURL:INTERNAL=[/usr/lib/libcurl.so][/usr/include][ ][v8.17.0()]
 //Details about finding OpenSSL
 FIND_PACKAGE_MESSAGE_DETAILS_OpenSSL:INTERNAL=[/usr/lib/libcrypto.so][/usr/include][ ][v3.6.0()]
+//Details about finding PkgConfig
+FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v2.5.1()]
 //Details about finding SQLite3
 FIND_PACKAGE_MESSAGE_DETAILS_SQLite3:INTERNAL=[/usr/lib/libsqlite3.so][/usr/include][v3.51.0()]
 //ADVANCED property for variable: OPENSSL_CRYPTO_LIBRARY
@@ -526,6 +483,41 @@ PC_SQLite3_sqlite3_VERSION:INTERNAL=
 PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
 PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
+SODIUM_CFLAGS:INTERNAL=-I/usr/include
+SODIUM_CFLAGS_I:INTERNAL=
+SODIUM_CFLAGS_OTHER:INTERNAL=
+SODIUM_FOUND:INTERNAL=1
+SODIUM_INCLUDEDIR:INTERNAL=/usr/include
+SODIUM_INCLUDE_DIRS:INTERNAL=/usr/include
+SODIUM_LDFLAGS:INTERNAL=-L/usr/lib;-lsodium
+SODIUM_LDFLAGS_OTHER:INTERNAL=
+SODIUM_LIBDIR:INTERNAL=/usr/lib
+SODIUM_LIBRARIES:INTERNAL=sodium
+SODIUM_LIBRARY_DIRS:INTERNAL=/usr/lib
+SODIUM_LIBS:INTERNAL=
+SODIUM_LIBS_L:INTERNAL=
+SODIUM_LIBS_OTHER:INTERNAL=
+SODIUM_LIBS_PATHS:INTERNAL=
+SODIUM_MODULE_NAME:INTERNAL=libsodium
+SODIUM_PREFIX:INTERNAL=/usr
+SODIUM_STATIC_CFLAGS:INTERNAL=-I/usr/include
+SODIUM_STATIC_CFLAGS_I:INTERNAL=
+SODIUM_STATIC_CFLAGS_OTHER:INTERNAL=
+SODIUM_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include
+SODIUM_STATIC_LDFLAGS:INTERNAL=-L/usr/lib;-lsodium;-lpthread;-pthread
+SODIUM_STATIC_LDFLAGS_OTHER:INTERNAL=-pthread
+SODIUM_STATIC_LIBDIR:INTERNAL=
+SODIUM_STATIC_LIBRARIES:INTERNAL=sodium;pthread
+SODIUM_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib
+SODIUM_STATIC_LIBS:INTERNAL=
+SODIUM_STATIC_LIBS_L:INTERNAL=
+SODIUM_STATIC_LIBS_OTHER:INTERNAL=
+SODIUM_STATIC_LIBS_PATHS:INTERNAL=
+SODIUM_VERSION:INTERNAL=1.0.20
+SODIUM_libsodium_INCLUDEDIR:INTERNAL=
+SODIUM_libsodium_LIBDIR:INTERNAL=
+SODIUM_libsodium_PREFIX:INTERNAL=
+SODIUM_libsodium_VERSION:INTERNAL=
 //ADVANCED property for variable: SQLite3_INCLUDE_DIR
 SQLite3_INCLUDE_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: SQLite3_LIBRARY
@@ -567,17 +559,21 @@ _OPENSSL_openssl_PREFIX:INTERNAL=
 _OPENSSL_openssl_VERSION:INTERNAL=
 __pkg_config_arguments_PC_CURL:INTERNAL=QUIET;libcurl
 __pkg_config_arguments_PC_SQLite3:INTERNAL=QUIET;sqlite3
+__pkg_config_arguments_SODIUM:INTERNAL=REQUIRED;libsodium
 __pkg_config_arguments__OPENSSL:INTERNAL=QUIET;openssl
 __pkg_config_checked_PC_CURL:INTERNAL=1
 __pkg_config_checked_PC_SQLite3:INTERNAL=1
+__pkg_config_checked_SODIUM:INTERNAL=1
 __pkg_config_checked__OPENSSL:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_PC_CURL_curl
 pkgcfg_lib_PC_CURL_curl-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_PC_SQLite3_sqlite3
 pkgcfg_lib_PC_SQLite3_sqlite3-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_SODIUM_sodium
+pkgcfg_lib_SODIUM_sodium-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib__OPENSSL_crypto
 pkgcfg_lib__OPENSSL_crypto-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib__OPENSSL_ssl
 pkgcfg_lib__OPENSSL_ssl-ADVANCED:INTERNAL=1
-prefix_result:INTERNAL=alt-svc;AsynchDNS;brotli;GSS-API;HSTS;HTTP2;HTTP3;HTTPS-proxy;IDN;IPv6;Kerberos;Largefile;libz;NTLM;PSL;SPNEGO;SSL;threadsafe;TLS-SRP;UnixSockets;zstd
+prefix_result:INTERNAL=/usr/lib
 

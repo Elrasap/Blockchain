@@ -12,6 +12,6 @@ bool verifySignatureOverFile(const std::string& path,
                              const std::vector<uint8_t>& pubkey) {
     auto d = fileSha256(path);
     std::vector<uint8_t> msg(d.begin(), d.end());
-    return verify(msg, signature, pubkey);
+    return crypto::verify(msg, signature, pubkey);
 }
 

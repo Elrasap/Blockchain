@@ -12,11 +12,11 @@ std::array<uint8_t,32> fileSha256(const std::string& path) {
         std::streamsize got = in.gcount();
         if (got > 0) buf.insert(buf.end(), chunk.begin(), chunk.begin() + got);
     }
-    return sha256(buf);
+    return crypto::sha256(buf);
 }
 
 std::string fileSha256Hex(const std::string& path) {
     auto h = fileSha256(path);
-    return toHex(h);
+    return crypto::toHex(h);
 }
 
