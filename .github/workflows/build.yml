@@ -1,0 +1,24 @@
+name: Build and Verify
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Install deps
+        run: sudo apt update && sudo apt install -y cmake g++ libssl-dev
+      - name: Configure & Build
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -- -j$(nproc)
+      - name: Compute SHA256
+        run: sha256sum build/blockchain_node > blockchain_node.sha256
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: blockchain-binaries
+          path: |
+            build/blockchain_node
+            blockchain_node.sha256
