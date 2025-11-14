@@ -4,6 +4,7 @@
 #include <atomic>
 
 class MetricsServer {
+private:
     int port;
     std::atomic<bool> running;
     std::thread server_thread;
@@ -13,7 +14,7 @@ public:
     MetricsServer(int port);
     ~MetricsServer();
 
-    void start();
+    bool start();   // now returns success/failure
     void stop();
 };
 

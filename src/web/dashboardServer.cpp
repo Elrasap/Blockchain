@@ -1,8 +1,8 @@
 #include "web/dashboardServer.hpp"
 #include <thirdparty/httplib.h>
 #include <iostream>
+#include <filesystem>
 #include <fstream>
-#include <filesystem>   // <-- WICHTIG!!!
 
 DashboardServer::DashboardServer(int port,
                                  const std::string& reportsDir,
@@ -10,67 +10,50 @@ DashboardServer::DashboardServer(int port,
     : port(port), reportsDir(reportsDir), binaryPath(binaryPath) {}
 
 void DashboardServer::start() {
-    using namespace httplib;
     namespace fs = std::filesystem;
 
-    Server svr;
+    // === FIX: Ordner automatisch erstellen ===
+    if (!fs::exists(reportsDir)) {
+        std::cout << "[DashboardServer] Creating missing directory: "
+                  << reportsDir << "\n";
+        fs::create_directories(reportsDir);
+    }
 
-    svr.Get("/", [&](const Request&, Response& res) {
-        std::string html;
+    httplib::Server server;
 
-        html += "<html><body>";
-        html += "<h1>Blockchain Dashboard</h1>";
-        html += "<ul>";
-        html += "<li><a href=\"/reports\">Reports</a></li>";
-        html += "<li><a href=\"/binary\">Download Binary</a></li>";
-        html += "<li><a href=\"/metrics\">Metrics</a></li>";
-        html += "</ul>";
-        html += "</body></html>";
+    server.Get("/", [&](const httplib::Request&, httplib::Response& res) {
+        std::string html = "<h1>Blockchain Dashboard</h1><ul>";
 
-        res.set_content(html, "text/html");
-    });
-
-    // ----- Reports -----
-    svr.Get("/reports", [&](const Request&, Response& res) {
-        std::string html = "<html><body><h2>Reports</h2><ul>";
-
-        try {
-            for (const auto& entry : fs::directory_iterator(reportsDir)) {
-                html += "<li>" + entry.path().string() + "</li>";
+        for (const auto& entry : fs::directory_iterator(reportsDir)) {
+            if (entry.is_regular_file()) {
+                auto name = entry.path().filename().string();
+                html += "<li><a href=\"/report/" + name + "\">" + name + "</a></li>";
             }
-        } catch (...) {
-            html += "<li>No reports found</li>";
         }
 
-        html += "</ul></body></html>";
+        html += "</ul>";
         res.set_content(html, "text/html");
     });
 
-    // ----- Binary Download -----
-    svr.Get("/binary", [&](const Request&, Response& res) {
-        std::ifstream in(binaryPath, std::ios::binary);
-        if (!in.is_open()) {
+    server.Get(R"(/report/(.+))", [&](const httplib::Request& req, httplib::Response& res) {
+        std::string filePath = reportsDir + "/" + req.matches[1].str();
+
+        std::ifstream f(filePath);
+        if (!f.is_open()) {
             res.status = 404;
-            res.set_content("binary not found", "text/plain");
+            res.set_content("Not found", "text/plain");
             return;
         }
 
-        std::string buf(
-            (std::istreambuf_iterator<char>(in)),
-            std::istreambuf_iterator<char>()
-        );
+        std::string content((std::istreambuf_iterator<char>(f)),
+                             std::istreambuf_iterator<char>());
 
-        res.set_content(buf, "application/octet-stream");
-    });
-
-    // ----- INTERNAL METRICS REDIRECT -----
-    svr.Get("/metrics", [&](const Request&, Response& res) {
-        res.set_redirect("http://localhost:9100/metrics");
+        res.set_content(content, "text/html");
     });
 
     std::cout << "[DashboardServer] Listening on 0.0.0.0:" << port << "\n";
 
-    if (!svr.listen("0.0.0.0", port)) {
+    if (!server.listen("0.0.0.0", port)) {
         std::cerr << "[DashboardServer] ERROR: Could not bind port " << port << "\n";
     }
 }
