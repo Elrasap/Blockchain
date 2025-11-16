@@ -54,6 +54,27 @@ void DashboardServer::start() {
         html += "</ul>";
         res.set_content(html, "text/html");
     });
+    server.Post("/gossip/tx", [&](const Request& req, Response& res) {
+        auto j = json::parse(req.body);
+        Transaction tx;
+        tx.senderPubkey = j["sender"];
+        tx.payload      = j["payload"];
+        tx.signature    = j["signature"];
+
+        std::string err;
+        mempool.addTransactionValidated(tx, err);
+
+        res.set_content("OK", "text/plain");
+    });
+
+    server.Post("/gossip/block", [&](const Request& req, Response& res) {
+        auto j = json::parse(req.body);
+        Block b = Block::deserialize(req.body);
+
+        chain.appendBlock(b);
+
+        res.set_content("OK", "text/plain");
+    });
 
     server.Get(R"(/report/(.+))", [&](const httplib::Request& req, httplib::Response& res) {
         std::string filePath = reportsDir + "/" + req.matches[1].str();

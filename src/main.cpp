@@ -1,45 +1,95 @@
+#include <iostream>
+#include <thread>
+#include <chrono>
+
 #include "core/dmKeyManager.hpp"
-#include "storage/blockStore.hpp"
 #include "core/blockchain.hpp"
 #include "core/blockBuilder.hpp"
 #include "core/mempool.hpp"
-#include <iostream>
-#include <memory>
+#include "storage/blockStore.hpp"
+
+#include "dnd/dndTxValidator.hpp"
+
+#include "web/dashboardServer.hpp"
+#include "metrics/metricsServer.hpp"
 
 int main() {
-    // 1. DM-Key laden/erzeugen
+    std::cout << "=== Blockchain Node Startup ===\n";
+
+    // 1) Load / create DM keys
     DmKeyPair dmKeys;
     if (!loadOrCreateDmKey("dm_keys.bin", dmKeys)) {
-        std::cerr << "Failed to init DM keys\n";
+        std::cerr << "[FATAL] Cannot load or generate DM key\n";
         return 1;
     }
 
-    // 2. BlockStore
+    // 2) BlockStore + Blockchain
     BlockStore store("blocks.db");
-
-    // 3. Blockchain
     Blockchain chain(store, dmKeys.publicKey);
 
-    // 4. Genesis sicherstellen
     chain.ensureGenesisBlock(dmKeys.privateKey);
 
-    // 5. BlockBuilder
-    BlockBuilder builder(chain, dmKeys.privateKey, dmKeys.publicKey);
+    // 3) Build DnD validation context
+    dnd::DndValidationContext ctx;
 
-    // 6. Mempool
-    Mempool mempool;
-    // ... mempool mit Transaktionen füllen ...
+    ctx.characterExists = [&chain](const std::string& id) {
+        return chain.getDndState().characterExists(id);
+    };
+    ctx.monsterExists = [&chain](const std::string& id) {
+        return chain.getDndState().monsterExists(id);
+    };
+    ctx.encounterActive = [&chain](const std::string& id) {
+        return chain.getDndState().encounterExists(id);
+    };
 
-    auto txs = mempool.getAll();
+    ctx.hasControlPermission = [](const std::string&,
+                                  const std::vector<uint8_t>&,
+                                  bool) {
+        return true; // TODO real auth
+    };
 
-    if (!txs.empty()) {
-        Block newBlock = builder.buildBlock(txs);
+    dnd::DndTxValidator validator(ctx);
 
-        if (chain.appendBlock(newBlock)) {
-            mempool.clear();
-            std::cout << "New block appended.\n";
+    // 4) Mempool
+    Mempool mempool(&validator);
+
+    // 5) BlockBuilder
+    BlockBuilder blockBuilder(chain,
+                              dmKeys.privateKey,
+                              dmKeys.publicKey);
+
+    // 6) Dashboard Server
+    DashboardServer dashboard(8080, "reports", "./blockchain_node");
+
+    std::thread dashThread([&]() {
+        dashboard.start();
+    });
+
+    // 7) Metrics
+    MetricsServer metrics(9100);
+
+    std::thread metricsThread([&]() {
+        metrics.start();
+    });
+
+    // 8) Auto miner
+    std::thread miner([&]() {
+        while (true) {
+            std::this_thread::sleep_for(std::chrono::seconds(4));
+
+            if (mempool.size() == 0)
+                continue;
+
+            Block out;
+            if (blockBuilder.buildAndAppendFromMempool(mempool, out)) {
+                std::cout << "[AutoMiner] Block " << out.header.height << " mined.\n";
+            }
         }
-    }
+    });
+
+    dashThread.join();
+    metricsThread.join();
+    miner.join();
 
     return 0;
 }
