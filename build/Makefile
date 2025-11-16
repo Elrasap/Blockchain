@@ -574,6 +574,33 @@ src/core/mempool.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_tests.dir/build.make CMakeFiles/blockchain_tests.dir/src/core/mempool.cpp.s
 .PHONY : src/core/mempool.cpp.s
 
+src/core/poaValidator.o: src/core/poaValidator.cpp.o
+.PHONY : src/core/poaValidator.o
+
+# target to build an object file
+src/core/poaValidator.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_tests.dir/build.make CMakeFiles/blockchain_tests.dir/src/core/poaValidator.cpp.o
+.PHONY : src/core/poaValidator.cpp.o
+
+src/core/poaValidator.i: src/core/poaValidator.cpp.i
+.PHONY : src/core/poaValidator.i
+
+# target to preprocess a source file
+src/core/poaValidator.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_tests.dir/build.make CMakeFiles/blockchain_tests.dir/src/core/poaValidator.cpp.i
+.PHONY : src/core/poaValidator.cpp.i
+
+src/core/poaValidator.s: src/core/poaValidator.cpp.s
+.PHONY : src/core/poaValidator.s
+
+# target to generate assembly for a file
+src/core/poaValidator.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_tests.dir/build.make CMakeFiles/blockchain_tests.dir/src/core/poaValidator.cpp.s
+.PHONY : src/core/poaValidator.cpp.s
+
 src/core/transaction.o: src/core/transaction.cpp.o
 .PHONY : src/core/transaction.o
 
@@ -2585,6 +2612,9 @@ help:
 	@echo "... src/core/mempool.o"
 	@echo "... src/core/mempool.i"
 	@echo "... src/core/mempool.s"
+	@echo "... src/core/poaValidator.o"
+	@echo "... src/core/poaValidator.i"
+	@echo "... src/core/poaValidator.s"
 	@echo "... src/core/transaction.o"
 	@echo "... src/core/transaction.i"
 	@echo "... src/core/transaction.s"

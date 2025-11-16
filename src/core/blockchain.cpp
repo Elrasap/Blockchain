@@ -1,7 +1,7 @@
 #include "core/blockchain.hpp"
 #include "core/poaValidator.hpp"
 #include "core/blockJson.hpp"
-
+#include "dnd/dndPayload.hpp"
 #include <iostream>
 #include <ctime>
 
@@ -228,7 +228,8 @@ bool Blockchain::ensureGenesisBlock(const std::vector<uint8_t>& dmPrivKey) {
 // =====================================================
 
 bool Blockchain::writeSnapshot(const std::string& path) const {
-    return dndState_.writeSnapshot(path);
+    return dnd::writeSnapshot(dndState_, path);
+
 }
 
 // =====================================================
@@ -236,7 +237,8 @@ bool Blockchain::writeSnapshot(const std::string& path) const {
 // =====================================================
 
 bool Blockchain::loadSnapshot(const std::string& path) {
-    if (!dndState_.loadSnapshot(path))
+    if (!dnd::loadSnapshot(dndState_, path))
+
         return false;
 
     return true;

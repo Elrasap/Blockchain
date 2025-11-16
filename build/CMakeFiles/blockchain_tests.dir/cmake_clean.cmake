@@ -32,6 +32,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/blockchain_tests.dir/src/core/logger.cpp.o.d"
   "CMakeFiles/blockchain_tests.dir/src/core/mempool.cpp.o"
   "CMakeFiles/blockchain_tests.dir/src/core/mempool.cpp.o.d"
+  "CMakeFiles/blockchain_tests.dir/src/core/poaValidator.cpp.o"
+  "CMakeFiles/blockchain_tests.dir/src/core/poaValidator.cpp.o.d"
   "CMakeFiles/blockchain_tests.dir/src/core/transaction.cpp.o"
   "CMakeFiles/blockchain_tests.dir/src/core/transaction.cpp.o.d"
   "CMakeFiles/blockchain_tests.dir/src/core/validation.cpp.o"

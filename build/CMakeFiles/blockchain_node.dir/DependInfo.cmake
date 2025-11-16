@@ -24,6 +24,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/elrasap/programmieren/Blockchain/src/core/dmKeyManager.cpp" "CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/core/logger.cpp" "CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/core/mempool.cpp" "CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.o.d"
+  "/home/elrasap/programmieren/Blockchain/src/core/poaValidator.cpp" "CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/core/transaction.cpp" "CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/core/validation.cpp" "CMakeFiles/blockchain_node.dir/src/core/validation.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/validation.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/dashboard/forecastDashboard.cpp" "CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.o.d"
