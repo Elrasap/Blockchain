@@ -18,6 +18,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/elrasap/programmieren/Blockchain/src/core/blockBuilder.cpp" "CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/core/blockEncoding.cpp" "CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/core/blockchain.cpp" "CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o.d"
+  "/home/elrasap/programmieren/Blockchain/src/core/consensus.cpp" "CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/core/crypto.cpp" "CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/core/dmKeyManager.cpp" "CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/core/logger.cpp" "CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o.d"

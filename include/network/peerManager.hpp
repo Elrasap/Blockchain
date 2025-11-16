@@ -28,7 +28,11 @@ public:
     int getPort() const { return listen_port; }
     void attachFastSync(FastSyncManager* f) { fastSync = f; }
 
+    void addPeer(const std::string& addr);
+    std::vector<PeerInfo> getPeers() const;
 
+    void updatePeerHeight(const std::string& addr, uint64_t height);
+    void markSeen(const std::string& addr);
 
 private:
     int listen_port;
@@ -36,7 +40,8 @@ private:
     std::thread serverThread;
     std::mutex connMutex;
     std::map<int, int> sockets;
-
+    mutable std::mutex mtx;
+    std::vector<PeerInfo> peers;
     Mempool* mempool;
     SyncManager* sync;
 

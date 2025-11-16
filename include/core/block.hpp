@@ -3,11 +3,8 @@
 #include <vector>
 #include <cstdint>
 
-#include "core/transaction.hpp"   // Vollständiger Typ benötigt
+#include "core/transaction.hpp"   // <-- WICHTIG: kompletter Transaction-Typ
 
-// ----------------------
-// BlockHeader
-// ----------------------
 struct BlockHeader {
     std::array<uint8_t, 32> prevHash{};
     std::array<uint8_t, 32> merkleRoot{};
@@ -18,11 +15,9 @@ struct BlockHeader {
     std::vector<uint8_t> signature;
 
     std::vector<uint8_t> toBytes() const;
+    std::array<uint8_t, 32> hash() const;
 };
 
-// ----------------------
-// Block
-// ----------------------
 class Block {
 public:
     BlockHeader header;
@@ -35,11 +30,6 @@ public:
     static Block deserialize(const std::vector<uint8_t>& data);
 };
 
-// ----------------------
-// Block-Signing API
-// ----------------------
-
-// Signiert einen BlockHeader mit DM-Key
 bool signBlockHeader(
     BlockHeader& header,
     const std::vector<uint8_t>& privKey,

@@ -20,6 +20,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o.d"
   "CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o"
   "CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o.d"
+  "CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o"
+  "CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o.d"
   "CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.o"
   "CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.o.d"
   "CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o"

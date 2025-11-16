@@ -3,34 +3,40 @@
 #include <vector>
 #include "core/block.hpp"
 
-// Vorwärtsdeklaration, um sqlite3.h nur im .cpp zu includen
-struct sqlite3;
+// BlockStore speichert Blöcke als JSON-Dateien:
+//
+//   blocks/
+//     000000.json   (Genesis)
+//     000001.json
+//     000002.json
+//
+// Der Konstruktor-Parameter ist das Verzeichnis (z.B. "blocks").
 
 class BlockStore {
 public:
-    // path = Pfad zur SQLite-DB (z.B. "blocks.db")
-    explicit BlockStore(const std::string& path);
-    ~BlockStore();
+    explicit BlockStore(const std::string& directory);
 
-    // Hängt einen Block an (INSERT/REPLACE in SQLite).
+    // Block anfügen (blocks/00000N.json)
     bool appendBlock(const Block& block);
 
-    // Lädt alle Blöcke sortiert nach Höhe (ascending).
+    // Alias, falls irgendwo append(...) verwendet wird
+    bool append(const Block& block) { return appendBlock(block); }
+
+    // Alle Blöcke laden (sortiert nach height)
     std::vector<Block> loadAllBlocks() const;
 
-    // Liefert den letzten Block; bei leerer Chain: Default-Block (height=0).
+    // Letzter Block (oder Default-Block, wenn leer)
     Block getLatestBlock() const;
 
-    // Entfernt alle Einträge, lässt DB-Datei aber bestehen.
+    // Alle Dateien im Verzeichnis löschen
     void clear();
 
-    // DB-Datei komplett löschen & Schema neu anlegen.
-    void reset();
+    // Alias für clear()
+    void reset() { clear(); }
 
 private:
-    bool initSchema();
+    std::string directory_;
 
-    std::string db_path;
-    sqlite3* db = nullptr;
+    std::string filenameForHeight(uint64_t height) const;
 };
 

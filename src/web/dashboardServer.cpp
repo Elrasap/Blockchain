@@ -3,6 +3,26 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include "web/dndApi.hpp"
+#include "core/blockchain.hpp"
+#include "core/mempool.hpp"
+#include "core/blockBuilder.hpp"
+#include "web/dndApi.hpp"
+#include "web/dmApi.hpp"
+#include "web/chainApi.hpp"
+
+web::DndApi dndApi(
+    server,
+    ctx.chain,          // Blockchain
+    ctx.mempool,        // Mempool
+    ctx.dmPrivKey,      // DM private key
+    ctx.dmPubKey        // DM public key
+);
+
+// …
+DndApi dndApi(mempool, dndValidator);
+dndApi.attach(server);
+
 
 DashboardServer::DashboardServer(int port,
                                  const std::string& reportsDir,

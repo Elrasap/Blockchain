@@ -27,7 +27,39 @@ SyncManager* global_sync = nullptr;
 PeerManager::PeerManager(int port) : listen_port(port) {
     std::cout << "[PeerManager] Created on port " << port << std::endl;
 }
+#include "network/peerManager.hpp"
+#include <algorithm>
+#include <ctime>
 
+void PeerManager::addPeer(const std::string& addr) {
+    std::lock_guard<std::mutex> lock(mtx);
+    for (auto& p : peers)
+        if (p.address == addr) return;
+
+    PeerInfo p;
+    p.address = addr;
+    p.lastSeen = time(nullptr);
+    peers.push_back(p);
+}
+
+std::vector<PeerInfo> PeerManager::getPeers() const {
+    std::lock_guard<std::mutex> lock(mtx);
+    return peers;
+}
+
+void PeerManager::updatePeerHeight(const std::string& addr, uint64_t height) {
+    std::lock_guard<std::mutex> lock(mtx);
+    for (auto& p : peers)
+        if (p.address == addr)
+            p.height = height;
+}
+
+void PeerManager::markSeen(const std::string& addr) {
+    std::lock_guard<std::mutex> lock(mtx);
+    for (auto& p : peers)
+        if (p.address == addr)
+            p.lastSeen = time(nullptr);
+}
 void PeerManager::startServer() {
     running = true;
     serverThread = thread(&PeerManager::serverLoop, this);

@@ -1,138 +1,244 @@
 #include "core/blockchain.hpp"
-#include "core/validation.hpp"
-#include "core/crypto.hpp"
+#include "core/poaValidator.hpp"
+#include "core/blockJson.hpp"
 
-#include <chrono>
-#include <cstring>
 #include <iostream>
+#include <ctime>
 
-using namespace std;
-
-namespace {
-
-uint64_t nowMs() {
-    using namespace std::chrono;
-    auto now = system_clock::now().time_since_epoch();
-    return duration_cast<milliseconds>(now).count();
-}
-
-bool isZeroHash(const std::array<uint8_t, 32>& h) {
-    for (auto b : h) {
-        if (b != 0) return false;
-    }
-    return true;
-}
-
-} // namespace
+// =====================================================
+// Constructor
+// =====================================================
 
 Blockchain::Blockchain(BlockStore& store,
                        const std::vector<uint8_t>& dmValidatorPubKey)
-    : store(store),
-      dmPubKey(dmValidatorPubKey) {}
-
-uint64_t Blockchain::getHeight() const {
-    Block latest = store.getLatestBlock();
-    return latest.header.height;
+    : store_(store), dmPubKey(dmValidatorPubKey)
+{
+    loadFromDisk();
+    rebuildState();
 }
 
-Block Blockchain::getLatestBlock() const {
-    return store.getLatestBlock();
-}
+// =====================================================
+// Load blocks from disk
+// =====================================================
 
-Block Blockchain::getBlock(uint64_t height) const {
-    auto all = store.loadAllBlocks();
-    for (const auto& b : all) {
-        if (b.header.height == height) {
-            return b;
-        }
-    }
-    return Block{}; // height = 0
-}
+void Blockchain::loadFromDisk() {
+    std::cout << "[Blockchain] Loading blocks from disk...\n";
 
-std::vector<Block> Blockchain::loadChain() const {
-    return store.loadAllBlocks();
-}
+    chain_ = store_.loadAllBlocks();
 
-bool Blockchain::validateBlock(const Block& block) const {
-    // Genesis-Block: height == 0, kein prev
-    if (block.header.height == 0) {
-        // Optional: minimale Checks
-        if (!verifyBlockHeaderSignature(block.header)) {
-            return false;
-        }
-        if (block.header.validatorPubKey != dmPubKey) {
-            return false;
-        }
-        return true;
+    if (chain_.empty()) {
+        std::cout << "[Blockchain] No blocks found.\n";
+        return;
     }
 
-    auto all = store.loadAllBlocks();
-    if (all.empty()) {
-        // Kein vorheriger Block, aber height > 0 → ungültig
-        return false;
-    }
+    // validate sequentially
+    for (size_t i = 1; i < chain_.size(); i++) {
+        const auto& prev = chain_[i - 1];
+        const auto& curr = chain_[i];
 
-    // Vorgänger mit height-1 suchen
-    Block prev;
-    bool foundPrev = false;
-    for (const auto& b : all) {
-        if (b.header.height == block.header.height - 1) {
-            prev = b;
-            foundPrev = true;
+        if (curr.header.height != prev.header.height + 1) {
+            std::cerr << "[Blockchain] Height mismatch at block "
+                      << i << "\n";
+            chain_.resize(i);
+            break;
+        }
+
+        if (curr.header.prevHash != prev.hash()) {
+            std::cerr << "[Blockchain] prevHash mismatch at block "
+                      << i << "\n";
+            chain_.resize(i);
+            break;
+        }
+
+        if (!validateBlock(curr)) {
+            std::cerr << "[Blockchain] Invalid block at height "
+                      << curr.header.height << "\n";
+            chain_.resize(i);
             break;
         }
     }
-    if (!foundPrev) {
-        return false;
-    }
 
-    // Proof-of-Authority Validierung
-    return Validation::validateBlockPoA(block, prev, dmPubKey);
+    std::cout << "[Blockchain] Loaded "
+              << chain_.size() << " valid blocks.\n";
 }
 
-bool Blockchain::appendBlock(const Block& block) {
-    if (!validateBlock(block)) {
-        std::cerr << "[Blockchain] Block validation failed at height "
-                  << block.header.height << "\n";
+// =====================================================
+// Rebuild DnD state from chain
+// =====================================================
+
+void Blockchain::rebuildState() {
+    std::cout << "[DndState] Rebuilding...\n";
+
+    dndState_.clear();
+
+    for (const auto& block : chain_) {
+        for (const auto& tx : block.transactions) {
+            if (!dnd::isDndPayload(tx.payload))
+                continue;
+
+            auto evt = dnd::extractDndEventTx(tx);
+            std::string err;
+
+            // Full DnD validation is optional here (already validated on block add)
+            if (!dndState_.apply(evt, err)) {
+                std::cerr << "[DndState] apply() failed at block "
+                          << block.header.height << ": " << err << "\n";
+            }
+        }
+    }
+
+    std::cout << "[DndState] Rebuild complete. Characters: "
+              << dndState_.characters.size()
+              << " Monsters: " << dndState_.monsters.size()
+              << " Encounters: " << dndState_.encounters.size()
+              << "\n";
+}
+
+// =====================================================
+// Height, read
+// =====================================================
+
+uint64_t Blockchain::getHeight() const {
+    if (chain_.empty()) return 0;
+    return chain_.back().header.height;
+}
+
+Block Blockchain::getLatestBlock() const {
+    if (chain_.empty()) return Block{};
+    return chain_.back();
+}
+
+Block Blockchain::getBlock(uint64_t height) const {
+    if (height >= chain_.size()) return Block{};
+    return chain_[height];
+}
+
+// =====================================================
+// Validate block
+// =====================================================
+
+bool Blockchain::validateBlock(const Block& block) const {
+    const BlockHeader& h = block.header;
+
+    // PoA check
+    if (h.validatorPubKey != dmPubKey) {
+        std::cerr << "[PoA] Unauthorized validator\n";
         return false;
     }
 
-    if (!store.appendBlock(block)) {
-        std::cerr << "[Blockchain] Failed to append block to store.\n";
+    if (!verifyBlockHeaderSignature(h)) {
+        std::cerr << "[PoA] Invalid signature\n";
+        return false;
+    }
+
+    // Merkle root
+    auto calc = block.calculateMerkleRoot();
+    if (calc != h.merkleRoot) {
+        std::cerr << "[PoA] Invalid Merkle root\n";
+        return false;
+    }
+
+    // Time sanity
+    uint64_t now = time(nullptr);
+    if (h.timestamp > now + 30) {
+        std::cerr << "[PoA] Timestamp too far in future\n";
         return false;
     }
 
     return true;
 }
 
-bool Blockchain::ensureGenesisBlock(const std::vector<uint8_t>& dmPrivKey) {
-    // Wenn schon irgendwas in der DB ist → nichts tun
-    auto all = store.loadAllBlocks();
-    if (!all.empty()) {
-        return true;
+// =====================================================
+// Validate Transaction
+// =====================================================
+
+bool Blockchain::validateTransaction(const Transaction& tx,
+                                     std::string& err) const
+{
+    if (!tx.verifySignature()) {
+        err = "TX: invalid signature";
+        return false;
     }
+
+    if (dnd::isDndPayload(tx.payload)) {
+        auto evt = dnd::decodeDndTx(tx.payload);
+        evt.senderPubKey = tx.senderPubkey;
+        evt.signature    = tx.signature;
+
+        if (!dndState_.validate(evt, err))
+            return false;
+    }
+
+    return true;
+}
+
+// =====================================================
+// Append Block
+// =====================================================
+
+bool Blockchain::appendBlock(const Block& block) {
+    if (!validateBlock(block)) return false;
+
+    if (!store_.appendBlock(block)) {
+        std::cerr << "[Blockchain] Store append failed\n";
+        return false;
+    }
+
+    chain_.push_back(block);
+
+    // apply all block txs to state
+    for (const auto& tx : block.transactions) {
+        if (!dnd::isDndPayload(tx.payload))
+            continue;
+
+        auto evt = dnd::extractDndEventTx(tx);
+        std::string err;
+
+        if (!dndState_.apply(evt, err)) {
+            std::cerr << "[DndState] appendBlock apply fail: " << err << "\n";
+        }
+    }
+
+    return true;
+}
+
+// =====================================================
+// Genesis
+// =====================================================
+
+bool Blockchain::ensureGenesisBlock(const std::vector<uint8_t>& dmPrivKey) {
+    if (!chain_.empty()) return true;
 
     Block genesis;
     genesis.header.height = 0;
-    genesis.header.timestamp = nowMs();
+    genesis.header.timestamp = time(nullptr);
+    genesis.header.prevHash.fill(0);
+    genesis.header.merkleRoot.fill(0);
 
-    // prevHash = 0
-    genesis.header.prevHash = {};
-    // keine TXs → MerkleRoot über leere Liste
-    genesis.header.merkleRoot = genesis.calculateMerkleRoot();
+    signBlockHeader(genesis.header, dmPrivKey, dmPubKey);
 
-    // Signieren mit DM-Key
-    if (!signBlockHeader(genesis.header, dmPrivKey, dmPubKey)) {
-        std::cerr << "[Blockchain] Failed to sign genesis block.\n";
+    if (!store_.appendBlock(genesis)) return false;
+
+    chain_.push_back(genesis);
+    return true;
+}
+
+// =====================================================
+// Snapshot Write
+// =====================================================
+
+bool Blockchain::writeSnapshot(const std::string& path) const {
+    return dndState_.writeSnapshot(path);
+}
+
+// =====================================================
+// Snapshot Load
+// =====================================================
+
+bool Blockchain::loadSnapshot(const std::string& path) {
+    if (!dndState_.loadSnapshot(path))
         return false;
-    }
 
-    if (!store.appendBlock(genesis)) {
-        std::cerr << "[Blockchain] Failed to append genesis block.\n";
-        return false;
-    }
-
-    std::cout << "[Blockchain] Genesis block created.\n";
     return true;
 }
 

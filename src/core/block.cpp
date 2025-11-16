@@ -1,6 +1,5 @@
 #include "core/block.hpp"
 #include "core/crypto.hpp"
-
 #include <cstring>
 #include <stdexcept>
 
@@ -72,44 +71,53 @@ vector<uint8_t> serializeHeaderInternal(const BlockHeader& h, bool includeSignat
 
 // === Block-MerkleRoot ===
 
-array<uint8_t, 32> Block::calculateMerkleRoot() const {
+std::array<uint8_t, 32> Block::calculateMerkleRoot() const {
+    std::vector<std::array<uint8_t, 32>> layer;
+
+    // ====== Edge Case: Keine Transaktionen ======
     if (transactions.empty()) {
-        vector<uint8_t> empty{};
-        return crypto::sha256(empty);
+        // Leeres MerkleRoot = SHA256("")
+        return crypto::sha256(std::vector<uint8_t>{});
     }
 
-    vector<array<uint8_t, 32>> layer;
+    // ====== Erste Ebene: Hash jeder Transaktion ======
     layer.reserve(transactions.size());
-
-    // Hash der einzelnen Transactions
     for (const auto& tx : transactions) {
         layer.push_back(tx.hash());
     }
 
-    // Merkle-Baum nach oben falten
+    // ====== Merkle-Baum iterativ aufbauen ======
     while (layer.size() > 1) {
-        vector<array<uint8_t, 32>> next;
-        next.reserve((layer.size() + 1) / 2);
+        std::vector<std::array<uint8_t, 32>> next;
 
         for (size_t i = 0; i < layer.size(); i += 2) {
-            if (i + 1 < layer.size()) {
-                vector<uint8_t> buf;
-                buf.reserve(64);
-                buf.insert(buf.end(), layer[i].begin(), layer[i].end());
-                buf.insert(buf.end(), layer[i + 1].begin(), layer[i + 1].end());
+            std::array<uint8_t, 32> left = layer[i];
+            std::array<uint8_t, 32> right;
 
-                next.push_back(crypto::sha256(buf));
+            // Wenn ungerade Anzahl → letzten Hash duplizieren (Bitcoin-Regel)
+            if (i + 1 < layer.size()) {
+                right = layer[i + 1];
             } else {
-                // ungerade Anzahl -> letztes Element duplizieren
-                next.push_back(layer[i]);
+                right = left;
             }
+
+            // Concatenate L || R
+            std::vector<uint8_t> concat;
+            concat.reserve(64);
+            concat.insert(concat.end(), left.begin(), left.end());
+            concat.insert(concat.end(), right.begin(), right.end());
+
+            // Hash(L || R)
+            next.push_back(crypto::sha256(concat));
         }
 
         layer = std::move(next);
     }
 
+    // ====== Ein Element übrig → MerkleRoot ======
     return layer[0];
 }
+
 
 // === Block-Hash ===
 // Hash = SHA256( Header inkl. Signatur )
@@ -193,17 +201,26 @@ bool verifyBlockHeaderSignature(const BlockHeader& header) {
 
 std::vector<uint8_t> BlockHeader::toBytes() const {
     std::vector<uint8_t> buf;
-    buf.reserve(32 + 32 + 8 + 8);
+    buf.reserve(32 + 32 + 8 + 8 + 4 + validatorPubKey.size() + 4 + signature.size());
 
     buf.insert(buf.end(), prevHash.begin(), prevHash.end());
     buf.insert(buf.end(), merkleRoot.begin(), merkleRoot.end());
 
-    for (int i = 0; i < 8; ++i)
-        buf.push_back((height >> (i * 8)) & 0xFF);
+    for (int i = 0; i < 8; i++) buf.push_back((height >> (8 * i)) & 0xFF);
+    for (int i = 0; i < 8; i++) buf.push_back((timestamp >> (8 * i)) & 0xFF);
 
-    for (int i = 0; i < 8; ++i)
-        buf.push_back((timestamp >> (i * 8)) & 0xFF);
+    uint32_t pubLen = validatorPubKey.size();
+    for (int i = 0; i < 4; i++) buf.push_back((pubLen >> (8 * i)) & 0xFF);
+    buf.insert(buf.end(), validatorPubKey.begin(), validatorPubKey.end());
+
+    uint32_t sigLen = signature.size();
+    for (int i = 0; i < 4; i++) buf.push_back((sigLen >> (8 * i)) & 0xFF);
+    buf.insert(buf.end(), signature.begin(), signature.end());
 
     return buf;
+}
+
+std::array<uint8_t, 32> BlockHeader::hash() const {
+    return crypto::sha256(toBytes());
 }
 

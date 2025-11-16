@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>DND Player Client</title>
+    <style>
+        body {
+            background: #1e1e1e;
+            color: #eee;
+            font-family: sans-serif;
+            margin: 40px;
+        }
+        .card {
+            background: #2b2b2b;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 500px;
+            margin-bottom: 30px;
+        }
+        input, select, button, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border: none;
+            background: #444;
+            color: #fff;
+        }
+        button {
+            background: #3a7bd5;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>DND Player Client</h1>
+
+<div class="card">
+    <h2>🔑 Player Key</h2>
+    <button id="btnGenerateKey">Generate New Keypair</button>
+    <textarea id="pubKey" readonly placeholder="Public Key will appear here"></textarea>
+</div>
+
+<div class="card">
+    <h2>⚔️ Propose Action</h2>
+
+    <label>Encounter ID</label>
+    <input id="encounterId" placeholder="enc-1">
+
+    <label>Actor ID (Your Character)</label>
+    <input id="actorId" placeholder="char-123">
+
+    <label>Target ID</label>
+    <input id="targetId" placeholder="monster-1">
+
+    <label>Roll Result</label>
+    <input id="roll" type="number" value="15">
+
+    <label>Damage</label>
+    <input id="damage" type="number" value="6">
+
+    <label>Hit?</label>
+    <select id="hit">
+        <option value="true">Hit</option>
+        <option value="false">Miss</option>
+    </select>
+
+    <label>Note</label>
+    <textarea id="note" placeholder="Optional note"></textarea>
+
+    <button id="btnSend">Send Action to Blockchain Node</button>
+
+    <pre id="log"></pre>
+</div>
+
+<script src="playerCrypto.js"></script>
+<script src="dndTxClient.js"></script>
+
+<script>
+document.getElementById("btnGenerateKey").onclick = async () => {
+    await PlayerCrypto.generate();
+    document.getElementById("pubKey").value = PlayerCrypto.getPublicHex();
+};
+
+document.getElementById("btnSend").onclick = async () => {
+    const evt = {
+        encounterId: document.getElementById("encounterId").value,
+        actorId:     document.getElementById("actorId").value,
+        targetId:    document.getElementById("targetId").value,
+        actorType:   0,
+        targetType:  1,
+        roll:        parseInt(document.getElementById("roll").value),
+        damage:      parseInt(document.getElementById("damage").value),
+        hit:         document.getElementById("hit").value === "true",
+        note:        document.getElementById("note").value,
+        timestamp:   Math.floor(Date.now() / 1000)
+    };
+
+    const log = document.getElementById("log");
+    log.textContent = "Signing...";
+
+    const result = await DndTxClient.sendEvent(evt);
+    log.textContent = JSON.stringify(result, null, 2);
+};
+</script>
+
+</body>
+</html>
+

@@ -369,6 +369,30 @@ src/core/blockchain.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.s
 .PHONY : src/core/blockchain.cpp.s
 
+src/core/consensus.o: src/core/consensus.cpp.o
+.PHONY : src/core/consensus.o
+
+# target to build an object file
+src/core/consensus.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o
+.PHONY : src/core/consensus.cpp.o
+
+src/core/consensus.i: src/core/consensus.cpp.i
+.PHONY : src/core/consensus.i
+
+# target to preprocess a source file
+src/core/consensus.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.i
+.PHONY : src/core/consensus.cpp.i
+
+src/core/consensus.s: src/core/consensus.cpp.s
+.PHONY : src/core/consensus.s
+
+# target to generate assembly for a file
+src/core/consensus.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.s
+.PHONY : src/core/consensus.cpp.s
+
 src/core/crypto.o: src/core/crypto.cpp.o
 .PHONY : src/core/crypto.o
 
@@ -1872,6 +1896,9 @@ help:
 	@echo "... src/core/blockchain.o"
 	@echo "... src/core/blockchain.i"
 	@echo "... src/core/blockchain.s"
+	@echo "... src/core/consensus.o"
+	@echo "... src/core/consensus.i"
+	@echo "... src/core/consensus.s"
 	@echo "... src/core/crypto.o"
 	@echo "... src/core/crypto.i"
 	@echo "... src/core/crypto.s"

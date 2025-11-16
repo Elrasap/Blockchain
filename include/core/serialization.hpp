@@ -1,25 +1,43 @@
 #pragma once
 #include <vector>
 #include <string>
-#include "crypto/types.hpp"
-#include "crypto/hash.hpp"
-#include "block.hpp"
+#include <nlohmann/json.hpp>
 
-using namespace std;
+namespace dnd {
 
-class Transaction{
-public:
-    B32 senderPubKey;
-    B32 nonce;
-    uin64_t payload;
-    uin64_t fee;
-    B32 signature;
-};
+// Payload MUST begin with "DND:"
+static constexpr const char* DND_PREFIX = "DND:";
 
-namespace serialization{
-    uint64_t serializeUint65(uint64_t value);
-    uint64_t serializeBytes(vector<uint8_t> bytes);
-    uint64_t concatBytes(listy<vector<uint8_t>> bytes);
-    uint64_t deserializeUint64(uint64_t value);
-    uint64_t deserializeBytes(uint64_t value);
+// Prüft, ob payload ein DnD-Event ist
+inline bool isDndPayload(const std::vector<uint8_t>& raw)
+{
+    if (raw.size() < 4)
+        return false;
+
+    // Compare prefix
+    std::string prefix(raw.begin(), raw.begin() + 4);
+
+    return prefix == DND_PREFIX;
 }
+
+// JSON → Bytes: automatically add prefix
+inline std::vector<uint8_t> makeDndPayload(const nlohmann::json& j)
+{
+    std::string s = std::string(DND_PREFIX) + j.dump();
+    return std::vector<uint8_t>(s.begin(), s.end());
+}
+
+// Bytes → JSON: strip prefix
+inline nlohmann::json parseDndPayload(const std::vector<uint8_t>& raw)
+{
+    std::string s(raw.begin(), raw.end());
+
+    if (s.rfind(DND_PREFIX, 0) != 0)
+        throw std::runtime_error("Not a DND payload");
+
+    std::string jsonPart = s.substr(4);
+    return nlohmann::json::parse(jsonPart);
+}
+
+} // namespace dnd
+
