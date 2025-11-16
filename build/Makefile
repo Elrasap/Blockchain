@@ -129,30 +129,6 @@ blockchain_node/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/build
 .PHONY : blockchain_node/fast
 
-src/alerts/eventCollector.o: src/alerts/eventCollector.cpp.o
-.PHONY : src/alerts/eventCollector.o
-
-# target to build an object file
-src/alerts/eventCollector.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/alerts/eventCollector.cpp.o
-.PHONY : src/alerts/eventCollector.cpp.o
-
-src/alerts/eventCollector.i: src/alerts/eventCollector.cpp.i
-.PHONY : src/alerts/eventCollector.i
-
-# target to preprocess a source file
-src/alerts/eventCollector.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/alerts/eventCollector.cpp.i
-.PHONY : src/alerts/eventCollector.cpp.i
-
-src/alerts/eventCollector.s: src/alerts/eventCollector.cpp.s
-.PHONY : src/alerts/eventCollector.s
-
-# target to generate assembly for a file
-src/alerts/eventCollector.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/alerts/eventCollector.cpp.s
-.PHONY : src/alerts/eventCollector.cpp.s
-
 src/analytics/forecaster.o: src/analytics/forecaster.cpp.o
 .PHONY : src/analytics/forecaster.o
 
@@ -249,54 +225,6 @@ src/analytics/trendReporter.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.s
 .PHONY : src/analytics/trendReporter.cpp.s
 
-src/ci/chaosCiRunner.o: src/ci/chaosCiRunner.cpp.o
-.PHONY : src/ci/chaosCiRunner.o
-
-# target to build an object file
-src/ci/chaosCiRunner.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/ci/chaosCiRunner.cpp.o
-.PHONY : src/ci/chaosCiRunner.cpp.o
-
-src/ci/chaosCiRunner.i: src/ci/chaosCiRunner.cpp.i
-.PHONY : src/ci/chaosCiRunner.i
-
-# target to preprocess a source file
-src/ci/chaosCiRunner.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/ci/chaosCiRunner.cpp.i
-.PHONY : src/ci/chaosCiRunner.cpp.i
-
-src/ci/chaosCiRunner.s: src/ci/chaosCiRunner.cpp.s
-.PHONY : src/ci/chaosCiRunner.s
-
-# target to generate assembly for a file
-src/ci/chaosCiRunner.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/ci/chaosCiRunner.cpp.s
-.PHONY : src/ci/chaosCiRunner.cpp.s
-
-src/ci/verificationAgent.o: src/ci/verificationAgent.cpp.o
-.PHONY : src/ci/verificationAgent.o
-
-# target to build an object file
-src/ci/verificationAgent.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/ci/verificationAgent.cpp.o
-.PHONY : src/ci/verificationAgent.cpp.o
-
-src/ci/verificationAgent.i: src/ci/verificationAgent.cpp.i
-.PHONY : src/ci/verificationAgent.i
-
-# target to preprocess a source file
-src/ci/verificationAgent.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/ci/verificationAgent.cpp.i
-.PHONY : src/ci/verificationAgent.cpp.i
-
-src/ci/verificationAgent.s: src/ci/verificationAgent.cpp.s
-.PHONY : src/ci/verificationAgent.s
-
-# target to generate assembly for a file
-src/ci/verificationAgent.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/ci/verificationAgent.cpp.s
-.PHONY : src/ci/verificationAgent.cpp.s
-
 src/cluster/clusterManager.o: src/cluster/clusterManager.cpp.o
 .PHONY : src/cluster/clusterManager.o
 
@@ -345,54 +273,6 @@ src/cluster/clusterNode.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.s
 .PHONY : src/cluster/clusterNode.cpp.s
 
-src/consensus/consensusManager.o: src/consensus/consensusManager.cpp.o
-.PHONY : src/consensus/consensusManager.o
-
-# target to build an object file
-src/consensus/consensusManager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/consensus/consensusManager.cpp.o
-.PHONY : src/consensus/consensusManager.cpp.o
-
-src/consensus/consensusManager.i: src/consensus/consensusManager.cpp.i
-.PHONY : src/consensus/consensusManager.i
-
-# target to preprocess a source file
-src/consensus/consensusManager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/consensus/consensusManager.cpp.i
-.PHONY : src/consensus/consensusManager.cpp.i
-
-src/consensus/consensusManager.s: src/consensus/consensusManager.cpp.s
-.PHONY : src/consensus/consensusManager.s
-
-# target to generate assembly for a file
-src/consensus/consensusManager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/consensus/consensusManager.cpp.s
-.PHONY : src/consensus/consensusManager.cpp.s
-
-src/consensus/finalityManager.o: src/consensus/finalityManager.cpp.o
-.PHONY : src/consensus/finalityManager.o
-
-# target to build an object file
-src/consensus/finalityManager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/consensus/finalityManager.cpp.o
-.PHONY : src/consensus/finalityManager.cpp.o
-
-src/consensus/finalityManager.i: src/consensus/finalityManager.cpp.i
-.PHONY : src/consensus/finalityManager.i
-
-# target to preprocess a source file
-src/consensus/finalityManager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/consensus/finalityManager.cpp.i
-.PHONY : src/consensus/finalityManager.cpp.i
-
-src/consensus/finalityManager.s: src/consensus/finalityManager.cpp.s
-.PHONY : src/consensus/finalityManager.s
-
-# target to generate assembly for a file
-src/consensus/finalityManager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/consensus/finalityManager.cpp.s
-.PHONY : src/consensus/finalityManager.cpp.s
-
 src/core/block.o: src/core/block.cpp.o
 .PHONY : src/core/block.o
 
@@ -417,6 +297,78 @@ src/core/block.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/block.cpp.s
 .PHONY : src/core/block.cpp.s
 
+src/core/blockBuilder.o: src/core/blockBuilder.cpp.o
+.PHONY : src/core/blockBuilder.o
+
+# target to build an object file
+src/core/blockBuilder.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o
+.PHONY : src/core/blockBuilder.cpp.o
+
+src/core/blockBuilder.i: src/core/blockBuilder.cpp.i
+.PHONY : src/core/blockBuilder.i
+
+# target to preprocess a source file
+src/core/blockBuilder.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.i
+.PHONY : src/core/blockBuilder.cpp.i
+
+src/core/blockBuilder.s: src/core/blockBuilder.cpp.s
+.PHONY : src/core/blockBuilder.s
+
+# target to generate assembly for a file
+src/core/blockBuilder.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.s
+.PHONY : src/core/blockBuilder.cpp.s
+
+src/core/blockEncoding.o: src/core/blockEncoding.cpp.o
+.PHONY : src/core/blockEncoding.o
+
+# target to build an object file
+src/core/blockEncoding.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o
+.PHONY : src/core/blockEncoding.cpp.o
+
+src/core/blockEncoding.i: src/core/blockEncoding.cpp.i
+.PHONY : src/core/blockEncoding.i
+
+# target to preprocess a source file
+src/core/blockEncoding.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.i
+.PHONY : src/core/blockEncoding.cpp.i
+
+src/core/blockEncoding.s: src/core/blockEncoding.cpp.s
+.PHONY : src/core/blockEncoding.s
+
+# target to generate assembly for a file
+src/core/blockEncoding.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.s
+.PHONY : src/core/blockEncoding.cpp.s
+
+src/core/blockchain.o: src/core/blockchain.cpp.o
+.PHONY : src/core/blockchain.o
+
+# target to build an object file
+src/core/blockchain.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o
+.PHONY : src/core/blockchain.cpp.o
+
+src/core/blockchain.i: src/core/blockchain.cpp.i
+.PHONY : src/core/blockchain.i
+
+# target to preprocess a source file
+src/core/blockchain.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.i
+.PHONY : src/core/blockchain.cpp.i
+
+src/core/blockchain.s: src/core/blockchain.cpp.s
+.PHONY : src/core/blockchain.s
+
+# target to generate assembly for a file
+src/core/blockchain.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.s
+.PHONY : src/core/blockchain.cpp.s
+
 src/core/crypto.o: src/core/crypto.cpp.o
 .PHONY : src/core/crypto.o
 
@@ -440,6 +392,30 @@ src/core/crypto.s: src/core/crypto.cpp.s
 src/core/crypto.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.s
 .PHONY : src/core/crypto.cpp.s
+
+src/core/dmKeyManager.o: src/core/dmKeyManager.cpp.o
+.PHONY : src/core/dmKeyManager.o
+
+# target to build an object file
+src/core/dmKeyManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o
+.PHONY : src/core/dmKeyManager.cpp.o
+
+src/core/dmKeyManager.i: src/core/dmKeyManager.cpp.i
+.PHONY : src/core/dmKeyManager.i
+
+# target to preprocess a source file
+src/core/dmKeyManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.i
+.PHONY : src/core/dmKeyManager.cpp.i
+
+src/core/dmKeyManager.s: src/core/dmKeyManager.cpp.s
+.PHONY : src/core/dmKeyManager.s
+
+# target to generate assembly for a file
+src/core/dmKeyManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.s
+.PHONY : src/core/dmKeyManager.cpp.s
 
 src/core/logger.o: src/core/logger.cpp.o
 .PHONY : src/core/logger.o
@@ -536,102 +512,6 @@ src/core/validation.s: src/core/validation.cpp.s
 src/core/validation.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/core/validation.cpp.s
 .PHONY : src/core/validation.cpp.s
-
-src/crypto/blacke3Hash.o: src/crypto/blacke3Hash.cpp.o
-.PHONY : src/crypto/blacke3Hash.o
-
-# target to build an object file
-src/crypto/blacke3Hash.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/crypto/blacke3Hash.cpp.o
-.PHONY : src/crypto/blacke3Hash.cpp.o
-
-src/crypto/blacke3Hash.i: src/crypto/blacke3Hash.cpp.i
-.PHONY : src/crypto/blacke3Hash.i
-
-# target to preprocess a source file
-src/crypto/blacke3Hash.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/crypto/blacke3Hash.cpp.i
-.PHONY : src/crypto/blacke3Hash.cpp.i
-
-src/crypto/blacke3Hash.s: src/crypto/blacke3Hash.cpp.s
-.PHONY : src/crypto/blacke3Hash.s
-
-# target to generate assembly for a file
-src/crypto/blacke3Hash.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/crypto/blacke3Hash.cpp.s
-.PHONY : src/crypto/blacke3Hash.cpp.s
-
-src/crypto/ed25519Signature.o: src/crypto/ed25519Signature.cpp.o
-.PHONY : src/crypto/ed25519Signature.o
-
-# target to build an object file
-src/crypto/ed25519Signature.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/crypto/ed25519Signature.cpp.o
-.PHONY : src/crypto/ed25519Signature.cpp.o
-
-src/crypto/ed25519Signature.i: src/crypto/ed25519Signature.cpp.i
-.PHONY : src/crypto/ed25519Signature.i
-
-# target to preprocess a source file
-src/crypto/ed25519Signature.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/crypto/ed25519Signature.cpp.i
-.PHONY : src/crypto/ed25519Signature.cpp.i
-
-src/crypto/ed25519Signature.s: src/crypto/ed25519Signature.cpp.s
-.PHONY : src/crypto/ed25519Signature.s
-
-# target to generate assembly for a file
-src/crypto/ed25519Signature.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/crypto/ed25519Signature.cpp.s
-.PHONY : src/crypto/ed25519Signature.cpp.s
-
-src/crypto/hash.o: src/crypto/hash.cpp.o
-.PHONY : src/crypto/hash.o
-
-# target to build an object file
-src/crypto/hash.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/crypto/hash.cpp.o
-.PHONY : src/crypto/hash.cpp.o
-
-src/crypto/hash.i: src/crypto/hash.cpp.i
-.PHONY : src/crypto/hash.i
-
-# target to preprocess a source file
-src/crypto/hash.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/crypto/hash.cpp.i
-.PHONY : src/crypto/hash.cpp.i
-
-src/crypto/hash.s: src/crypto/hash.cpp.s
-.PHONY : src/crypto/hash.s
-
-# target to generate assembly for a file
-src/crypto/hash.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/crypto/hash.cpp.s
-.PHONY : src/crypto/hash.cpp.s
-
-src/crypto/sha256Hash.o: src/crypto/sha256Hash.cpp.o
-.PHONY : src/crypto/sha256Hash.o
-
-# target to build an object file
-src/crypto/sha256Hash.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/crypto/sha256Hash.cpp.o
-.PHONY : src/crypto/sha256Hash.cpp.o
-
-src/crypto/sha256Hash.i: src/crypto/sha256Hash.cpp.i
-.PHONY : src/crypto/sha256Hash.i
-
-# target to preprocess a source file
-src/crypto/sha256Hash.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/crypto/sha256Hash.cpp.i
-.PHONY : src/crypto/sha256Hash.cpp.i
-
-src/crypto/sha256Hash.s: src/crypto/sha256Hash.cpp.s
-.PHONY : src/crypto/sha256Hash.s
-
-# target to generate assembly for a file
-src/crypto/sha256Hash.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/crypto/sha256Hash.cpp.s
-.PHONY : src/crypto/sha256Hash.cpp.s
 
 src/dashboard/forecastDashboard.o: src/dashboard/forecastDashboard.cpp.o
 .PHONY : src/dashboard/forecastDashboard.o
@@ -1329,78 +1209,6 @@ src/network/syncManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.s
 .PHONY : src/network/syncManager.cpp.s
 
-src/node/lifecycleManager.o: src/node/lifecycleManager.cpp.o
-.PHONY : src/node/lifecycleManager.o
-
-# target to build an object file
-src/node/lifecycleManager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/node/lifecycleManager.cpp.o
-.PHONY : src/node/lifecycleManager.cpp.o
-
-src/node/lifecycleManager.i: src/node/lifecycleManager.cpp.i
-.PHONY : src/node/lifecycleManager.i
-
-# target to preprocess a source file
-src/node/lifecycleManager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/node/lifecycleManager.cpp.i
-.PHONY : src/node/lifecycleManager.cpp.i
-
-src/node/lifecycleManager.s: src/node/lifecycleManager.cpp.s
-.PHONY : src/node/lifecycleManager.s
-
-# target to generate assembly for a file
-src/node/lifecycleManager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/node/lifecycleManager.cpp.s
-.PHONY : src/node/lifecycleManager.cpp.s
-
-src/node/nodeInstance.o: src/node/nodeInstance.cpp.o
-.PHONY : src/node/nodeInstance.o
-
-# target to build an object file
-src/node/nodeInstance.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/node/nodeInstance.cpp.o
-.PHONY : src/node/nodeInstance.cpp.o
-
-src/node/nodeInstance.i: src/node/nodeInstance.cpp.i
-.PHONY : src/node/nodeInstance.i
-
-# target to preprocess a source file
-src/node/nodeInstance.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/node/nodeInstance.cpp.i
-.PHONY : src/node/nodeInstance.cpp.i
-
-src/node/nodeInstance.s: src/node/nodeInstance.cpp.s
-.PHONY : src/node/nodeInstance.s
-
-# target to generate assembly for a file
-src/node/nodeInstance.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/node/nodeInstance.cpp.s
-.PHONY : src/node/nodeInstance.cpp.s
-
-src/node/recoveryController.o: src/node/recoveryController.cpp.o
-.PHONY : src/node/recoveryController.o
-
-# target to build an object file
-src/node/recoveryController.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/node/recoveryController.cpp.o
-.PHONY : src/node/recoveryController.cpp.o
-
-src/node/recoveryController.i: src/node/recoveryController.cpp.i
-.PHONY : src/node/recoveryController.i
-
-# target to preprocess a source file
-src/node/recoveryController.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/node/recoveryController.cpp.i
-.PHONY : src/node/recoveryController.cpp.i
-
-src/node/recoveryController.s: src/node/recoveryController.cpp.s
-.PHONY : src/node/recoveryController.s
-
-# target to generate assembly for a file
-src/node/recoveryController.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/node/recoveryController.cpp.s
-.PHONY : src/node/recoveryController.cpp.s
-
 src/obs/healthChecker.o: src/obs/healthChecker.cpp.o
 .PHONY : src/obs/healthChecker.o
 
@@ -1569,30 +1377,6 @@ src/ops/reliabilityGuard.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.s
 .PHONY : src/ops/reliabilityGuard.cpp.s
 
-src/pipeline/securityPipeline.o: src/pipeline/securityPipeline.cpp.o
-.PHONY : src/pipeline/securityPipeline.o
-
-# target to build an object file
-src/pipeline/securityPipeline.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/pipeline/securityPipeline.cpp.o
-.PHONY : src/pipeline/securityPipeline.cpp.o
-
-src/pipeline/securityPipeline.i: src/pipeline/securityPipeline.cpp.i
-.PHONY : src/pipeline/securityPipeline.i
-
-# target to preprocess a source file
-src/pipeline/securityPipeline.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/pipeline/securityPipeline.cpp.i
-.PHONY : src/pipeline/securityPipeline.cpp.i
-
-src/pipeline/securityPipeline.s: src/pipeline/securityPipeline.cpp.s
-.PHONY : src/pipeline/securityPipeline.s
-
-# target to generate assembly for a file
-src/pipeline/securityPipeline.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/pipeline/securityPipeline.cpp.s
-.PHONY : src/pipeline/securityPipeline.cpp.s
-
 src/recovery/disasterRecovery.o: src/recovery/disasterRecovery.cpp.o
 .PHONY : src/recovery/disasterRecovery.o
 
@@ -1640,270 +1424,6 @@ src/recovery/timelineReporter.s: src/recovery/timelineReporter.cpp.s
 src/recovery/timelineReporter.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.s
 .PHONY : src/recovery/timelineReporter.cpp.s
-
-src/release/attestation.o: src/release/attestation.cpp.o
-.PHONY : src/release/attestation.o
-
-# target to build an object file
-src/release/attestation.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/attestation.cpp.o
-.PHONY : src/release/attestation.cpp.o
-
-src/release/attestation.i: src/release/attestation.cpp.i
-.PHONY : src/release/attestation.i
-
-# target to preprocess a source file
-src/release/attestation.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/attestation.cpp.i
-.PHONY : src/release/attestation.cpp.i
-
-src/release/attestation.s: src/release/attestation.cpp.s
-.PHONY : src/release/attestation.s
-
-# target to generate assembly for a file
-src/release/attestation.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/attestation.cpp.s
-.PHONY : src/release/attestation.cpp.s
-
-src/release/checksummer.o: src/release/checksummer.cpp.o
-.PHONY : src/release/checksummer.o
-
-# target to build an object file
-src/release/checksummer.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/checksummer.cpp.o
-.PHONY : src/release/checksummer.cpp.o
-
-src/release/checksummer.i: src/release/checksummer.cpp.i
-.PHONY : src/release/checksummer.i
-
-# target to preprocess a source file
-src/release/checksummer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/checksummer.cpp.i
-.PHONY : src/release/checksummer.cpp.i
-
-src/release/checksummer.s: src/release/checksummer.cpp.s
-.PHONY : src/release/checksummer.s
-
-# target to generate assembly for a file
-src/release/checksummer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/checksummer.cpp.s
-.PHONY : src/release/checksummer.cpp.s
-
-src/release/releaseManifest.o: src/release/releaseManifest.cpp.o
-.PHONY : src/release/releaseManifest.o
-
-# target to build an object file
-src/release/releaseManifest.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/releaseManifest.cpp.o
-.PHONY : src/release/releaseManifest.cpp.o
-
-src/release/releaseManifest.i: src/release/releaseManifest.cpp.i
-.PHONY : src/release/releaseManifest.i
-
-# target to preprocess a source file
-src/release/releaseManifest.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/releaseManifest.cpp.i
-.PHONY : src/release/releaseManifest.cpp.i
-
-src/release/releaseManifest.s: src/release/releaseManifest.cpp.s
-.PHONY : src/release/releaseManifest.s
-
-# target to generate assembly for a file
-src/release/releaseManifest.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/releaseManifest.cpp.s
-.PHONY : src/release/releaseManifest.cpp.s
-
-src/release/releasePublisher.o: src/release/releasePublisher.cpp.o
-.PHONY : src/release/releasePublisher.o
-
-# target to build an object file
-src/release/releasePublisher.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/releasePublisher.cpp.o
-.PHONY : src/release/releasePublisher.cpp.o
-
-src/release/releasePublisher.i: src/release/releasePublisher.cpp.i
-.PHONY : src/release/releasePublisher.i
-
-# target to preprocess a source file
-src/release/releasePublisher.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/releasePublisher.cpp.i
-.PHONY : src/release/releasePublisher.cpp.i
-
-src/release/releasePublisher.s: src/release/releasePublisher.cpp.s
-.PHONY : src/release/releasePublisher.s
-
-# target to generate assembly for a file
-src/release/releasePublisher.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/releasePublisher.cpp.s
-.PHONY : src/release/releasePublisher.cpp.s
-
-src/release/releaseVerifier.o: src/release/releaseVerifier.cpp.o
-.PHONY : src/release/releaseVerifier.o
-
-# target to build an object file
-src/release/releaseVerifier.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/releaseVerifier.cpp.o
-.PHONY : src/release/releaseVerifier.cpp.o
-
-src/release/releaseVerifier.i: src/release/releaseVerifier.cpp.i
-.PHONY : src/release/releaseVerifier.i
-
-# target to preprocess a source file
-src/release/releaseVerifier.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/releaseVerifier.cpp.i
-.PHONY : src/release/releaseVerifier.cpp.i
-
-src/release/releaseVerifier.s: src/release/releaseVerifier.cpp.s
-.PHONY : src/release/releaseVerifier.s
-
-# target to generate assembly for a file
-src/release/releaseVerifier.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/releaseVerifier.cpp.s
-.PHONY : src/release/releaseVerifier.cpp.s
-
-src/release/sbom.o: src/release/sbom.cpp.o
-.PHONY : src/release/sbom.o
-
-# target to build an object file
-src/release/sbom.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/sbom.cpp.o
-.PHONY : src/release/sbom.cpp.o
-
-src/release/sbom.i: src/release/sbom.cpp.i
-.PHONY : src/release/sbom.i
-
-# target to preprocess a source file
-src/release/sbom.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/sbom.cpp.i
-.PHONY : src/release/sbom.cpp.i
-
-src/release/sbom.s: src/release/sbom.cpp.s
-.PHONY : src/release/sbom.s
-
-# target to generate assembly for a file
-src/release/sbom.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/sbom.cpp.s
-.PHONY : src/release/sbom.cpp.s
-
-src/release/signer.o: src/release/signer.cpp.o
-.PHONY : src/release/signer.o
-
-# target to build an object file
-src/release/signer.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/signer.cpp.o
-.PHONY : src/release/signer.cpp.o
-
-src/release/signer.i: src/release/signer.cpp.i
-.PHONY : src/release/signer.i
-
-# target to preprocess a source file
-src/release/signer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/signer.cpp.i
-.PHONY : src/release/signer.cpp.i
-
-src/release/signer.s: src/release/signer.cpp.s
-.PHONY : src/release/signer.s
-
-# target to generate assembly for a file
-src/release/signer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/signer.cpp.s
-.PHONY : src/release/signer.cpp.s
-
-src/release/verifier.o: src/release/verifier.cpp.o
-.PHONY : src/release/verifier.o
-
-# target to build an object file
-src/release/verifier.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/verifier.cpp.o
-.PHONY : src/release/verifier.cpp.o
-
-src/release/verifier.i: src/release/verifier.cpp.i
-.PHONY : src/release/verifier.i
-
-# target to preprocess a source file
-src/release/verifier.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/verifier.cpp.i
-.PHONY : src/release/verifier.cpp.i
-
-src/release/verifier.s: src/release/verifier.cpp.s
-.PHONY : src/release/verifier.s
-
-# target to generate assembly for a file
-src/release/verifier.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/release/verifier.cpp.s
-.PHONY : src/release/verifier.cpp.s
-
-src/runtime/nodeHealthMonitor.o: src/runtime/nodeHealthMonitor.cpp.o
-.PHONY : src/runtime/nodeHealthMonitor.o
-
-# target to build an object file
-src/runtime/nodeHealthMonitor.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/runtime/nodeHealthMonitor.cpp.o
-.PHONY : src/runtime/nodeHealthMonitor.cpp.o
-
-src/runtime/nodeHealthMonitor.i: src/runtime/nodeHealthMonitor.cpp.i
-.PHONY : src/runtime/nodeHealthMonitor.i
-
-# target to preprocess a source file
-src/runtime/nodeHealthMonitor.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/runtime/nodeHealthMonitor.cpp.i
-.PHONY : src/runtime/nodeHealthMonitor.cpp.i
-
-src/runtime/nodeHealthMonitor.s: src/runtime/nodeHealthMonitor.cpp.s
-.PHONY : src/runtime/nodeHealthMonitor.s
-
-# target to generate assembly for a file
-src/runtime/nodeHealthMonitor.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/runtime/nodeHealthMonitor.cpp.s
-.PHONY : src/runtime/nodeHealthMonitor.cpp.s
-
-src/runtime/runtimeLoop.o: src/runtime/runtimeLoop.cpp.o
-.PHONY : src/runtime/runtimeLoop.o
-
-# target to build an object file
-src/runtime/runtimeLoop.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/runtime/runtimeLoop.cpp.o
-.PHONY : src/runtime/runtimeLoop.cpp.o
-
-src/runtime/runtimeLoop.i: src/runtime/runtimeLoop.cpp.i
-.PHONY : src/runtime/runtimeLoop.i
-
-# target to preprocess a source file
-src/runtime/runtimeLoop.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/runtime/runtimeLoop.cpp.i
-.PHONY : src/runtime/runtimeLoop.cpp.i
-
-src/runtime/runtimeLoop.s: src/runtime/runtimeLoop.cpp.s
-.PHONY : src/runtime/runtimeLoop.s
-
-# target to generate assembly for a file
-src/runtime/runtimeLoop.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/runtime/runtimeLoop.cpp.s
-.PHONY : src/runtime/runtimeLoop.cpp.s
-
-src/runtime/upgradeManager.o: src/runtime/upgradeManager.cpp.o
-.PHONY : src/runtime/upgradeManager.o
-
-# target to build an object file
-src/runtime/upgradeManager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/runtime/upgradeManager.cpp.o
-.PHONY : src/runtime/upgradeManager.cpp.o
-
-src/runtime/upgradeManager.i: src/runtime/upgradeManager.cpp.i
-.PHONY : src/runtime/upgradeManager.i
-
-# target to preprocess a source file
-src/runtime/upgradeManager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/runtime/upgradeManager.cpp.i
-.PHONY : src/runtime/upgradeManager.cpp.i
-
-src/runtime/upgradeManager.s: src/runtime/upgradeManager.cpp.s
-.PHONY : src/runtime/upgradeManager.s
-
-# target to generate assembly for a file
-src/runtime/upgradeManager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/runtime/upgradeManager.cpp.s
-.PHONY : src/runtime/upgradeManager.cpp.s
 
 src/security/auditReport.o: src/security/auditReport.cpp.o
 .PHONY : src/security/auditReport.o
@@ -2073,30 +1593,6 @@ src/storage/snapshotManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.s
 .PHONY : src/storage/snapshotManager.cpp.s
 
-src/testMain.o: src/testMain.cpp.o
-.PHONY : src/testMain.o
-
-# target to build an object file
-src/testMain.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/testMain.cpp.o
-.PHONY : src/testMain.cpp.o
-
-src/testMain.i: src/testMain.cpp.i
-.PHONY : src/testMain.i
-
-# target to preprocess a source file
-src/testMain.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/testMain.cpp.i
-.PHONY : src/testMain.cpp.i
-
-src/testMain.s: src/testMain.cpp.s
-.PHONY : src/testMain.s
-
-# target to generate assembly for a file
-src/testMain.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/testMain.cpp.s
-.PHONY : src/testMain.cpp.s
-
 src/tests/regressionReporter.o: src/tests/regressionReporter.cpp.o
 .PHONY : src/tests/regressionReporter.o
 
@@ -2265,6 +1761,30 @@ src/upgrade/upgradeSafetyChecker.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.s
 .PHONY : src/upgrade/upgradeSafetyChecker.cpp.s
 
+src/util/dummyCrypto.o: src/util/dummyCrypto.cpp.o
+.PHONY : src/util/dummyCrypto.o
+
+# target to build an object file
+src/util/dummyCrypto.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.o
+.PHONY : src/util/dummyCrypto.cpp.o
+
+src/util/dummyCrypto.i: src/util/dummyCrypto.cpp.i
+.PHONY : src/util/dummyCrypto.i
+
+# target to preprocess a source file
+src/util/dummyCrypto.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.i
+.PHONY : src/util/dummyCrypto.cpp.i
+
+src/util/dummyCrypto.s: src/util/dummyCrypto.cpp.s
+.PHONY : src/util/dummyCrypto.s
+
+# target to generate assembly for a file
+src/util/dummyCrypto.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.s
+.PHONY : src/util/dummyCrypto.cpp.s
+
 src/web/dashboardServer.o: src/web/dashboardServer.cpp.o
 .PHONY : src/web/dashboardServer.o
 
@@ -2322,9 +1842,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... blockchain_node"
-	@echo "... src/alerts/eventCollector.o"
-	@echo "... src/alerts/eventCollector.i"
-	@echo "... src/alerts/eventCollector.s"
 	@echo "... src/analytics/forecaster.o"
 	@echo "... src/analytics/forecaster.i"
 	@echo "... src/analytics/forecaster.s"
@@ -2337,30 +1854,30 @@ help:
 	@echo "... src/analytics/trendReporter.o"
 	@echo "... src/analytics/trendReporter.i"
 	@echo "... src/analytics/trendReporter.s"
-	@echo "... src/ci/chaosCiRunner.o"
-	@echo "... src/ci/chaosCiRunner.i"
-	@echo "... src/ci/chaosCiRunner.s"
-	@echo "... src/ci/verificationAgent.o"
-	@echo "... src/ci/verificationAgent.i"
-	@echo "... src/ci/verificationAgent.s"
 	@echo "... src/cluster/clusterManager.o"
 	@echo "... src/cluster/clusterManager.i"
 	@echo "... src/cluster/clusterManager.s"
 	@echo "... src/cluster/clusterNode.o"
 	@echo "... src/cluster/clusterNode.i"
 	@echo "... src/cluster/clusterNode.s"
-	@echo "... src/consensus/consensusManager.o"
-	@echo "... src/consensus/consensusManager.i"
-	@echo "... src/consensus/consensusManager.s"
-	@echo "... src/consensus/finalityManager.o"
-	@echo "... src/consensus/finalityManager.i"
-	@echo "... src/consensus/finalityManager.s"
 	@echo "... src/core/block.o"
 	@echo "... src/core/block.i"
 	@echo "... src/core/block.s"
+	@echo "... src/core/blockBuilder.o"
+	@echo "... src/core/blockBuilder.i"
+	@echo "... src/core/blockBuilder.s"
+	@echo "... src/core/blockEncoding.o"
+	@echo "... src/core/blockEncoding.i"
+	@echo "... src/core/blockEncoding.s"
+	@echo "... src/core/blockchain.o"
+	@echo "... src/core/blockchain.i"
+	@echo "... src/core/blockchain.s"
 	@echo "... src/core/crypto.o"
 	@echo "... src/core/crypto.i"
 	@echo "... src/core/crypto.s"
+	@echo "... src/core/dmKeyManager.o"
+	@echo "... src/core/dmKeyManager.i"
+	@echo "... src/core/dmKeyManager.s"
 	@echo "... src/core/logger.o"
 	@echo "... src/core/logger.i"
 	@echo "... src/core/logger.s"
@@ -2373,18 +1890,6 @@ help:
 	@echo "... src/core/validation.o"
 	@echo "... src/core/validation.i"
 	@echo "... src/core/validation.s"
-	@echo "... src/crypto/blacke3Hash.o"
-	@echo "... src/crypto/blacke3Hash.i"
-	@echo "... src/crypto/blacke3Hash.s"
-	@echo "... src/crypto/ed25519Signature.o"
-	@echo "... src/crypto/ed25519Signature.i"
-	@echo "... src/crypto/ed25519Signature.s"
-	@echo "... src/crypto/hash.o"
-	@echo "... src/crypto/hash.i"
-	@echo "... src/crypto/hash.s"
-	@echo "... src/crypto/sha256Hash.o"
-	@echo "... src/crypto/sha256Hash.i"
-	@echo "... src/crypto/sha256Hash.s"
 	@echo "... src/dashboard/forecastDashboard.o"
 	@echo "... src/dashboard/forecastDashboard.i"
 	@echo "... src/dashboard/forecastDashboard.s"
@@ -2472,15 +1977,6 @@ help:
 	@echo "... src/network/syncManager.o"
 	@echo "... src/network/syncManager.i"
 	@echo "... src/network/syncManager.s"
-	@echo "... src/node/lifecycleManager.o"
-	@echo "... src/node/lifecycleManager.i"
-	@echo "... src/node/lifecycleManager.s"
-	@echo "... src/node/nodeInstance.o"
-	@echo "... src/node/nodeInstance.i"
-	@echo "... src/node/nodeInstance.s"
-	@echo "... src/node/recoveryController.o"
-	@echo "... src/node/recoveryController.i"
-	@echo "... src/node/recoveryController.s"
 	@echo "... src/obs/healthChecker.o"
 	@echo "... src/obs/healthChecker.i"
 	@echo "... src/obs/healthChecker.s"
@@ -2502,48 +1998,12 @@ help:
 	@echo "... src/ops/reliabilityGuard.o"
 	@echo "... src/ops/reliabilityGuard.i"
 	@echo "... src/ops/reliabilityGuard.s"
-	@echo "... src/pipeline/securityPipeline.o"
-	@echo "... src/pipeline/securityPipeline.i"
-	@echo "... src/pipeline/securityPipeline.s"
 	@echo "... src/recovery/disasterRecovery.o"
 	@echo "... src/recovery/disasterRecovery.i"
 	@echo "... src/recovery/disasterRecovery.s"
 	@echo "... src/recovery/timelineReporter.o"
 	@echo "... src/recovery/timelineReporter.i"
 	@echo "... src/recovery/timelineReporter.s"
-	@echo "... src/release/attestation.o"
-	@echo "... src/release/attestation.i"
-	@echo "... src/release/attestation.s"
-	@echo "... src/release/checksummer.o"
-	@echo "... src/release/checksummer.i"
-	@echo "... src/release/checksummer.s"
-	@echo "... src/release/releaseManifest.o"
-	@echo "... src/release/releaseManifest.i"
-	@echo "... src/release/releaseManifest.s"
-	@echo "... src/release/releasePublisher.o"
-	@echo "... src/release/releasePublisher.i"
-	@echo "... src/release/releasePublisher.s"
-	@echo "... src/release/releaseVerifier.o"
-	@echo "... src/release/releaseVerifier.i"
-	@echo "... src/release/releaseVerifier.s"
-	@echo "... src/release/sbom.o"
-	@echo "... src/release/sbom.i"
-	@echo "... src/release/sbom.s"
-	@echo "... src/release/signer.o"
-	@echo "... src/release/signer.i"
-	@echo "... src/release/signer.s"
-	@echo "... src/release/verifier.o"
-	@echo "... src/release/verifier.i"
-	@echo "... src/release/verifier.s"
-	@echo "... src/runtime/nodeHealthMonitor.o"
-	@echo "... src/runtime/nodeHealthMonitor.i"
-	@echo "... src/runtime/nodeHealthMonitor.s"
-	@echo "... src/runtime/runtimeLoop.o"
-	@echo "... src/runtime/runtimeLoop.i"
-	@echo "... src/runtime/runtimeLoop.s"
-	@echo "... src/runtime/upgradeManager.o"
-	@echo "... src/runtime/upgradeManager.i"
-	@echo "... src/runtime/upgradeManager.s"
 	@echo "... src/security/auditReport.o"
 	@echo "... src/security/auditReport.i"
 	@echo "... src/security/auditReport.s"
@@ -2565,9 +2025,6 @@ help:
 	@echo "... src/storage/snapshotManager.o"
 	@echo "... src/storage/snapshotManager.i"
 	@echo "... src/storage/snapshotManager.s"
-	@echo "... src/testMain.o"
-	@echo "... src/testMain.i"
-	@echo "... src/testMain.s"
 	@echo "... src/tests/regressionReporter.o"
 	@echo "... src/tests/regressionReporter.i"
 	@echo "... src/tests/regressionReporter.s"
@@ -2589,6 +2046,9 @@ help:
 	@echo "... src/upgrade/upgradeSafetyChecker.o"
 	@echo "... src/upgrade/upgradeSafetyChecker.i"
 	@echo "... src/upgrade/upgradeSafetyChecker.s"
+	@echo "... src/util/dummyCrypto.o"
+	@echo "... src/util/dummyCrypto.i"
+	@echo "... src/util/dummyCrypto.s"
 	@echo "... src/web/dashboardServer.o"
 	@echo "... src/web/dashboardServer.i"
 	@echo "... src/web/dashboardServer.s"

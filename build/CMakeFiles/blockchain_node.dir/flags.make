@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/elrasap/programmieren/Blockchain/include
 
-CXX_FLAGS = -std=gnu++20 -fPIE -Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-unused-function -Wno-missing-field-initializers -Wno-deprecated -DWITH_GZFILEOP
+CXX_FLAGS = -std=gnu++20 -fPIE -DWITH_GZFILEOP
 

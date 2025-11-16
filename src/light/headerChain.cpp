@@ -5,19 +5,31 @@
 //
 // Serialize BlockHeader
 //
-static std::vector<uint8_t> serializeHeader(const BlockHeader& h) {
-    std::vector<uint8_t> buf;
-    buf.reserve(32 + 32 + 8 + 8 + 8);
+#include "light/headerChain.hpp"
+#include "core/block.hpp"
+#include <vector>
 
+std::vector<unsigned char> serializeHeader(const BlockHeader& h) {
+    std::vector<unsigned char> buf;
+    buf.reserve(32 + 32 + 8 + 8);
+
+    // prevHash (32 bytes)
     buf.insert(buf.end(), h.prevHash.begin(), h.prevHash.end());
+
+    // merkleRoot (32 bytes)
     buf.insert(buf.end(), h.merkleRoot.begin(), h.merkleRoot.end());
 
-    for (int i = 0; i < 8; ++i) buf.push_back((h.height    >> (i * 8)) & 0xFF);
-    for (int i = 0; i < 8; ++i) buf.push_back((h.timestamp >> (i * 8)) & 0xFF);
-    for (int i = 0; i < 8; ++i) buf.push_back((h.nonce     >> (i * 8)) & 0xFF);
+    // height (uint64_t)
+    for (int i = 0; i < 8; ++i)
+        buf.push_back((h.height >> (i * 8)) & 0xFF);
+
+    // timestamp (uint64_t)
+    for (int i = 0; i < 8; ++i)
+        buf.push_back((h.timestamp >> (i * 8)) & 0xFF);
 
     return buf;
 }
+
 
 //
 // Validate: curr.prevHash == sha256(prevHeader)
