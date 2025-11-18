@@ -1,5 +1,5 @@
 #include "tests/testFramework.hpp"
-#include "dnd/state.hpp"
+#include "dnd/dndState.hpp"
 #include "dnd/dndTx.hpp"
 #include <string>
 

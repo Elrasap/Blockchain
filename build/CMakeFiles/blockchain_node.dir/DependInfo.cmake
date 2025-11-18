@@ -42,6 +42,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/elrasap/programmieren/Blockchain/src/dnd/dndTx.cpp" "CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/dnd/dndTxAdapter.cpp" "CMakeFiles/blockchain_node.dir/src/dnd/dndTxAdapter.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/dnd/dndTxAdapter.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/dnd/dndTxCodec.cpp" "CMakeFiles/blockchain_node.dir/src/dnd/dndTxCodec.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/dnd/dndTxCodec.cpp.o.d"
+  "/home/elrasap/programmieren/Blockchain/src/dnd/dndTxSerialization.cpp" "CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/dnd/dndTxValidator.cpp" "CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/dnd/patch.cpp" "CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/dnd/payload.cpp" "CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o.d"

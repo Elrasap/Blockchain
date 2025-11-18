@@ -1,8 +1,9 @@
 #include "dnd/dndTx.hpp"
-#include "dnd/serialization.hpp"
+#include "core/serialization.hpp"
 #include "core/crypto.hpp"
 #include <sodium.h>
 #include <ctime>
+#include "dnd/dndTxCodec.hpp"
 
 namespace dnd {
 

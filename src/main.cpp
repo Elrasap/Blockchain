@@ -51,7 +51,7 @@ int main() {
     dnd::DndTxValidator validator(ctx);
 
     // 4) Mempool
-    Mempool mempool(&validator);
+    Mempool mempool;
 
     // 5) BlockBuilder
     BlockBuilder blockBuilder(chain,

@@ -1,10 +1,18 @@
-#include "dnd/dndTxCodec.hpp"
+#pragma once
+#include <vector>
+#include <string>
+#include <nlohmann/json.hpp>
+#include "dnd/dndTx.hpp"
 
 namespace dnd {
 
 using json = nlohmann::json;
 
-std::vector<uint8_t> encodeDndTx(const DndEventTx& tx) {
+// ============================================================
+// Encode DnD TX (JSON → bytes)
+// ============================================================
+inline std::vector<uint8_t> encodeDndTx(const DndEventTx& tx)
+{
     json j = {
         {"encounterId", tx.encounterId},
         {"actorType",   tx.actorType},
@@ -20,34 +28,38 @@ std::vector<uint8_t> encodeDndTx(const DndEventTx& tx) {
         {"signature",    tx.signature}
     };
 
-    const std::string serialized = j.dump();
-    return std::vector<uint8_t>(serialized.begin(), serialized.end());
+    const std::string s = j.dump();
+    return std::vector<uint8_t>(s.begin(), s.end());
 }
 
-DndEventTx decodeDndTx(const std::vector<uint8_t>& payload) {
+// ============================================================
+// Decode bytes → DnD TX
+// ============================================================
+inline DndEventTx decodeDndTx(const std::vector<uint8_t>& buf)
+{
     DndEventTx tx;
 
-    std::string s(payload.begin(), payload.end());
+    std::string s(buf.begin(), buf.end());
     json j = json::parse(s);
 
-    tx.encounterId  = j.value("encounterId", "");
-    tx.actorType    = j.value("actorType", "");
-    tx.actorId      = j.value("actorId", "");
-    tx.targetType   = j.value("targetType", "");
-    tx.targetId     = j.value("targetId", "");
+    tx.encounterId = j.value("encounterId", "");
+    tx.actorType   = j.value("actorType", 0);
+    tx.actorId     = j.value("actorId", "");
+    tx.targetType  = j.value("targetType", 0);
+    tx.targetId    = j.value("targetId", "");
 
-    tx.roll         = j.value("roll", 0);
-    tx.damage       = j.value("damage", 0);
-    tx.hit          = j.value("hit", false);
-    tx.note         = j.value("note", "");
+    tx.roll        = j.value("roll", 0);
+    tx.damage      = j.value("damage", 0);
+    tx.hit         = j.value("hit", false);
+    tx.note        = j.value("note", "");
 
-    tx.timestamp    = j.value("timestamp", 0ull);
+    tx.timestamp   = j.value("timestamp", 0ull);
 
     if (j.contains("senderPubKey"))
-        tx.senderPubKey = j.at("senderPubKey").get<std::vector<uint8_t>>();
+        tx.senderPubKey = j["senderPubKey"].get<std::vector<uint8_t>>();
 
     if (j.contains("signature"))
-        tx.signature = j.at("signature").get<std::vector<uint8_t>>();
+        tx.signature = j["signature"].get<std::vector<uint8_t>>();
 
     return tx;
 }

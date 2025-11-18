@@ -1060,6 +1060,33 @@ src/dnd/dndTxCodec.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_tests.dir/build.make CMakeFiles/blockchain_tests.dir/src/dnd/dndTxCodec.cpp.s
 .PHONY : src/dnd/dndTxCodec.cpp.s
 
+src/dnd/dndTxSerialization.o: src/dnd/dndTxSerialization.cpp.o
+.PHONY : src/dnd/dndTxSerialization.o
+
+# target to build an object file
+src/dnd/dndTxSerialization.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_tests.dir/build.make CMakeFiles/blockchain_tests.dir/src/dnd/dndTxSerialization.cpp.o
+.PHONY : src/dnd/dndTxSerialization.cpp.o
+
+src/dnd/dndTxSerialization.i: src/dnd/dndTxSerialization.cpp.i
+.PHONY : src/dnd/dndTxSerialization.i
+
+# target to preprocess a source file
+src/dnd/dndTxSerialization.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_tests.dir/build.make CMakeFiles/blockchain_tests.dir/src/dnd/dndTxSerialization.cpp.i
+.PHONY : src/dnd/dndTxSerialization.cpp.i
+
+src/dnd/dndTxSerialization.s: src/dnd/dndTxSerialization.cpp.s
+.PHONY : src/dnd/dndTxSerialization.s
+
+# target to generate assembly for a file
+src/dnd/dndTxSerialization.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_tests.dir/build.make CMakeFiles/blockchain_tests.dir/src/dnd/dndTxSerialization.cpp.s
+.PHONY : src/dnd/dndTxSerialization.cpp.s
+
 src/dnd/dndTxValidator.o: src/dnd/dndTxValidator.cpp.o
 .PHONY : src/dnd/dndTxValidator.o
 
@@ -2666,6 +2693,9 @@ help:
 	@echo "... src/dnd/dndTxCodec.o"
 	@echo "... src/dnd/dndTxCodec.i"
 	@echo "... src/dnd/dndTxCodec.s"
+	@echo "... src/dnd/dndTxSerialization.o"
+	@echo "... src/dnd/dndTxSerialization.i"
+	@echo "... src/dnd/dndTxSerialization.s"
 	@echo "... src/dnd/dndTxValidator.o"
 	@echo "... src/dnd/dndTxValidator.i"
 	@echo "... src/dnd/dndTxValidator.s"

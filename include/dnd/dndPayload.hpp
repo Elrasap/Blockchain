@@ -1,23 +1,18 @@
 #pragma once
 #include <vector>
-#include "dnd/dndTx.hpp"
+#include <string>
 
-// Prüft ob eine TX-Payload ein DnD-Event enthält
+#include "dnd/dndTx.hpp"
+#include "dnd/dndTxCodec.hpp"
+#include "core/transaction.hpp"   // <-- WICHTIG! DAMIT Transaction BEKANNT IST
+
 namespace dnd {
 
 inline bool isDndPayload(const std::vector<uint8_t>& payload)
 {
-    if (payload.size() < 4)
-        return false;
-
-    // "DND1" Header
-    return payload[0] == 'D' &&
-           payload[1] == 'N' &&
-           payload[2] == 'D' &&
-           payload[3] == '1';
+    return !payload.empty() && payload[0] == 0xD1;
 }
 
-// Extrahiert Event aus kompletter Transaction
 inline DndEventTx extractDndEventTx(const Transaction& tx)
 {
     auto evt = decodeDndTx(tx.payload);
@@ -26,5 +21,5 @@ inline DndEventTx extractDndEventTx(const Transaction& tx)
     return evt;
 }
 
-} // namespace dnd
+}
 

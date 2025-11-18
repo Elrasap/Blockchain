@@ -2,18 +2,24 @@
 #include <iostream>
 
 int main() {
-    auto& tests = getTestRegistry();
+    auto& tests = getTests();  // neue API
     std::cout << "[TEST] Registered " << tests.size() << " test cases.\n";
 
     int failed = 0;
+
     for (auto& t : tests) {
+        const std::string& name = t.first;
+        auto fn = t.second;
+
         try {
-            std::cout << "[RUN] " << t.name << " ... ";
-            t.fn();
+            std::cout << "[RUN] " << name << " ... ";
+            fn();  // Test ausführen
             std::cout << "OK\n";
+
         } catch (const std::exception& ex) {
             std::cout << "FAILED: " << ex.what() << "\n";
             ++failed;
+
         } catch (...) {
             std::cout << "FAILED: unknown error\n";
             ++failed;

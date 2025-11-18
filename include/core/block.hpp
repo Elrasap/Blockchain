@@ -30,14 +30,9 @@ public:
     static Block deserialize(const std::vector<uint8_t>& data);
 };
 
-bool signBlockHeader(
-    BlockHeader& header,
-    const std::vector<uint8_t>& privKey,
-    const std::vector<uint8_t>& pubKey
-);
+bool signBlockHeader(BlockHeader& header,
+                     const std::vector<uint8_t>& privKey,
+                     const std::vector<uint8_t>& pubKey);
 
-// Verifiziert die BlockHeader-Signatur
-bool verifyBlockHeaderSignature(
-    const BlockHeader& header
-);
+bool verifyBlockHeaderSignature(const BlockHeader& header);
 

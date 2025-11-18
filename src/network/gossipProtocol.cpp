@@ -1,7 +1,13 @@
 #include "network/gossipProtocol.hpp"
 #include "network/peerManager.hpp"
-#include <httplib.h>
+#include <thirdparty/httplib.h>
 #include <nlohmann/json.hpp>
+#include "network/gossipProtocol.hpp"
+#include "network/peerManager.hpp"
+#include "thirdparty/httplib.h"
+#include <nlohmann/json.hpp>
+
+// dann gossipTransaction / gossipBlock implementieren
 
 using json = nlohmann::json;
 

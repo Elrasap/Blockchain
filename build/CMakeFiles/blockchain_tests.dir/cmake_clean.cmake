@@ -68,6 +68,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/blockchain_tests.dir/src/dnd/dndTxAdapter.cpp.o.d"
   "CMakeFiles/blockchain_tests.dir/src/dnd/dndTxCodec.cpp.o"
   "CMakeFiles/blockchain_tests.dir/src/dnd/dndTxCodec.cpp.o.d"
+  "CMakeFiles/blockchain_tests.dir/src/dnd/dndTxSerialization.cpp.o"
+  "CMakeFiles/blockchain_tests.dir/src/dnd/dndTxSerialization.cpp.o.d"
   "CMakeFiles/blockchain_tests.dir/src/dnd/dndTxValidator.cpp.o"
   "CMakeFiles/blockchain_tests.dir/src/dnd/dndTxValidator.cpp.o.d"
   "CMakeFiles/blockchain_tests.dir/src/dnd/patch.cpp.o"

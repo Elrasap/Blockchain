@@ -17,6 +17,10 @@ find_package(CURL REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBSODIUM REQUIRED libsodium)
 
+# ==========================================================
+# Include paths
+# ==========================================================
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${LIBSODIUM_INCLUDE_DIRS}
@@ -82,7 +86,7 @@ file(GLOB TEST_SOURCES
 
 add_executable(blockchain_tests
     ${TEST_SOURCES}
-    ${BLOCKCHAIN_CORE_SRC}    # Tests müssen alle Core-Komponenten nutzen
+    ${BLOCKCHAIN_CORE_SRC}    # Tests brauchen alle Core-Module
 )
 
 target_link_libraries(blockchain_tests
@@ -94,7 +98,7 @@ target_link_libraries(blockchain_tests
 )
 
 # ==========================================================
-# Output Messages
+# Output
 # ==========================================================
 
 message(STATUS "===============================================")

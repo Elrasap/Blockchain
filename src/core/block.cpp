@@ -121,9 +121,8 @@ std::array<uint8_t, 32> Block::calculateMerkleRoot() const {
 
 // === Block-Hash ===
 // Hash = SHA256( Header inkl. Signatur )
-array<uint8_t, 32> Block::hash() const {
-    auto bytes = serializeHeaderInternal(header, /*includeSignature=*/true);
-    return crypto::sha256(bytes);
+std::array<uint8_t, 32> Block::hash() const {
+    return header.hash();
 }
 
 // === Serialize / Deserialize ===
@@ -174,29 +173,6 @@ Block Block::deserialize(const vector<uint8_t>& data) {
 vector<uint8_t> serializeHeaderForSigning(const BlockHeader& header) {
     // Ohne signature-Feld
     return serializeHeaderInternal(header, /*includeSignature=*/false);
-}
-
-bool signBlockHeader(BlockHeader& header,
-                     const vector<uint8_t>& privKey,
-                     const vector<uint8_t>& pubKey) {
-    header.validatorPubKey = pubKey;
-
-    const auto msg = serializeHeaderForSigning(header);
-    try {
-        header.signature = crypto::sign(msg, privKey);
-    } catch (const std::exception&) {
-        return false;
-    }
-    return true;
-}
-
-bool verifyBlockHeaderSignature(const BlockHeader& header) {
-    if (header.validatorPubKey.empty() || header.signature.empty()) {
-        return false;
-    }
-
-    const auto msg = serializeHeaderForSigning(header);
-    return crypto::verify(msg, header.signature, header.validatorPubKey);
 }
 
 std::vector<uint8_t> BlockHeader::toBytes() const {

@@ -5,8 +5,8 @@
 
 #include "core/block.hpp"
 #include "storage/blockStore.hpp"
+#include "dnd/dndState.hpp"
 
-#include "dnd/state.hpp"           // <-- wichtig: EINZIGE Dnd-State-Definition
 #include "dnd/stateSnapshot.hpp"
 
 class Blockchain {

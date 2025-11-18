@@ -1,18 +1,13 @@
 #pragma once
-#include <string>
-#include <vector>
-#include "core/block.hpp"
+#include <cstdint>
 
 class PeerManager;
 
 class SyncProtocol {
 public:
-    SyncProtocol(PeerManager& peers);
+    SyncProtocol(PeerManager& p);
 
-    // Ask peers for their height
     void requestPeerHeights();
-
-    // Download blocks we miss
     void syncMissingBlocks(uint64_t localHeight);
 
 private:

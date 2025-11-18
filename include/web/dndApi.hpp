@@ -1,4 +1,5 @@
 #pragma once
+#include <thirdparty/httplib.h>
 #include "core/blockchain.hpp"
 #include "core/mempool.hpp"
 

@@ -2,7 +2,7 @@
 #include "core/blockchain.hpp"
 #include "core/blockBuilder.hpp"
 #include "core/mempool.hpp"
-#include <httplib.h>
+#include <thirdparty/httplib.h>
 
 namespace web {
 

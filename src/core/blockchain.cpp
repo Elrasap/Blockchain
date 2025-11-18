@@ -3,6 +3,12 @@
 #include "core/blockJson.hpp"
 #include "dnd/dndPayload.hpp"
 #include <iostream>
+#include "dnd/dndPayload.hpp"
+#include "dnd/dndTxCodec.hpp"
+#include "dnd/dndState.hpp"
+#include "dnd/dndPayload.hpp"
+#include "dnd/dndTxCodec.hpp"
+
 #include <ctime>
 
 // =====================================================
@@ -162,15 +168,17 @@ bool Blockchain::validateTransaction(const Transaction& tx,
 
     if (dnd::isDndPayload(tx.payload)) {
         auto evt = dnd::decodeDndTx(tx.payload);
+
         evt.senderPubKey = tx.senderPubkey;
         evt.signature    = tx.signature;
 
-        if (!dndState_.validate(evt, err))
-            return false;
+        // DnD rules are NOT validated here.
+        // They are validated before entering the chain (mempool / dndTxValidator)
     }
 
     return true;
 }
+
 
 // =====================================================
 // Append Block

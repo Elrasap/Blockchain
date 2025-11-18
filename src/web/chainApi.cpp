@@ -70,37 +70,52 @@ void ChainApi::registerRoutes(httplib::Server& server)
     {
         json j;
 
+        // ===========================
         // CHARACTERS
+        // ===========================
         j["characters"] = json::array();
         for (auto& [id, c] : dndState_.characters)
         {
             json cj;
-            cj["id"] = id;
-            cj["name"] = c.name;
-            cj["hp"] = c.hp;
-            cj["ownerPubKey"] = c.ownerPubKey;
+            cj["id"]   = c.sheet.id;
+            cj["name"] = c.sheet.name;
+            cj["level"] = c.sheet.level;
+            cj["hpCurrent"] = c.sheet.hpCurrent;
+            cj["hpMax"]     = c.sheet.hpMax;
+            cj["armorClass"] = c.sheet.armorClass;
+
             j["characters"].push_back(cj);
         }
 
+        // ===========================
         // MONSTERS
+        // ===========================
         j["monsters"] = json::array();
         for (auto& [id, m] : dndState_.monsters)
         {
             json mj;
-            mj["id"] = id;
-            mj["name"] = m.name;
+            mj["id"] = m.id;
             mj["hp"] = m.hp;
+            mj["maxHp"] = m.maxHp;
+
+            // Kein Name vorhanden in deiner Struktur,
+            // wir tragen den Key als "Name" ein
+            mj["name"] = m.id;
+
             j["monsters"].push_back(mj);
         }
 
+        // ===========================
         // ENCOUNTERS
+        // ===========================
         j["encounters"] = json::array();
         for (auto& [id, e] : dndState_.encounters)
         {
             json ej;
-            ej["id"] = id;
+            ej["id"] = e.id;
             ej["active"] = e.active;
             ej["round"] = e.round;
+            ej["turnIndex"] = e.turnIndex;
 
             ej["actors"] = json::array();
             for (auto& a : e.actors)
@@ -140,6 +155,7 @@ void ChainApi::registerRoutes(httplib::Server& server)
         j["id"] = e.id;
         j["active"] = e.active;
         j["round"] = e.round;
+        j["turnIndex"] = e.turnIndex;
 
         j["actors"] = json::array();
         for (const auto& a : e.actors) {
