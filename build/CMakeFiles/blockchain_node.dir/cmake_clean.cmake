@@ -108,6 +108,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.o.d"
   "CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o"
   "CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o.d"
+  "CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o"
+  "CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o.d"
   "CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o"
   "CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o.d"
   "CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o"

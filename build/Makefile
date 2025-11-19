@@ -1597,6 +1597,33 @@ src/network/gossipProtocol.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_tests.dir/build.make CMakeFiles/blockchain_tests.dir/src/network/gossipProtocol.cpp.s
 .PHONY : src/network/gossipProtocol.cpp.s
 
+src/network/gossipServer.o: src/network/gossipServer.cpp.o
+.PHONY : src/network/gossipServer.o
+
+# target to build an object file
+src/network/gossipServer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_tests.dir/build.make CMakeFiles/blockchain_tests.dir/src/network/gossipServer.cpp.o
+.PHONY : src/network/gossipServer.cpp.o
+
+src/network/gossipServer.i: src/network/gossipServer.cpp.i
+.PHONY : src/network/gossipServer.i
+
+# target to preprocess a source file
+src/network/gossipServer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_tests.dir/build.make CMakeFiles/blockchain_tests.dir/src/network/gossipServer.cpp.i
+.PHONY : src/network/gossipServer.cpp.i
+
+src/network/gossipServer.s: src/network/gossipServer.cpp.s
+.PHONY : src/network/gossipServer.s
+
+# target to generate assembly for a file
+src/network/gossipServer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_node.dir/build.make CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/blockchain_tests.dir/build.make CMakeFiles/blockchain_tests.dir/src/network/gossipServer.cpp.s
+.PHONY : src/network/gossipServer.cpp.s
+
 src/network/messages.o: src/network/messages.cpp.o
 .PHONY : src/network/messages.o
 
@@ -2753,6 +2780,9 @@ help:
 	@echo "... src/network/gossipProtocol.o"
 	@echo "... src/network/gossipProtocol.i"
 	@echo "... src/network/gossipProtocol.s"
+	@echo "... src/network/gossipServer.o"
+	@echo "... src/network/gossipServer.i"
+	@echo "... src/network/gossipServer.s"
 	@echo "... src/network/messages.o"
 	@echo "... src/network/messages.i"
 	@echo "... src/network/messages.s"

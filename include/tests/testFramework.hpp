@@ -1,5 +1,3 @@
-#warning USING CORRECT testFramework.hpp
-
 #pragma once
 #include <iostream>
 #include <sstream>
@@ -100,7 +98,7 @@ inline std::string toString(const T& v) {
 }
 
 /* ============================================================
-   ASSERT FUNCTIONS (SAFE — NO MACRO ARGUMENT ISSUES)
+   ASSERT FUNCTIONS
    ============================================================ */
 
 template<typename A, typename B>
@@ -129,10 +127,6 @@ inline void assertNe(const A& a, const B& b,
         throw std::runtime_error("ASSERT_NE failed");
     }
 }
-
-/* ============================================================
-   ASSERT MACROS (WRAPPERS)
-   ============================================================ */
 
 #define ASSERT_EQ(a,b) assertEq((a),(b), #a,#b, __FILE__, __LINE__)
 #define ASSERT_NE(a,b) assertNe((a),(b), #a,#b, __FILE__, __LINE__)

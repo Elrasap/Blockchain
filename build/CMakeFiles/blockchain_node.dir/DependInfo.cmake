@@ -62,6 +62,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/elrasap/programmieren/Blockchain/src/metrics/metricsServer.cpp" "CMakeFiles/blockchain_node.dir/src/metrics/metricsServer.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/metrics/metricsServer.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/network/fastSyncManager.cpp" "CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/network/gossipProtocol.cpp" "CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o.d"
+  "/home/elrasap/programmieren/Blockchain/src/network/gossipServer.cpp" "CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/network/messages.cpp" "CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/network/peerInfo.cpp" "CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o.d"
   "/home/elrasap/programmieren/Blockchain/src/network/peerManager.cpp" "CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.o" "gcc" "CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.o.d"

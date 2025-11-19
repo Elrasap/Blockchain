@@ -1,17 +1,34 @@
-#pragma once
-#include <vector>
-#include <string>
-#include <nlohmann/json.hpp>
+#include "dnd/dndTxCodec.hpp"
 #include "dnd/dndTx.hpp"
+
+#include <nlohmann/json.hpp>
 
 namespace dnd {
 
 using json = nlohmann::json;
 
-// ============================================================
-// Encode DnD TX (JSON → bytes)
-// ============================================================
-inline std::vector<uint8_t> encodeDndTx(const DndEventTx& tx)
+// -------------------------------------------------------------
+// Prüfen, ob Payload DnD JSON ist
+// -------------------------------------------------------------
+bool isDndPayload(const std::vector<uint8_t>& payload)
+{
+    if (payload.empty())
+        return false;
+
+    try {
+        std::string s(payload.begin(), payload.end());
+        auto j = json::parse(s);
+
+        return j.contains("encounterId"); // wichtigste Struktur
+    } catch (...) {
+        return false;
+    }
+}
+
+// -------------------------------------------------------------
+// Encode DnD TX → JSON → bytes
+// -------------------------------------------------------------
+std::vector<uint8_t> encodeDndTx(const DndEventTx& tx)
 {
     json j = {
         {"encounterId", tx.encounterId},
@@ -25,17 +42,17 @@ inline std::vector<uint8_t> encodeDndTx(const DndEventTx& tx)
         {"note",        tx.note},
         {"timestamp",   tx.timestamp},
         {"senderPubKey", tx.senderPubKey},
-        {"signature",    tx.signature}
+        {"signature",   tx.signature}
     };
 
     const std::string s = j.dump();
     return std::vector<uint8_t>(s.begin(), s.end());
 }
 
-// ============================================================
-// Decode bytes → DnD TX
-// ============================================================
-inline DndEventTx decodeDndTx(const std::vector<uint8_t>& buf)
+// -------------------------------------------------------------
+// Decode bytes → JSON → DndEventTx
+// -------------------------------------------------------------
+DndEventTx decodeDndTx(const std::vector<uint8_t>& buf)
 {
     DndEventTx tx;
 

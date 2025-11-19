@@ -3,6 +3,7 @@
 #include "core/mempool.hpp"
 #include "network/messages.hpp"
 #include "core/transaction.hpp"
+#include "core/block.hpp"
 
 #include <iostream>
 #include <unistd.h>
@@ -24,13 +25,13 @@ SyncManager* global_sync = nullptr;
 // --------------------------------------------------------
 
 PeerManager::PeerManager(int port, SyncManager* syncManager)
-    : listen_port(port), sync(syncManager)
+        : listen_port(port), sync(syncManager)
 {
     cout << "[PeerManager] Created with sync at port " << port << endl;
 }
 
 PeerManager::PeerManager(int port)
-    : listen_port(port)
+        : listen_port(port)
 {
     cout << "[PeerManager] Created on port " << port << endl;
 }
@@ -75,6 +76,16 @@ void PeerManager::markSeen(const std::string& addr) {
 
 
 // --------------------------------------------------------
+// Peer count
+// --------------------------------------------------------
+
+int PeerManager::peerCount() const {
+    std::lock_guard<std::mutex> lock(mtx);
+    return peers.size();
+}
+
+
+// --------------------------------------------------------
 // Networking: start/stop server
 // --------------------------------------------------------
 
@@ -102,7 +113,7 @@ void PeerManager::stop()
 
 
 // --------------------------------------------------------
-// Connect to peer (outgoing connection)
+// Connect to peer (outgoing)
 // --------------------------------------------------------
 
 void PeerManager::connectToPeer(const std::string& host, int port)
@@ -124,7 +135,8 @@ void PeerManager::connectToPeer(const std::string& host, int port)
     }
 
     if (connect(sock, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
-        cerr << "[PeerManager] Connection failed to " << host << ":" << port << endl;
+        cerr << "[PeerManager] Connection failed to "
+             << host << ":" << port << endl;
         close(sock);
         return;
     }
@@ -136,7 +148,8 @@ void PeerManager::connectToPeer(const std::string& host, int port)
 
     addPeer(host + ":" + to_string(port));
 
-    cout << "[PeerManager] Connected to peer " << host << ":" << port << endl;
+    cout << "[PeerManager] Connected to peer "
+         << host << ":" << port << endl;
 }
 
 
@@ -151,7 +164,7 @@ void PeerManager::setMempool(Mempool* mp)
 
 
 // --------------------------------------------------------
-// Broadcast transaction
+// broadcast transaction
 // --------------------------------------------------------
 
 void PeerManager::broadcastTransaction(const Transaction& tx)
@@ -173,7 +186,23 @@ void PeerManager::broadcastTransaction(const Transaction& tx)
 
 
 // --------------------------------------------------------
-// Server loop (incoming connections)
+// broadcast generic message
+// --------------------------------------------------------
+
+void PeerManager::broadcast(const Message& msg)
+{
+    auto encoded = encodeMessage(msg);
+
+    lock_guard<std::mutex> lock(connMutex);
+
+    for (auto& [fd, _] : sockets) {
+        send(fd, encoded.data(), encoded.size(), 0);
+    }
+}
+
+
+// --------------------------------------------------------
+// Server loop
 // --------------------------------------------------------
 
 void PeerManager::serverLoop()
@@ -247,10 +276,16 @@ void PeerManager::handleClient(int client_fd)
             Transaction tx;
             tx.deserialize(msg.payload);
 
-            if (mempool)
-                mempool->addTransaction(tx);
+            if (mempool) {
+                std::string err;
+                if (!mempool->addTransactionValidated(tx, err)) {
+                    std::cerr << "[PeerManager] Rejected incoming TX: "
+                              << err << "\n";
+                }
+            }
 
-            cout << "Received TX_BROADCAST on port " << listen_port << endl;
+            cout << "Received TX_BROADCAST on port "
+                 << listen_port << endl;
         }
         else if (msg.type == MessageType::INV ||
                  msg.type == MessageType::GETBLOCK ||
@@ -270,7 +305,7 @@ void PeerManager::handleClient(int client_fd)
 
 
 // --------------------------------------------------------
-// Handle blockchain sync messages
+// Sync messages
 // --------------------------------------------------------
 
 void PeerManager::handleMessage(int fd, const Message& msg)
@@ -299,7 +334,7 @@ void PeerManager::handleMessage(int fd, const Message& msg)
 
 
 // --------------------------------------------------------
-// Clean shutdown
+// Shutdown
 // --------------------------------------------------------
 
 void PeerManager::shutdownAllConnections()
@@ -308,5 +343,32 @@ void PeerManager::shutdownAllConnections()
 
     for (auto& [fd, _] : sockets)
         shutdown(fd, SHUT_RDWR);
+}
+
+
+// --------------------------------------------------------
+// BLOCK BROADCAST
+// --------------------------------------------------------
+
+void PeerManager::broadcastBlock(const Block& block)
+{
+    std::vector<uint8_t> bytes = block.serialize();
+
+    Message msg;
+    msg.type = MessageType::BLOCK;
+    msg.payload = bytes;
+
+    std::vector<uint8_t> encoded = encodeMessage(msg);
+
+    std::lock_guard<std::mutex> lock(connMutex);
+
+    for (auto& [fd, _] : sockets) {
+        send(fd, encoded.data(), encoded.size(), 0);
+    }
+
+    std::cout << "[PeerManager] broadcastBlock height="
+              << block.header.height
+              << " to " << sockets.size()
+              << " peers\n";
 }
 

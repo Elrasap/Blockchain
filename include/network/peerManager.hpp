@@ -4,7 +4,9 @@
 #include <mutex>
 #include <thread>
 #include <vector>
+
 #include "core/transaction.hpp"
+#include "core/block.hpp"          // <-- WICHTIG!
 #include "network/messages.hpp"
 #include "network/fastSyncManager.hpp"
 
@@ -32,12 +34,13 @@ public:
     void broadcast(const Message& msg);
     void sendTo(int peer_fd, const Message& msg);
 
+    void broadcastBlock(const Block& block);   // <===== NEU!
+
     void setMempool(Mempool* mp);
 
     int peerCount() const;
     int getPort() const { return listen_port; }
 
-    // Peer list management
     void addPeer(const std::string& addr);
     std::vector<PeerInfo> getPeers() const;
     void updatePeerHeight(const std::string& addr, uint64_t height);
@@ -51,13 +54,11 @@ private:
 
     std::thread serverThread;
 
-    // active socket connections
     std::map<int, int> sockets;
     std::mutex connMutex;
 
-    // peers list
     std::vector<PeerInfo> peers;
-    mutable std::mutex mtx;   // <-- THIS IS THE PEER LIST MUTEX
+    mutable std::mutex mtx;
 
     Mempool* mempool = nullptr;
     SyncManager* sync = nullptr;
