@@ -112,9 +112,10 @@ int main()
     // NETWORK
     // ---------------------------------------------------------
     PeerManager peers(peerPort);
-    SyncManager sync(&chain, &peers);
-    peers.sync = &sync;
+    SyncManager sync(chain, peers);
+    peers.setSync(&sync);
     global_sync = &sync;
+
 
     peers.startServer();
 
@@ -145,10 +146,12 @@ int main()
     dndapi.install(http);
 
     DashboardServer dashboard(httpPort, "reports/", db);
-    dashboard.attach(http);
+    dashboard.attach(http);  // Jetzt funktioniert
 
-    MetricsServer metrics(9100, chain);
+
+    MetricsServer metrics(9100);
     metrics.attach(http);
+
 
     std::thread thttp([&]() {
         http.listen("0.0.0.0", httpPort);
@@ -194,6 +197,7 @@ int main()
     peers.stop();
     http.stop();
     gossip.stop();
+
 
     if (miner.joinable()) miner.join();
     if (tg.joinable()) tg.join();

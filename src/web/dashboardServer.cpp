@@ -5,6 +5,13 @@
 #include <thirdparty/httplib.h>
 #include <filesystem>
 #include <iostream>
+#include "web/dashboardServer.hpp"
+#include "web/chainApi.hpp"
+#include "web/dndApi.hpp"
+
+#include "thirdparty/httplib.h"
+#include <filesystem>
+#include <iostream>
 
 DashboardServer::DashboardServer(int port,
                                  const std::string& reportsDir,
@@ -823,5 +830,14 @@ void DashboardServer::start()
     // ========== START SERVER ==========
     std::cout << "[DashboardServer] Listening on 0.0.0.0:" << port << "\n";
     server.listen("0.0.0.0", port);
+}
+void DashboardServer::attach(httplib::Server& http)
+{
+    http.Get("/dashboard", [&](const httplib::Request&, httplib::Response& res) {
+        res.set_content(
+            "<html><body><h1>Blockchain Dashboard</h1><p>läuft 🎉</p></body></html>",
+            "text/html"
+        );
+    });
 }
 

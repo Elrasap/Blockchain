@@ -1,29 +1,15 @@
-// include/network/gossipServer.hpp
 #pragma once
 
 #include <cstdint>
-
 #include "core/blockchain.hpp"
 #include "core/mempool.hpp"
 #include "network/peerManager.hpp"
+#include "thirdparty/httplib.h"
 
 namespace dnd {
-    class DndTxValidator; // Vorwärtsdeklaration – volle Definition im .cpp
+class DndTxValidator;
 }
 
-/**
- * GossipServer
- *
- * HTTP-Gossip-Endpunkte:
- *   - POST /gossip/tx
- *   - POST /gossip/block
- *
- * Verantwortlichkeiten:
- *   - nimmt signierte Transactions entgegen
- *   - validiert + legt in Mempool
- *   - broadcastet TX/Blocks an Peers
- *   - kann reine DnD-Event-JSONs in eine Transaction "wrappen"
- */
 class GossipServer {
 public:
     GossipServer(int port,
@@ -32,8 +18,8 @@ public:
                  PeerManager* peers = nullptr,
                  dnd::DndTxValidator* validator = nullptr);
 
-    // Blockiert – startet HTTP-Server (httplib::Server::listen)
     void start();
+    void stop();
 
 private:
     int port_;
@@ -41,5 +27,9 @@ private:
     Mempool& mempool_;
     PeerManager* peers_;
     dnd::DndTxValidator* validator_;
+
+    httplib::Server server;
+
+    bool running = false;
 };
 

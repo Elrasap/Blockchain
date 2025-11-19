@@ -15,7 +15,7 @@ find_package(Threads REQUIRED)
 # OpenSSL
 find_package(OpenSSL REQUIRED)
 
-# Include Dir
+# Include directories
 include_directories(
     include
     include/thirdparty
@@ -28,15 +28,29 @@ include_directories(
     include/tests
 )
 
-# Source files
-file(GLOB_RECURSE SRC_FILES
-    src/*.cpp
+# ============================================================
+# NODE SOURCES (exclude backup + agent)
+# ============================================================
+
+file(GLOB_RECURSE NODE_SRC
+    src/core/*.cpp
+    src/network/*.cpp
+    src/web/*.cpp
+    src/storage/*.cpp
+    src/metrics/*.cpp
+    src/dnd/*.cpp
 )
 
-# MAIN EXECUTABLE
+# Ensure backups excluded
+list(FILTER NODE_SRC EXCLUDE REGEX "backup")
+list(FILTER NODE_SRC EXCLUDE REGEX "agent")
+
+# Add main.cpp manually
+set(NODE_MAIN src/main.cpp)
+
 add_executable(blockchain_node
-    ${SRC_FILES}
-    src/main.cpp        # ensure main is included
+    ${NODE_SRC}
+    ${NODE_MAIN}
 )
 
 target_link_libraries(blockchain_node
@@ -45,7 +59,10 @@ target_link_libraries(blockchain_node
     OpenSSL::SSL
 )
 
-# TEST EXECUTABLE
+# ============================================================
+# TEST SOURCES (clean separation)
+# ============================================================
+
 file(GLOB_RECURSE TEST_SRC
     src/tests/*.cpp
 )

@@ -3,8 +3,9 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <cstdint>                 // <-- NEU
 
-#include "dnd/character.hpp"            // enthält CharacterSheet
+#include "dnd/character.hpp"       // enthält CharacterSheet
 #include "dnd/combat/encounter.hpp"
 #include "dnd/dndTx.hpp"
 
@@ -14,10 +15,11 @@ class Blockchain;
 namespace dnd {
 
 // ---------------------------------------------------------
-// CharacterState hält nur das CharacterSheet
+// CharacterState hält CharacterSheet + Owner
 // ---------------------------------------------------------
 struct CharacterState {
     CharacterSheet sheet;
+    std::vector<uint8_t> ownerPubKey;   // <-- NEU: Owner des Characters
 };
 
 // ---------------------------------------------------------
@@ -41,6 +43,10 @@ struct EncounterState {
     std::vector<combat::CombatActorRef> actors;
     std::vector<DndEventTx>             events;
 };
+
+// Der struct Character, den du unten hast, kann bleiben oder gelöscht werden.
+// Er wird aktuell von DndState NICHT benutzt, also einfach ignorieren.
+
 struct Character {
     std::string id;
     std::string name;
@@ -60,7 +66,6 @@ public:
     std::unordered_map<std::string, MonsterState>   monsters;
     std::unordered_map<std::string, EncounterState> encounters;
 
-    // Ein Event auf den State anwenden (z.B. Attacke → HP ändern)
     bool apply(const DndEventTx& evt, std::string& err);
 
     // --- Convenience-HP-Helpers (für Tests & Game-Logik) ---

@@ -5,10 +5,12 @@
 #include "core/blockchain.hpp"
 #include "network/peerManager.hpp"
 #include "network/messages.hpp"
+#include <sys/socket.h>
 
 #include <iostream>
 #include <cstring>
 #include <unistd.h> // write()
+SyncManager* global_sync = nullptr;
 
 SyncManager::SyncManager(Blockchain& chain, PeerManager& peers)
     : chain_(chain), peers_(peers)

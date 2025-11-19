@@ -2,27 +2,15 @@
 #include "core/poaValidator.hpp"
 #include "core/blockJson.hpp"
 #include "dnd/dndPayload.hpp"
-#include <iostream>
-#include "dnd/dndPayload.hpp"
 #include "dnd/dndTxCodec.hpp"
 #include "dnd/dndState.hpp"
-#include "dnd/dndPayload.hpp"
-#include "dnd/dndTxCodec.hpp"
 
+#include <iostream>
 #include <ctime>
 
 // =====================================================
 // Constructor
 // =====================================================
-extern SyncManager* global_sync;
-if (global_sync) {
-    Message msg;
-    msg.type = MessageType::INV;
-    auto h = block.hash();
-    msg.payload.assign(h.begin(), h.end());
-    auto encoded = encodeMessage(msg);
-    peers.broadcastRaw(encoded);
-}
 
 Blockchain::Blockchain(BlockStore& store,
                        const std::vector<uint8_t>& dmValidatorPubKey)
@@ -181,8 +169,8 @@ bool Blockchain::validateTransaction(const Transaction& tx,
         evt.senderPubKey = tx.senderPubkey;
         evt.signature    = tx.signature;
 
-        // DnD rules are NOT validated here.
-        // They are validated before entering the chain (mempool / dndTxValidator)
+        // DnD rules sind auf Mempool/Validator-Ebene,
+        // hier nur Basis-TX-Checks.
     }
 
     return true;
@@ -190,35 +178,35 @@ bool Blockchain::validateTransaction(const Transaction& tx,
 
 
 // =====================================================
-// Append Block
+// Append Block (mit einfachem Konsens-Konflikt-Handling)
 // =====================================================
 
 bool Blockchain::appendBlock(const Block& block)
 {
     uint64_t expectedHeight = chain_.empty() ? 0 : chain_.back().header.height + 1;
 
-    // ---------- NEW: CONSENSUS CONFLICT CHECK ----------
-    // FALL 1: Block ist älter als unsere Chain → sofort reject
+    // ---------- Konsens-Konflikt-Checks ----------
+    // Fall 1: Block ist älter als unsere Chain → sofort reject
     if (block.header.height < expectedHeight) {
         std::cerr << "[Consensus] Reject block " << block.header.height
                   << " because we already have a longer chain.\n";
         return false;
     }
 
-    // FALL 2: Block ist in Zukunft → wir haben die Vorgänger nicht
+    // Fall 2: Block ist in Zukunft → wir haben die Vorgänger nicht
     if (block.header.height > expectedHeight) {
         std::cerr << "[Consensus] Reject block " << block.header.height
                   << " because it is ahead of our chain (missing parent).\n";
         return false;
     }
 
-    // FALL 3: Block ist EXAKT auf derselben Höhe → Fork → reject
+    // Fall 3: Block ist EXAKT auf derselben Höhe → Fork → reject
     if (!chain_.empty() && block.header.height == chain_.back().header.height) {
         std::cerr << "[Consensus] Reject block at same height "
                   << block.header.height << " (fork detected).\n";
         return false;
     }
-    // ----------------------------------------------------
+    // ---------------------------------------------
 
     // Normale Validierung (PoA, Merkle, Timestamp)
     if (!validateBlock(block)) return false;
@@ -276,7 +264,6 @@ bool Blockchain::ensureGenesisBlock(const std::vector<uint8_t>& dmPrivKey) {
 
 bool Blockchain::writeSnapshot(const std::string& path) const {
     return dnd::writeSnapshot(dndState_, path);
-
 }
 
 // =====================================================
@@ -285,7 +272,6 @@ bool Blockchain::writeSnapshot(const std::string& path) const {
 
 bool Blockchain::loadSnapshot(const std::string& path) {
     if (!dnd::loadSnapshot(dndState_, path))
-
         return false;
 
     return true;

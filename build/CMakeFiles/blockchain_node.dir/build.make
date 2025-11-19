@@ -72,108 +72,10 @@ include CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/codegen:
 .PHONY : CMakeFiles/blockchain_node.dir/codegen
 
-CMakeFiles/blockchain_node.dir/src/main.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/main.cpp.o: /home/elrasap/programmieren/Blockchain/src/main.cpp
-CMakeFiles/blockchain_node.dir/src/main.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/blockchain_node.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/main.cpp.o -MF CMakeFiles/blockchain_node.dir/src/main.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/main.cpp.o -c /home/elrasap/programmieren/Blockchain/src/main.cpp
-
-CMakeFiles/blockchain_node.dir/src/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/main.cpp > CMakeFiles/blockchain_node.dir/src/main.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/main.cpp -o CMakeFiles/blockchain_node.dir/src/main.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.o: /home/elrasap/programmieren/Blockchain/src/analytics/forecaster.cpp
-CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.o -MF CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.o -c /home/elrasap/programmieren/Blockchain/src/analytics/forecaster.cpp
-
-CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/analytics/forecaster.cpp > CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/analytics/forecaster.cpp -o CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.o: /home/elrasap/programmieren/Blockchain/src/analytics/rtoRpoAnalyzer.cpp
-CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.o -MF CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.o -c /home/elrasap/programmieren/Blockchain/src/analytics/rtoRpoAnalyzer.cpp
-
-CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/analytics/rtoRpoAnalyzer.cpp > CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/analytics/rtoRpoAnalyzer.cpp -o CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.o: /home/elrasap/programmieren/Blockchain/src/analytics/trendAnalyzer.cpp
-CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.o -MF CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.o -c /home/elrasap/programmieren/Blockchain/src/analytics/trendAnalyzer.cpp
-
-CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/analytics/trendAnalyzer.cpp > CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/analytics/trendAnalyzer.cpp -o CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.o: /home/elrasap/programmieren/Blockchain/src/analytics/trendReporter.cpp
-CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.o -MF CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.o -c /home/elrasap/programmieren/Blockchain/src/analytics/trendReporter.cpp
-
-CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/analytics/trendReporter.cpp > CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/analytics/trendReporter.cpp -o CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.o: /home/elrasap/programmieren/Blockchain/src/cluster/clusterManager.cpp
-CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.o -MF CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.o -c /home/elrasap/programmieren/Blockchain/src/cluster/clusterManager.cpp
-
-CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/cluster/clusterManager.cpp > CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/cluster/clusterManager.cpp -o CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.o: /home/elrasap/programmieren/Blockchain/src/cluster/clusterNode.cpp
-CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.o -MF CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.o -c /home/elrasap/programmieren/Blockchain/src/cluster/clusterNode.cpp
-
-CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/cluster/clusterNode.cpp > CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/cluster/clusterNode.cpp -o CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.s
-
 CMakeFiles/blockchain_node.dir/src/core/block.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/block.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/block.cpp
 CMakeFiles/blockchain_node.dir/src/core/block.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/block.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/block.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/block.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/block.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/block.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/block.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/block.cpp.i: cmake_force
@@ -187,7 +89,7 @@ CMakeFiles/blockchain_node.dir/src/core/block.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/blockBuilder.cpp
 CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/blockBuilder.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.i: cmake_force
@@ -201,7 +103,7 @@ CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/blockEncoding.cpp
 CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/blockEncoding.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.i: cmake_force
@@ -215,7 +117,7 @@ CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/core/blockJson.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/blockJson.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/blockJson.cpp
 CMakeFiles/blockchain_node.dir/src/core/blockJson.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/blockJson.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/blockJson.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/blockJson.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/blockJson.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/blockJson.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/blockJson.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/blockJson.cpp.i: cmake_force
@@ -229,7 +131,7 @@ CMakeFiles/blockchain_node.dir/src/core/blockJson.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/blockchain.cpp
 CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/blockchain.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.i: cmake_force
@@ -243,7 +145,7 @@ CMakeFiles/blockchain_node.dir/src/core/blockchain.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/consensus.cpp
 CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/consensus.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.i: cmake_force
@@ -257,7 +159,7 @@ CMakeFiles/blockchain_node.dir/src/core/consensus.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/crypto.cpp
 CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/crypto.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.i: cmake_force
@@ -271,7 +173,7 @@ CMakeFiles/blockchain_node.dir/src/core/crypto.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/dmKeyManager.cpp
 CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/dmKeyManager.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.i: cmake_force
@@ -285,7 +187,7 @@ CMakeFiles/blockchain_node.dir/src/core/dmKeyManager.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/logger.cpp
 CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/logger.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/logger.cpp.i: cmake_force
@@ -299,7 +201,7 @@ CMakeFiles/blockchain_node.dir/src/core/logger.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/mempool.cpp
 CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/mempool.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.i: cmake_force
@@ -313,7 +215,7 @@ CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/poaValidator.cpp
 CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/poaValidator.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.i: cmake_force
@@ -327,7 +229,7 @@ CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/transaction.cpp
 CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/transaction.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.i: cmake_force
@@ -341,7 +243,7 @@ CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/core/validation.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/core/validation.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/validation.cpp
 CMakeFiles/blockchain_node.dir/src/core/validation.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/validation.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/blockchain_node.dir/src/core/validation.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/core/validation.cpp.o -MF CMakeFiles/blockchain_node.dir/src/core/validation.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/core/validation.cpp.o -c /home/elrasap/programmieren/Blockchain/src/core/validation.cpp
 
 CMakeFiles/blockchain_node.dir/src/core/validation.cpp.i: cmake_force
@@ -352,38 +254,10 @@ CMakeFiles/blockchain_node.dir/src/core/validation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/core/validation.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/core/validation.cpp -o CMakeFiles/blockchain_node.dir/src/core/validation.cpp.s
 
-CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.o: /home/elrasap/programmieren/Blockchain/src/dashboard/forecastDashboard.cpp
-CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dashboard/forecastDashboard.cpp
-
-CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/dashboard/forecastDashboard.cpp > CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/dashboard/forecastDashboard.cpp -o CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.o: /home/elrasap/programmieren/Blockchain/src/dashboard/perfDashboard.cpp
-CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dashboard/perfDashboard.cpp
-
-CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/dashboard/perfDashboard.cpp > CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/dashboard/perfDashboard.cpp -o CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.s
-
 CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/character.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/character.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.i: cmake_force
@@ -397,7 +271,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/combat/combatLog.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/combat/combatLog.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.i: cmake_force
@@ -411,7 +285,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/combat/combatService.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/combat/combatService.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.i: cmake_force
@@ -425,7 +299,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/combat/combat_payload.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/combat/combat_payload.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.i: cmake_force
@@ -439,7 +313,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/combat/combat_payload.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/combat/dice.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/combat/dice.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.i: cmake_force
@@ -453,7 +327,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/combat/encounter.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/combat/encounter.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.i: cmake_force
@@ -467,7 +341,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/combat/monster.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/combat/monster.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.i: cmake_force
@@ -481,7 +355,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/combat/payloads.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/combat/payloads.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.i: cmake_force
@@ -492,10 +366,24 @@ CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/dnd/combat/payloads.cpp -o CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.s
 
+CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
+CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/dndActions.cpp
+CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/dndActions.cpp
+
+CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/dnd/dndActions.cpp > CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.i
+
+CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/dnd/dndActions.cpp -o CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.s
+
 CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/dndCharacterService.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/dndCharacterService.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.i: cmake_force
@@ -509,7 +397,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/dndState.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/dndState.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/dndState.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/dndState.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndState.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndState.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/dndState.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/dndState.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/dndState.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/dndState.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/dndState.cpp.i: cmake_force
@@ -523,7 +411,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/dndState.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/dndTx.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/dndTx.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.i: cmake_force
@@ -537,7 +425,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxAdapter.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxAdapter.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/dndTxAdapter.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxAdapter.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndTxAdapter.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndTxAdapter.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/dndTxAdapter.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/dndTxAdapter.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/dndTxAdapter.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/dndTxAdapter.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxAdapter.cpp.i: cmake_force
@@ -551,7 +439,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/dndTxAdapter.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxCodec.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxCodec.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/dndTxCodec.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxCodec.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndTxCodec.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndTxCodec.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/dndTxCodec.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/dndTxCodec.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/dndTxCodec.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/dndTxCodec.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxCodec.cpp.i: cmake_force
@@ -565,7 +453,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/dndTxCodec.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/dndTxSerialization.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/dndTxSerialization.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.i: cmake_force
@@ -579,7 +467,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/dndTxSerialization.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/dndTxValidator.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/dndTxValidator.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.i: cmake_force
@@ -593,7 +481,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/patch.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/patch.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.i: cmake_force
@@ -607,7 +495,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/payload.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/payload.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.i: cmake_force
@@ -621,7 +509,7 @@ CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.o: /home/elrasap/programmieren/Blockchain/src/dnd/stateSnapshot.cpp
 CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.o -MF CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.o -c /home/elrasap/programmieren/Blockchain/src/dnd/stateSnapshot.cpp
 
 CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.i: cmake_force
@@ -632,122 +520,10 @@ CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/dnd/stateSnapshot.cpp -o CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.s
 
-CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.o: /home/elrasap/programmieren/Blockchain/src/incident/chaosEngine.cpp
-CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building CXX object CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.o -MF CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.o -c /home/elrasap/programmieren/Blockchain/src/incident/chaosEngine.cpp
-
-CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/incident/chaosEngine.cpp > CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/incident/chaosEngine.cpp -o CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.o: /home/elrasap/programmieren/Blockchain/src/incident/experimentReport.cpp
-CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building CXX object CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.o -MF CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.o -c /home/elrasap/programmieren/Blockchain/src/incident/experimentReport.cpp
-
-CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/incident/experimentReport.cpp > CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/incident/experimentReport.cpp -o CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.o: /home/elrasap/programmieren/Blockchain/src/incident/forensicsReporter.cpp
-CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building CXX object CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.o -MF CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.o -c /home/elrasap/programmieren/Blockchain/src/incident/forensicsReporter.cpp
-
-CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/incident/forensicsReporter.cpp > CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/incident/forensicsReporter.cpp -o CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.o: /home/elrasap/programmieren/Blockchain/src/incident/incidentHandler.cpp
-CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building CXX object CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.o -MF CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.o -c /home/elrasap/programmieren/Blockchain/src/incident/incidentHandler.cpp
-
-CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/incident/incidentHandler.cpp > CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/incident/incidentHandler.cpp -o CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.o: /home/elrasap/programmieren/Blockchain/src/incident/scenarioRunner.cpp
-CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building CXX object CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.o -MF CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.o -c /home/elrasap/programmieren/Blockchain/src/incident/scenarioRunner.cpp
-
-CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/incident/scenarioRunner.cpp > CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/incident/scenarioRunner.cpp -o CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.o: /home/elrasap/programmieren/Blockchain/src/light/headerChain.cpp
-CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building CXX object CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.o -MF CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.o -c /home/elrasap/programmieren/Blockchain/src/light/headerChain.cpp
-
-CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/light/headerChain.cpp > CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/light/headerChain.cpp -o CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.o: /home/elrasap/programmieren/Blockchain/src/light/lightClient.cpp
-CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building CXX object CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.o -MF CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.o -c /home/elrasap/programmieren/Blockchain/src/light/lightClient.cpp
-
-CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/light/lightClient.cpp > CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/light/lightClient.cpp -o CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.o: /home/elrasap/programmieren/Blockchain/src/light/merkleProof.cpp
-CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building CXX object CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.o -MF CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.o -c /home/elrasap/programmieren/Blockchain/src/light/merkleProof.cpp
-
-CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/light/merkleProof.cpp > CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/light/merkleProof.cpp -o CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.s
-
 CMakeFiles/blockchain_node.dir/src/metrics/clusterMetrics.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/metrics/clusterMetrics.cpp.o: /home/elrasap/programmieren/Blockchain/src/metrics/clusterMetrics.cpp
 CMakeFiles/blockchain_node.dir/src/metrics/clusterMetrics.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building CXX object CMakeFiles/blockchain_node.dir/src/metrics/clusterMetrics.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object CMakeFiles/blockchain_node.dir/src/metrics/clusterMetrics.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/metrics/clusterMetrics.cpp.o -MF CMakeFiles/blockchain_node.dir/src/metrics/clusterMetrics.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/metrics/clusterMetrics.cpp.o -c /home/elrasap/programmieren/Blockchain/src/metrics/clusterMetrics.cpp
 
 CMakeFiles/blockchain_node.dir/src/metrics/clusterMetrics.cpp.i: cmake_force
@@ -761,7 +537,7 @@ CMakeFiles/blockchain_node.dir/src/metrics/clusterMetrics.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/metrics/dndMetrics.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/metrics/dndMetrics.cpp.o: /home/elrasap/programmieren/Blockchain/src/metrics/dndMetrics.cpp
 CMakeFiles/blockchain_node.dir/src/metrics/dndMetrics.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building CXX object CMakeFiles/blockchain_node.dir/src/metrics/dndMetrics.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object CMakeFiles/blockchain_node.dir/src/metrics/dndMetrics.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/metrics/dndMetrics.cpp.o -MF CMakeFiles/blockchain_node.dir/src/metrics/dndMetrics.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/metrics/dndMetrics.cpp.o -c /home/elrasap/programmieren/Blockchain/src/metrics/dndMetrics.cpp
 
 CMakeFiles/blockchain_node.dir/src/metrics/dndMetrics.cpp.i: cmake_force
@@ -775,7 +551,7 @@ CMakeFiles/blockchain_node.dir/src/metrics/dndMetrics.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/metrics/metricsCollector.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/metrics/metricsCollector.cpp.o: /home/elrasap/programmieren/Blockchain/src/metrics/metricsCollector.cpp
 CMakeFiles/blockchain_node.dir/src/metrics/metricsCollector.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building CXX object CMakeFiles/blockchain_node.dir/src/metrics/metricsCollector.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object CMakeFiles/blockchain_node.dir/src/metrics/metricsCollector.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/metrics/metricsCollector.cpp.o -MF CMakeFiles/blockchain_node.dir/src/metrics/metricsCollector.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/metrics/metricsCollector.cpp.o -c /home/elrasap/programmieren/Blockchain/src/metrics/metricsCollector.cpp
 
 CMakeFiles/blockchain_node.dir/src/metrics/metricsCollector.cpp.i: cmake_force
@@ -789,7 +565,7 @@ CMakeFiles/blockchain_node.dir/src/metrics/metricsCollector.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/metrics/metricsServer.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/metrics/metricsServer.cpp.o: /home/elrasap/programmieren/Blockchain/src/metrics/metricsServer.cpp
 CMakeFiles/blockchain_node.dir/src/metrics/metricsServer.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building CXX object CMakeFiles/blockchain_node.dir/src/metrics/metricsServer.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building CXX object CMakeFiles/blockchain_node.dir/src/metrics/metricsServer.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/metrics/metricsServer.cpp.o -MF CMakeFiles/blockchain_node.dir/src/metrics/metricsServer.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/metrics/metricsServer.cpp.o -c /home/elrasap/programmieren/Blockchain/src/metrics/metricsServer.cpp
 
 CMakeFiles/blockchain_node.dir/src/metrics/metricsServer.cpp.i: cmake_force
@@ -803,7 +579,7 @@ CMakeFiles/blockchain_node.dir/src/metrics/metricsServer.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.o: /home/elrasap/programmieren/Blockchain/src/network/fastSyncManager.cpp
 CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.o -MF CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.o -c /home/elrasap/programmieren/Blockchain/src/network/fastSyncManager.cpp
 
 CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.i: cmake_force
@@ -817,7 +593,7 @@ CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o: /home/elrasap/programmieren/Blockchain/src/network/gossipProtocol.cpp
 CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o -MF CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o -c /home/elrasap/programmieren/Blockchain/src/network/gossipProtocol.cpp
 
 CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.i: cmake_force
@@ -831,7 +607,7 @@ CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o: /home/elrasap/programmieren/Blockchain/src/network/gossipServer.cpp
 CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o -MF CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o -c /home/elrasap/programmieren/Blockchain/src/network/gossipServer.cpp
 
 CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.i: cmake_force
@@ -845,7 +621,7 @@ CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o: /home/elrasap/programmieren/Blockchain/src/network/messages.cpp
 CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o -MF CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o -c /home/elrasap/programmieren/Blockchain/src/network/messages.cpp
 
 CMakeFiles/blockchain_node.dir/src/network/messages.cpp.i: cmake_force
@@ -856,10 +632,24 @@ CMakeFiles/blockchain_node.dir/src/network/messages.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/network/messages.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/network/messages.cpp -o CMakeFiles/blockchain_node.dir/src/network/messages.cpp.s
 
+CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
+CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.o: /home/elrasap/programmieren/Blockchain/src/network/peerDiscovery.cpp
+CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.o -MF CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.o -c /home/elrasap/programmieren/Blockchain/src/network/peerDiscovery.cpp
+
+CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/network/peerDiscovery.cpp > CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.i
+
+CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/network/peerDiscovery.cpp -o CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.s
+
 CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o: /home/elrasap/programmieren/Blockchain/src/network/peerInfo.cpp
 CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o -MF CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o -c /home/elrasap/programmieren/Blockchain/src/network/peerInfo.cpp
 
 CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.i: cmake_force
@@ -873,7 +663,7 @@ CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.o: /home/elrasap/programmieren/Blockchain/src/network/peerManager.cpp
 CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.o -MF CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.o -c /home/elrasap/programmieren/Blockchain/src/network/peerManager.cpp
 
 CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.i: cmake_force
@@ -887,7 +677,7 @@ CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.o: /home/elrasap/programmieren/Blockchain/src/network/syncManager.cpp
 CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.o -MF CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.o -c /home/elrasap/programmieren/Blockchain/src/network/syncManager.cpp
 
 CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.i: cmake_force
@@ -901,7 +691,7 @@ CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.o: /home/elrasap/programmieren/Blockchain/src/network/syncProtocol.cpp
 CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building CXX object CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.o -MF CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.o -c /home/elrasap/programmieren/Blockchain/src/network/syncProtocol.cpp
 
 CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.i: cmake_force
@@ -912,178 +702,10 @@ CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/network/syncProtocol.cpp -o CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.s
 
-CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.o: /home/elrasap/programmieren/Blockchain/src/obs/healthChecker.cpp
-CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Building CXX object CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.o -MF CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.o -c /home/elrasap/programmieren/Blockchain/src/obs/healthChecker.cpp
-
-CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/obs/healthChecker.cpp > CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/obs/healthChecker.cpp -o CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.o: /home/elrasap/programmieren/Blockchain/src/obs/metrics.cpp
-CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_62) "Building CXX object CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.o -MF CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.o -c /home/elrasap/programmieren/Blockchain/src/obs/metrics.cpp
-
-CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/obs/metrics.cpp > CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/obs/metrics.cpp -o CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.o: /home/elrasap/programmieren/Blockchain/src/obs/tracer.cpp
-CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_63) "Building CXX object CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.o -MF CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.o -c /home/elrasap/programmieren/Blockchain/src/obs/tracer.cpp
-
-CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/obs/tracer.cpp > CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/obs/tracer.cpp -o CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.o: /home/elrasap/programmieren/Blockchain/src/ops/exportAgent.cpp
-CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_64) "Building CXX object CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.o -MF CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.o -c /home/elrasap/programmieren/Blockchain/src/ops/exportAgent.cpp
-
-CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/ops/exportAgent.cpp > CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/ops/exportAgent.cpp -o CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.o: /home/elrasap/programmieren/Blockchain/src/ops/grafanaDashboardGenerator.cpp
-CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_65) "Building CXX object CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.o -MF CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.o -c /home/elrasap/programmieren/Blockchain/src/ops/grafanaDashboardGenerator.cpp
-
-CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/ops/grafanaDashboardGenerator.cpp > CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/ops/grafanaDashboardGenerator.cpp -o CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.o: /home/elrasap/programmieren/Blockchain/src/ops/notification.cpp
-CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_66) "Building CXX object CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.o -MF CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.o -c /home/elrasap/programmieren/Blockchain/src/ops/notification.cpp
-
-CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/ops/notification.cpp > CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/ops/notification.cpp -o CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.o: /home/elrasap/programmieren/Blockchain/src/ops/reliabilityGuard.cpp
-CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_67) "Building CXX object CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.o -MF CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.o -c /home/elrasap/programmieren/Blockchain/src/ops/reliabilityGuard.cpp
-
-CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/ops/reliabilityGuard.cpp > CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/ops/reliabilityGuard.cpp -o CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.o: /home/elrasap/programmieren/Blockchain/src/recovery/disasterRecovery.cpp
-CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_68) "Building CXX object CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.o -MF CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.o -c /home/elrasap/programmieren/Blockchain/src/recovery/disasterRecovery.cpp
-
-CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/recovery/disasterRecovery.cpp > CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/recovery/disasterRecovery.cpp -o CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.o: /home/elrasap/programmieren/Blockchain/src/recovery/timelineReporter.cpp
-CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_69) "Building CXX object CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.o -MF CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.o -c /home/elrasap/programmieren/Blockchain/src/recovery/timelineReporter.cpp
-
-CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/recovery/timelineReporter.cpp > CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/recovery/timelineReporter.cpp -o CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.o: /home/elrasap/programmieren/Blockchain/src/security/auditReport.cpp
-CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_70) "Building CXX object CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.o -MF CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.o -c /home/elrasap/programmieren/Blockchain/src/security/auditReport.cpp
-
-CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/security/auditReport.cpp > CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/security/auditReport.cpp -o CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.o: /home/elrasap/programmieren/Blockchain/src/security/policyEnfocer.cpp
-CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_71) "Building CXX object CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.o -MF CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.o -c /home/elrasap/programmieren/Blockchain/src/security/policyEnfocer.cpp
-
-CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/security/policyEnfocer.cpp > CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/security/policyEnfocer.cpp -o CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.o: /home/elrasap/programmieren/Blockchain/src/security/securityScanner.cpp
-CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_72) "Building CXX object CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.o -MF CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.o -c /home/elrasap/programmieren/Blockchain/src/security/securityScanner.cpp
-
-CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/security/securityScanner.cpp > CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/security/securityScanner.cpp -o CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.s
-
 CMakeFiles/blockchain_node.dir/src/storage/blockStore.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/storage/blockStore.cpp.o: /home/elrasap/programmieren/Blockchain/src/storage/blockStore.cpp
 CMakeFiles/blockchain_node.dir/src/storage/blockStore.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_73) "Building CXX object CMakeFiles/blockchain_node.dir/src/storage/blockStore.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building CXX object CMakeFiles/blockchain_node.dir/src/storage/blockStore.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/storage/blockStore.cpp.o -MF CMakeFiles/blockchain_node.dir/src/storage/blockStore.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/storage/blockStore.cpp.o -c /home/elrasap/programmieren/Blockchain/src/storage/blockStore.cpp
 
 CMakeFiles/blockchain_node.dir/src/storage/blockStore.cpp.i: cmake_force
@@ -1097,7 +719,7 @@ CMakeFiles/blockchain_node.dir/src/storage/blockStore.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/storage/commitLog.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/storage/commitLog.cpp.o: /home/elrasap/programmieren/Blockchain/src/storage/commitLog.cpp
 CMakeFiles/blockchain_node.dir/src/storage/commitLog.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_74) "Building CXX object CMakeFiles/blockchain_node.dir/src/storage/commitLog.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building CXX object CMakeFiles/blockchain_node.dir/src/storage/commitLog.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/storage/commitLog.cpp.o -MF CMakeFiles/blockchain_node.dir/src/storage/commitLog.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/storage/commitLog.cpp.o -c /home/elrasap/programmieren/Blockchain/src/storage/commitLog.cpp
 
 CMakeFiles/blockchain_node.dir/src/storage/commitLog.cpp.i: cmake_force
@@ -1111,7 +733,7 @@ CMakeFiles/blockchain_node.dir/src/storage/commitLog.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/storage/historyStore.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/storage/historyStore.cpp.o: /home/elrasap/programmieren/Blockchain/src/storage/historyStore.cpp
 CMakeFiles/blockchain_node.dir/src/storage/historyStore.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_75) "Building CXX object CMakeFiles/blockchain_node.dir/src/storage/historyStore.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building CXX object CMakeFiles/blockchain_node.dir/src/storage/historyStore.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/storage/historyStore.cpp.o -MF CMakeFiles/blockchain_node.dir/src/storage/historyStore.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/storage/historyStore.cpp.o -c /home/elrasap/programmieren/Blockchain/src/storage/historyStore.cpp
 
 CMakeFiles/blockchain_node.dir/src/storage/historyStore.cpp.i: cmake_force
@@ -1125,7 +747,7 @@ CMakeFiles/blockchain_node.dir/src/storage/historyStore.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.o: /home/elrasap/programmieren/Blockchain/src/storage/snapshotManager.cpp
 CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_76) "Building CXX object CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building CXX object CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.o -MF CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.o -c /home/elrasap/programmieren/Blockchain/src/storage/snapshotManager.cpp
 
 CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.i: cmake_force
@@ -1136,94 +758,10 @@ CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/storage/snapshotManager.cpp -o CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.s
 
-CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.o: /home/elrasap/programmieren/Blockchain/src/upgrade/goldenFileManager.cpp
-CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_77) "Building CXX object CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.o -MF CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.o -c /home/elrasap/programmieren/Blockchain/src/upgrade/goldenFileManager.cpp
-
-CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/upgrade/goldenFileManager.cpp > CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/upgrade/goldenFileManager.cpp -o CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.o: /home/elrasap/programmieren/Blockchain/src/upgrade/schemaRegistry.cpp
-CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_78) "Building CXX object CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.o -MF CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.o -c /home/elrasap/programmieren/Blockchain/src/upgrade/schemaRegistry.cpp
-
-CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/upgrade/schemaRegistry.cpp > CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/upgrade/schemaRegistry.cpp -o CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.o: /home/elrasap/programmieren/Blockchain/src/upgrade/stateValidator.cpp
-CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_79) "Building CXX object CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.o -MF CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.o -c /home/elrasap/programmieren/Blockchain/src/upgrade/stateValidator.cpp
-
-CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/upgrade/stateValidator.cpp > CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/upgrade/stateValidator.cpp -o CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.o: /home/elrasap/programmieren/Blockchain/src/upgrade/upgradeMatrix.cpp
-CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_80) "Building CXX object CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.o -MF CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.o -c /home/elrasap/programmieren/Blockchain/src/upgrade/upgradeMatrix.cpp
-
-CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/upgrade/upgradeMatrix.cpp > CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/upgrade/upgradeMatrix.cpp -o CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.o: /home/elrasap/programmieren/Blockchain/src/upgrade/upgradeSafetyChecker.cpp
-CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_81) "Building CXX object CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.o -MF CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.o -c /home/elrasap/programmieren/Blockchain/src/upgrade/upgradeSafetyChecker.cpp
-
-CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/upgrade/upgradeSafetyChecker.cpp > CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/upgrade/upgradeSafetyChecker.cpp -o CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.s
-
-CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
-CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.o: /home/elrasap/programmieren/Blockchain/src/util/dummyCrypto.cpp
-CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_82) "Building CXX object CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.o -MF CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.o -c /home/elrasap/programmieren/Blockchain/src/util/dummyCrypto.cpp
-
-CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/util/dummyCrypto.cpp > CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.i
-
-CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/util/dummyCrypto.cpp -o CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.s
-
 CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o: /home/elrasap/programmieren/Blockchain/src/web/chainApi.cpp
 CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_83) "Building CXX object CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building CXX object CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o -MF CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o -c /home/elrasap/programmieren/Blockchain/src/web/chainApi.cpp
 
 CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.i: cmake_force
@@ -1237,7 +775,7 @@ CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o: /home/elrasap/programmieren/Blockchain/src/web/dashboardServer.cpp
 CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_84) "Building CXX object CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building CXX object CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o -MF CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o -c /home/elrasap/programmieren/Blockchain/src/web/dashboardServer.cpp
 
 CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.i: cmake_force
@@ -1251,7 +789,7 @@ CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/web/dmApi.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/web/dmApi.cpp.o: /home/elrasap/programmieren/Blockchain/src/web/dmApi.cpp
 CMakeFiles/blockchain_node.dir/src/web/dmApi.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_85) "Building CXX object CMakeFiles/blockchain_node.dir/src/web/dmApi.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building CXX object CMakeFiles/blockchain_node.dir/src/web/dmApi.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/web/dmApi.cpp.o -MF CMakeFiles/blockchain_node.dir/src/web/dmApi.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/web/dmApi.cpp.o -c /home/elrasap/programmieren/Blockchain/src/web/dmApi.cpp
 
 CMakeFiles/blockchain_node.dir/src/web/dmApi.cpp.i: cmake_force
@@ -1265,7 +803,7 @@ CMakeFiles/blockchain_node.dir/src/web/dmApi.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.o: /home/elrasap/programmieren/Blockchain/src/web/dndApi.cpp
 CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_86) "Building CXX object CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building CXX object CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.o -MF CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.o -c /home/elrasap/programmieren/Blockchain/src/web/dndApi.cpp
 
 CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.i: cmake_force
@@ -1279,7 +817,7 @@ CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.s: cmake_force
 CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
 CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.o: /home/elrasap/programmieren/Blockchain/src/web/metricsEndpoint.cpp
 CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_87) "Building CXX object CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building CXX object CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.o -MF CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.o -c /home/elrasap/programmieren/Blockchain/src/web/metricsEndpoint.cpp
 
 CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.i: cmake_force
@@ -1290,15 +828,22 @@ CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/web/metricsEndpoint.cpp -o CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.s
 
+CMakeFiles/blockchain_node.dir/src/main.cpp.o: CMakeFiles/blockchain_node.dir/flags.make
+CMakeFiles/blockchain_node.dir/src/main.cpp.o: /home/elrasap/programmieren/Blockchain/src/main.cpp
+CMakeFiles/blockchain_node.dir/src/main.cpp.o: CMakeFiles/blockchain_node.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Building CXX object CMakeFiles/blockchain_node.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/blockchain_node.dir/src/main.cpp.o -MF CMakeFiles/blockchain_node.dir/src/main.cpp.o.d -o CMakeFiles/blockchain_node.dir/src/main.cpp.o -c /home/elrasap/programmieren/Blockchain/src/main.cpp
+
+CMakeFiles/blockchain_node.dir/src/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/blockchain_node.dir/src/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/elrasap/programmieren/Blockchain/src/main.cpp > CMakeFiles/blockchain_node.dir/src/main.cpp.i
+
+CMakeFiles/blockchain_node.dir/src/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/blockchain_node.dir/src/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/elrasap/programmieren/Blockchain/src/main.cpp -o CMakeFiles/blockchain_node.dir/src/main.cpp.s
+
 # Object files for target blockchain_node
 blockchain_node_OBJECTS = \
-"CMakeFiles/blockchain_node.dir/src/main.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/core/block.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o" \
@@ -1312,8 +857,6 @@ blockchain_node_OBJECTS = \
 "CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/core/validation.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.o" \
@@ -1322,6 +865,7 @@ blockchain_node_OBJECTS = \
 "CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.o" \
+"CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/dnd/dndState.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.o" \
@@ -1332,14 +876,6 @@ blockchain_node_OBJECTS = \
 "CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/metrics/clusterMetrics.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/metrics/dndMetrics.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/metrics/metricsCollector.cpp.o" \
@@ -1348,48 +884,25 @@ blockchain_node_OBJECTS = \
 "CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o" \
+"CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/storage/blockStore.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/storage/commitLog.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/storage/historyStore.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/web/dmApi.cpp.o" \
 "CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.o" \
-"CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.o"
+"CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.o" \
+"CMakeFiles/blockchain_node.dir/src/main.cpp.o"
 
 # External object files for target blockchain_node
 blockchain_node_EXTERNAL_OBJECTS =
 
-blockchain_node: CMakeFiles/blockchain_node.dir/src/main.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/analytics/forecaster.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/analytics/rtoRpoAnalyzer.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/analytics/trendAnalyzer.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/analytics/trendReporter.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/cluster/clusterManager.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/cluster/clusterNode.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/core/block.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/core/blockBuilder.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/core/blockEncoding.cpp.o
@@ -1403,8 +916,6 @@ blockchain_node: CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/core/poaValidator.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/core/transaction.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/core/validation.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/dashboard/forecastDashboard.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/dashboard/perfDashboard.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/character.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/combat/combatLog.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/combat/combatService.cpp.o
@@ -1413,6 +924,7 @@ blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/combat/dice.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/combat/encounter.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/combat/monster.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/combat/payloads.cpp.o
+blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/dndActions.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/dndCharacterService.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/dndState.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/dndTx.cpp.o
@@ -1423,14 +935,6 @@ blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/dndTxValidator.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/patch.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/payload.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/dnd/stateSnapshot.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/incident/chaosEngine.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/incident/experimentReport.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/incident/forensicsReporter.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/incident/incidentHandler.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/incident/scenarioRunner.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/light/headerChain.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/light/lightClient.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/light/merkleProof.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/metrics/clusterMetrics.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/metrics/dndMetrics.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/metrics/metricsCollector.cpp.o
@@ -1439,45 +943,28 @@ blockchain_node: CMakeFiles/blockchain_node.dir/src/network/fastSyncManager.cpp.
 blockchain_node: CMakeFiles/blockchain_node.dir/src/network/gossipProtocol.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/network/gossipServer.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/network/messages.cpp.o
+blockchain_node: CMakeFiles/blockchain_node.dir/src/network/peerDiscovery.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/network/peerInfo.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/network/peerManager.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/network/syncManager.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/network/syncProtocol.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/obs/healthChecker.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/obs/metrics.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/obs/tracer.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/ops/exportAgent.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/ops/grafanaDashboardGenerator.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/ops/notification.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/ops/reliabilityGuard.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/recovery/disasterRecovery.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/recovery/timelineReporter.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/security/auditReport.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/security/policyEnfocer.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/security/securityScanner.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/storage/blockStore.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/storage/commitLog.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/storage/historyStore.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/storage/snapshotManager.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/upgrade/goldenFileManager.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/upgrade/schemaRegistry.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/upgrade/stateValidator.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/upgrade/upgradeMatrix.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.o
-blockchain_node: CMakeFiles/blockchain_node.dir/src/util/dummyCrypto.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/web/dmApi.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/src/web/metricsEndpoint.cpp.o
+blockchain_node: CMakeFiles/blockchain_node.dir/src/main.cpp.o
 blockchain_node: CMakeFiles/blockchain_node.dir/build.make
 blockchain_node: CMakeFiles/blockchain_node.dir/compiler_depend.ts
-blockchain_node: /usr/lib/libsqlite3.so
 blockchain_node: /usr/lib/libcrypto.so
-blockchain_node: /usr/lib/libcurl.so
-blockchain_node: /usr/lib/libcurl.so
+blockchain_node: /usr/lib/libssl.so
+blockchain_node: /usr/lib/libcrypto.so
 blockchain_node: CMakeFiles/blockchain_node.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_88) "Linking CXX executable blockchain_node"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/elrasap/programmieren/Blockchain/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Linking CXX executable blockchain_node"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/blockchain_node.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

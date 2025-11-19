@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/elrasap/programmieren/Blockchain/include
+CXX_INCLUDES = -I/home/elrasap/programmieren/Blockchain/include -I/home/elrasap/programmieren/Blockchain/include/thirdparty -I/home/elrasap/programmieren/Blockchain/include/core -I/home/elrasap/programmieren/Blockchain/include/network -I/home/elrasap/programmieren/Blockchain/include/web -I/home/elrasap/programmieren/Blockchain/include/storage -I/home/elrasap/programmieren/Blockchain/include/dnd -I/home/elrasap/programmieren/Blockchain/include/metrics -I/home/elrasap/programmieren/Blockchain/include/tests
 
-CXX_FLAGS = -std=gnu++20 -fPIE -DWITH_GZFILEOP
+CXX_FLAGS = -std=gnu++20 -Wall -Wextra -Wpedantic -Wno-deprecated-declarations
 

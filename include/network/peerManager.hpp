@@ -21,6 +21,8 @@ struct PeerInfo {
 
 class PeerManager {
 public:
+    void setSync(SyncManager* s) { sync = s; }
+
     FastSyncManager* fastSync = nullptr;
 
     PeerManager(int port, SyncManager* sync);
@@ -56,7 +58,8 @@ private:
     std::thread serverThread;
 
     std::map<int, int> sockets;
-    std::mutex connMutex;
+    mutable std::mutex connMutex;
+
 
     std::vector<PeerInfo> peers;
     mutable std::mutex mtx;
