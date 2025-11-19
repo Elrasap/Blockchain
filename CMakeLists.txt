@@ -1,111 +1,61 @@
-cmake_minimum_required(VERSION 3.20)
-
-project(Blockchain LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.16)
+project(DndBlockchain CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# ==========================================================
-# Dependencies
-# ==========================================================
+# Compiler warnings
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    add_compile_options(-Wall -Wextra -Wpedantic -Wno-deprecated-declarations)
+endif()
 
-find_package(SQLite3 REQUIRED)
+# Threading
+find_package(Threads REQUIRED)
+
+# OpenSSL
 find_package(OpenSSL REQUIRED)
-find_package(CURL REQUIRED)
 
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(LIBSODIUM REQUIRED libsodium)
-
-# ==========================================================
-# Include paths
-# ==========================================================
-
+# Include Dir
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${LIBSODIUM_INCLUDE_DIRS}
+    include
+    include/thirdparty
+    include/core
+    include/network
+    include/web
+    include/storage
+    include/dnd
+    include/metrics
+    include/tests
 )
 
-# ==========================================================
-# Core Source Files
-# ==========================================================
-
-file(GLOB_RECURSE BLOCKCHAIN_CORE_SRC
-    src/core/*.cpp
-    src/storage/*.cpp
-    src/analytics/*.cpp
-    src/cluster/*.cpp
-    src/obs/*.cpp
-    src/ops/*.cpp
-    src/metrics/*.cpp
-    src/web/*.cpp
-    src/dnd/*.cpp
-    src/dashboard/*.cpp
-    src/network/*.cpp
-    src/recovery/*.cpp
-    src/security/*.cpp
-    src/upgrade/*.cpp
-    src/incident/*.cpp
-    src/light/*.cpp
-    src/util/*.cpp
+# Source files
+file(GLOB_RECURSE SRC_FILES
+    src/*.cpp
 )
 
-# ==========================================================
-# Main Node Binary
-# ==========================================================
-
+# MAIN EXECUTABLE
 add_executable(blockchain_node
-    src/main.cpp
-    ${BLOCKCHAIN_CORE_SRC}
+    ${SRC_FILES}
+    src/main.cpp        # ensure main is included
 )
 
 target_link_libraries(blockchain_node
-    PRIVATE
-        SQLite::SQLite3
-        OpenSSL::Crypto
-        CURL::libcurl
-        ${LIBSODIUM_LIBRARIES}
+    Threads::Threads
+    OpenSSL::Crypto
+    OpenSSL::SSL
 )
 
-# ==========================================================
-# Test Sources
-# ==========================================================
-
-file(GLOB TEST_SOURCES
-    src/tests/testFramework.hpp
-    src/tests/testRunner.cpp
-    src/tests/unit_block_tests.cpp
-    src/tests/unit_dnd_apply_tests.cpp
-    src/tests/selftest_chain_dnd.cpp
-    src/tests/fuzz_encounter_state.cpp
+# TEST EXECUTABLE
+file(GLOB_RECURSE TEST_SRC
+    src/tests/*.cpp
 )
-
-# ==========================================================
-# Test Binary
-# ==========================================================
 
 add_executable(blockchain_tests
-    ${TEST_SOURCES}
-    ${BLOCKCHAIN_CORE_SRC}    # Tests brauchen alle Core-Module
+    ${TEST_SRC}
 )
 
 target_link_libraries(blockchain_tests
-    PRIVATE
-        SQLite::SQLite3
-        OpenSSL::Crypto
-        CURL::libcurl
-        ${LIBSODIUM_LIBRARIES}
+    Threads::Threads
+    OpenSSL::Crypto
 )
-
-# ==========================================================
-# Output
-# ==========================================================
-
-message(STATUS "===============================================")
-message(STATUS " Build configuration complete")
-message(STATUS " Node binary:        blockchain_node")
-message(STATUS " Test binary:        blockchain_tests")
-message(STATUS " Sodium include dir: ${LIBSODIUM_INCLUDE_DIRS}")
-message(STATUS " Sodium libs:        ${LIBSODIUM_LIBRARIES}")
-message(STATUS "===============================================")
 

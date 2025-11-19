@@ -1,109 +1,204 @@
 #include <iostream>
+#include <fstream>
 #include <thread>
+#include <csignal>
 #include <chrono>
 
-#include "core/dmKeyManager.hpp"
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
+// Core
 #include "core/blockchain.hpp"
 #include "core/blockBuilder.hpp"
 #include "core/mempool.hpp"
-#include "storage/blockStore.hpp"
 
+// DnD
 #include "dnd/dndTxValidator.hpp"
+#include "dnd/dndPayload.hpp"
+#include "dnd/dndState.hpp"
 
+// Web & Network
+#include "web/chainApi.hpp"
+#include "web/dndApi.hpp"
 #include "web/dashboardServer.hpp"
 #include "metrics/metricsServer.hpp"
-
 #include "network/gossipServer.hpp"
 #include "network/peerManager.hpp"
+#include "network/syncManager.hpp"
 
-int main() {
-    std::cout << "=== Blockchain Node Startup ===\n";
+// Storage
+#include "storage/blockStore.hpp"
 
-    // 1) Load DM key
-    DmKeyPair dmKeys;
-    if (!loadOrCreateDmKey("dm_keys.bin", dmKeys)) {
-        std::cerr << "[FATAL] Cannot load or generate DM key\n";
-        return 1;
+static bool RUNNING = true;
+void signalHandler(int) { RUNNING = false; }
+
+// -------------------------------------------------------------
+// Config laden
+// -------------------------------------------------------------
+json loadConfig(const std::string& path)
+{
+    std::ifstream in(path);
+    if (!in) {
+        std::cerr << "[Config] Missing config.json\n";
+        exit(1);
     }
+    json j;
+    in >> j;
+    return j;
+}
 
-    // 2) Block store + chain
-    BlockStore store("blocks.db");
-    Blockchain chain(store, dmKeys.publicKey);
-    chain.ensureGenesisBlock(dmKeys.privateKey);
+// -------------------------------------------------------------
+// MAIN
+// -------------------------------------------------------------
+int main()
+{
+    std::cout << "=== DND BLOCKCHAIN NODE STARTING ===\n";
 
-    // 3) DnD validation context
+    // Shutdown-Signal
+    signal(SIGINT,  signalHandler);
+    signal(SIGTERM, signalHandler);
+
+    // ---------------------------------------------------------
+    // CONFIG
+    // ---------------------------------------------------------
+    json cfg = loadConfig("config.json");
+
+    int httpPort     = cfg.value("port",         8080);
+    int gossipPort   = cfg.value("gossipPort",   8090);
+    int peerPort     = cfg.value("peerPort",     9000);
+    std::string db   = cfg.value("blockDb",      "blocks.db");
+    std::string mpf  = cfg.value("mempoolFile",  "mempool.json");
+    std::string snap = cfg.value("snapshotFile", "state_snapshot.json");
+
+    std::vector<uint8_t> dmPriv = cfg["dmPrivKey"].get<std::vector<uint8_t>>();
+    std::vector<uint8_t> dmPub  = cfg["dmPubKey"].get<std::vector<uint8_t>>();
+
+    // ---------------------------------------------------------
+    // STORAGE
+    // ---------------------------------------------------------
+    BlockStore store(db);
+
+    // ---------------------------------------------------------
+    // BLOCKCHAIN
+    // ---------------------------------------------------------
+    Blockchain chain(store, dmPub);
+
+    // Snapshot laden falls vorhanden
+    chain.loadSnapshot(snap);
+    chain.rebuildState();
+
+    chain.ensureGenesisBlock(dmPriv);
+
+    // ---------------------------------------------------------
+    // VALIDATOR
+    // ---------------------------------------------------------
     dnd::DndValidationContext ctx;
-    ctx.characterExists = [&chain](const std::string& id) {
-        return chain.getDndState().characterExists(id);
-    };
-    ctx.monsterExists = [&chain](const std::string& id) {
-        return chain.getDndState().monsterExists(id);
-    };
-    ctx.encounterActive = [&chain](const std::string& id) {
-        return chain.getDndState().encounterExists(id);
-    };
-    ctx.hasControlPermission = [](const std::string&,
-                                  const std::vector<uint8_t>&,
-                                  bool) {
-        return true;
-    };
+    ctx.characterExists = [&](const std::string&) { return true; };
+    ctx.monsterExists   = [&](const std::string&) { return true; };
+    ctx.encounterActive = [&](const std::string&) { return true; };
+    ctx.hasControlPermission = [&](const std::string&,
+                                   const std::vector<uint8_t>&,
+                                   bool) { return true; };
 
     dnd::DndTxValidator validator(ctx);
 
-    // 4) Mempool (mit Validator!)
+    // ---------------------------------------------------------
+    // MEMPOOL (PERSISTENT)
+    // ---------------------------------------------------------
     Mempool mempool(&validator);
+    mempool.loadFromFile(mpf);
 
-    // 5) BlockBuilder
-    BlockBuilder blockBuilder(chain,
-                              dmKeys.privateKey,
-                              dmKeys.publicKey);
+    // ---------------------------------------------------------
+    // NETWORK
+    // ---------------------------------------------------------
+    PeerManager peers(peerPort);
+    SyncManager sync(&chain, &peers);
+    peers.sync = &sync;
+    global_sync = &sync;
 
-    // 6) PeerManager
-    PeerManager peers(8091, nullptr);
-    peers.setMempool(&mempool);
     peers.startServer();
 
-    // 7) Dashboard
-    DashboardServer dashboard(8080, "reports", "./blockchain_node");
-    std::thread dashThread([&]() {
-        dashboard.start();
+    // Peer discovery
+    if (cfg.contains("peers")) {
+        for (auto& adr : cfg["peers"]) {
+            std::string host = adr["host"];
+            int p = adr["port"];
+            peers.connectToPeer(host, p);
+        }
+    }
+
+    // ---------------------------------------------------------
+    // GOSSIP SERVER (HTTP)
+    // ---------------------------------------------------------
+    GossipServer gossip(gossipPort, chain, mempool, &peers, &validator);
+    std::thread tg([&]() { gossip.start(); });
+
+    // ---------------------------------------------------------
+    // HTTP-API SERVER
+    // ---------------------------------------------------------
+    httplib::Server http;
+
+    ChainApi api(chain);
+    api.bind(http);
+
+    dnd::DndApi dndapi(chain, mempool, &peers, validator, dmPriv, dmPub);
+    dndapi.install(http);
+
+    DashboardServer dashboard(httpPort, "reports/", db);
+    dashboard.attach(http);
+
+    MetricsServer metrics(9100, chain);
+    metrics.attach(http);
+
+    std::thread thttp([&]() {
+        http.listen("0.0.0.0", httpPort);
     });
 
-    // 8) Metrics
-    MetricsServer metrics(9100);
-    std::thread metricsThread([&]() {
-        metrics.start();
-    });
-
-    // 9) Gossip Server
-    GossipServer gossip(8090, chain, mempool, &peers, &validator);
-    std::thread gossipThread([&]() {
-        gossip.start();
-    });
-
-    // 10) Auto miner
+    // ---------------------------------------------------------
+    // AUTO-MINER (runs every 4 seconds)
+    // ---------------------------------------------------------
     std::thread miner([&]() {
-        while (true) {
+        BlockBuilder builder(chain, dmPriv, dmPub);
+
+        while (RUNNING) {
             std::this_thread::sleep_for(std::chrono::seconds(4));
 
             if (mempool.size() == 0)
                 continue;
 
             Block out;
-            if (blockBuilder.buildAndAppendFromMempool(mempool, out)) {
-                std::cout << "[AutoMiner] Block "
-                          << out.header.height << " mined.\n";
+            if (builder.buildAndAppendFromMempool(mempool, out)) {
+                std::cout << "[Miner] Mined block height "
+                          << out.header.height << "\n";
 
-                if (peers.peerCount() > 0) {
-                    peers.broadcastBlock(out);
-                }
+                peers.broadcastBlock(out);
             }
         }
     });
 
-    dashThread.join();
-    metricsThread.join();
-    gossipThread.join();
-    miner.join();
+    // ---------------------------------------------------------
+    // MAIN LOOP
+    // ---------------------------------------------------------
+    while (RUNNING) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
+
+    // ---------------------------------------------------------
+    // CLEAN SHUTDOWN
+    // ---------------------------------------------------------
+    std::cout << "[Node] Shutting down...\n";
+
+    mempool.saveToFile(mpf);
+    chain.writeSnapshot(snap);
+
+    peers.stop();
+    http.stop();
+    gossip.stop();
+
+    if (miner.joinable()) miner.join();
+    if (tg.joinable()) tg.join();
+    if (thttp.joinable()) thttp.join();
+
+    return 0;
 }
 
