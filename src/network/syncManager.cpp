@@ -1,15 +1,15 @@
-// src/network/syncManager.cpp
 #include "network/syncManager.hpp"
 
 #include "core/block.hpp"
 #include "core/blockchain.hpp"
 #include "network/peerManager.hpp"
 #include "network/messages.hpp"
-#include <sys/socket.h>
 
+#include <sys/socket.h>
+#include <unistd.h>   // ::send
 #include <iostream>
 #include <cstring>
-#include <unistd.h> // write()
+
 SyncManager* global_sync = nullptr;
 
 SyncManager::SyncManager(Blockchain& chain, PeerManager& peers)
@@ -33,9 +33,10 @@ void SyncManager::stop() {
 
 bool SyncManager::hasBlock(const std::array<uint8_t,32>& hash) const {
     auto& ch = chain_.getChain();
-    for (auto& b : ch)
+    for (auto& b : ch) {
         if (b.hash() == hash)
             return true;
+    }
     return false;
 }
 
@@ -45,7 +46,8 @@ void SyncManager::requestBlock(const std::array<uint8_t,32>& hash) {
     msg.payload.assign(hash.begin(), hash.end());
     auto encoded = encodeMessage(msg);
 
-    peers_.broadcastRaw(encoded);   // siehe PeerManager-Erweiterung unten
+    // über alle Peers rausschicken
+    peers_.broadcastRaw(encoded);
 }
 
 void SyncManager::handleInv(const std::array<uint8_t,32>& hash) {
@@ -60,7 +62,6 @@ void SyncManager::handleInv(const std::array<uint8_t,32>& hash) {
 }
 
 void SyncManager::handleGetBlock(const std::array<uint8_t,32>& hash, int fd) {
-    // passenden Block suchen
     auto& ch = chain_.getChain();
     for (auto& b : ch) {
         if (b.hash() == hash) {
@@ -88,7 +89,7 @@ void SyncManager::handleBlock(const Block& block) {
 
 void SyncManager::loop() {
     while (running) {
-        std::array<uint8_t,32> want;
+        std::array<uint8_t,32> want{};
         bool wantSet = false;
 
         {

@@ -833,6 +833,24 @@ void DashboardServer::start()
 }
 void DashboardServer::attach(httplib::Server& http)
 {
+    // Root page for browser
+    http.Get("/", [&](const httplib::Request&, httplib::Response& res) {
+        std::string html =
+            "<html><body style='font-family:sans-serif; background:#222; color:#eee;'>"
+            "<h1>Blockchain Dashboard</h1>"
+            "<p>Dashboard läuft 🎉</p>"
+            "<p>Endpoints:</p>"
+            "<ul>"
+            "<li><a style='color:#9cf' href='/chain/status'>/chain/status</a></li>"
+            "<li><a style='color:#9cf' href='/dnd/state'>/dnd/state</a></li>"
+            "<li><a style='color:#9cf' href='/metrics'>/metrics</a></li>"
+            "</ul>"
+            "</body></html>";
+
+        res.set_content(html, "text/html");
+    });
+
+    // Simple debug page
     http.Get("/dashboard", [&](const httplib::Request&, httplib::Response& res) {
         res.set_content(
             "<html><body><h1>Blockchain Dashboard</h1><p>läuft 🎉</p></body></html>",

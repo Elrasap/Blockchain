@@ -20,29 +20,43 @@ std::string ChainApi::hashToHex(const std::array<uint8_t, 32>& h) const
     return out;
 }
 
-void ChainApi::bind(httplib::Server& svr)
+void ChainApi::bind(httplib::Server& server)
 {
-    // /chain/height (falls noch nicht vorhanden, ansonsten egal)
-    svr.Get("/chain/height", [this](const httplib::Request&, httplib::Response& res) {
+    server.Get("/chain/height", [&](const httplib::Request&, httplib::Response& res) {
         json j;
         j["height"] = chain_.getHeight();
         res.set_content(j.dump(2), "application/json");
     });
 
-    // /chain/latest
-    svr.Get("/chain/latest", [this](const httplib::Request&, httplib::Response& res) {
-        auto blk = chain_.getLatestBlock();
+    server.Get("/chain/latest", [&](const httplib::Request&, httplib::Response& res) {
+        auto b = chain_.getLatestBlock();
+        res.set_content(serializeBlock(b), "application/json");
+    });
+
+    server.Get(R"(/chain/block/(\d+))", [&](const httplib::Request& req, httplib::Response& res) {
+        int h = std::stoi(req.matches[1]);
+        auto block = chain_.getBlock(h);
+        if (!block) {
+            res.status = 404;
+            res.set_content("{\"error\":\"block not found\"}", "application/json");
+            return;
+        }
+        res.set_content(serializeBlock(*block), "application/json");
+    });
+
+    // 👉 ADD THIS (your missing endpoint)
+    server.Get("/chain/status", [&](const httplib::Request&, httplib::Response& res) {
         json j;
 
-        j["height"]    = blk.header.height;
-        j["timestamp"] = blk.header.timestamp;
-        j["hash"]      = hashToHex(blk.hash());
-        j["prevHash"]  = hashToHex(blk.header.prevHash);
-        j["txCount"]   = blk.transactions.size();
+        j["height"] = chain_.getHeight();
+        auto latest = chain_.getLatestBlock();
+        j["latestHash"] = latest.header.hashHex();
+        j["timestamp"]  = latest.header.timestamp;
+        j["txCount"]    = latest.transactions.size();
 
         res.set_content(j.dump(2), "application/json");
     });
-
+}
     // /chain/range?from=..&to=..
     svr.Get("/chain/range", [this](const httplib::Request& req,
                                    httplib::Response& res) {

@@ -4,33 +4,32 @@ project(DndBlockchain CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Compiler warnings
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-Wall -Wextra -Wpedantic -Wno-deprecated-declarations)
 endif()
 
-# Threading
 find_package(Threads REQUIRED)
-
-# OpenSSL
 find_package(OpenSSL REQUIRED)
+find_package(CURL REQUIRED)
 
-# Include directories
+find_library(SODIUM_LIB sodium)
+find_library(SQLITE3_LIB sqlite3)
+
 include_directories(
     include
-    include/thirdparty
     include/core
     include/network
     include/web
     include/storage
     include/dnd
     include/metrics
+    include/upgrade
+    include/analytics
+    include/ops
+    include/light
     include/tests
+    include/thirdparty
 )
-
-# ============================================================
-# NODE SOURCES (exclude backup + agent)
-# ============================================================
 
 file(GLOB_RECURSE NODE_SRC
     src/core/*.cpp
@@ -39,29 +38,29 @@ file(GLOB_RECURSE NODE_SRC
     src/storage/*.cpp
     src/metrics/*.cpp
     src/dnd/*.cpp
+    src/upgrade/*.cpp
+    src/analytics/*.cpp
+    src/ops/*.cpp
+    src/light/*.cpp
+    src/release/*.cpp
+    src/obs/*.cpp
 )
-
-# Ensure backups excluded
 list(FILTER NODE_SRC EXCLUDE REGEX "backup")
 list(FILTER NODE_SRC EXCLUDE REGEX "agent")
 
-# Add main.cpp manually
-set(NODE_MAIN src/main.cpp)
-
 add_executable(blockchain_node
     ${NODE_SRC}
-    ${NODE_MAIN}
+    src/main.cpp
 )
 
 target_link_libraries(blockchain_node
     Threads::Threads
     OpenSSL::Crypto
     OpenSSL::SSL
+    ${SQLITE3_LIB}
+    ${SODIUM_LIB}
+    CURL::libcurl     # <---- Einheitlich
 )
-
-# ============================================================
-# TEST SOURCES (clean separation)
-# ============================================================
 
 file(GLOB_RECURSE TEST_SRC
     src/tests/*.cpp
@@ -69,10 +68,15 @@ file(GLOB_RECURSE TEST_SRC
 
 add_executable(blockchain_tests
     ${TEST_SRC}
+    ${NODE_SRC}
 )
 
 target_link_libraries(blockchain_tests
     Threads::Threads
     OpenSSL::Crypto
+    OpenSSL::SSL
+    ${SQLITE3_LIB}
+    ${SODIUM_LIB}
+    CURL::libcurl     # <---- Einheitlich
 )
 

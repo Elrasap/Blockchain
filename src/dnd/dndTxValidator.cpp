@@ -21,19 +21,18 @@ bool DndTxValidator::validate(const DndEventTx& evt, std::string& error) const {
 
 bool DndTxValidator::validateActorExists(const DndEventTx& evt,
                                          std::string& error) const {
-    if (!ctx_.characterExists || !ctx_.monsterExists) {
-        return true; // kein Kontext => keine Prüfung
-    }
+    if (!ctx_.characterExists || !ctx_.monsterExists)
+        return true;
 
-    const bool isMonster = (evt.actorType == 1);
+    bool isMonster = (evt.actorType == 1);
     if (isMonster) {
         if (!ctx_.monsterExists(evt.actorId)) {
-            error = "Actor monsterId not found: " + evt.actorId;
+            error = "Actor monster not found: " + evt.actorId;
             return false;
         }
     } else {
         if (!ctx_.characterExists(evt.actorId)) {
-            error = "Actor characterId not found: " + evt.actorId;
+            error = "Actor character not found: " + evt.actorId;
             return false;
         }
     }
@@ -42,19 +41,23 @@ bool DndTxValidator::validateActorExists(const DndEventTx& evt,
 
 bool DndTxValidator::validateTargetExists(const DndEventTx& evt,
                                           std::string& error) const {
-    if (!ctx_.characterExists || !ctx_.monsterExists) {
+    if (!ctx_.characterExists || !ctx_.monsterExists)
         return true;
+
+    // ===== OPTIONAL TARGETS =====
+    if (evt.targetId.empty()) {
+        return true;  // Initiative, Move, Start Encounter, etc.
     }
 
-    const bool isMonster = (evt.targetType == 1);
+    bool isMonster = (evt.targetType == 1);
     if (isMonster) {
         if (!ctx_.monsterExists(evt.targetId)) {
-            error = "Target monsterId not found: " + evt.targetId;
+            error = "Target monster not found: " + evt.targetId;
             return false;
         }
     } else {
         if (!ctx_.characterExists(evt.targetId)) {
-            error = "Target characterId not found: " + evt.targetId;
+            error = "Target character not found: " + evt.targetId;
             return false;
         }
     }
@@ -63,9 +66,9 @@ bool DndTxValidator::validateTargetExists(const DndEventTx& evt,
 
 bool DndTxValidator::validateEncounter(const DndEventTx& evt,
                                        std::string& error) const {
-    if (!ctx_.encounterActive) {
+    if (!ctx_.encounterActive)
         return true;
-    }
+
     if (!ctx_.encounterActive(evt.encounterId)) {
         error = "Encounter not active: " + evt.encounterId;
         return false;
@@ -81,10 +84,8 @@ bool DndTxValidator::validatePermissions(const DndEventTx& evt, std::string& err
         error = "permission denied for actorId=" + evt.actorId;
         return false;
     }
-
     return true;
 }
-
 
 bool DndTxValidator::validateTimestamp(const DndEventTx& evt,
                                        std::string& error) const {

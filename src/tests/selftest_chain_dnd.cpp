@@ -6,18 +6,19 @@
 #include "dnd/dndTxCodec.hpp"
 #include "dnd/dndTxValidator.hpp"
 #include "storage/blockStore.hpp"
+#include "core/crypto.hpp"
 
 #include <ctime>
 
-// Wir registrieren den Test ganz normal:
 TEST_CASE(selftest_chain_with_single_dnd_tx)
 {
     // ---- Blockchain Setup ----
     BlockStore store(":memory:");
 
-    // Dummy-DM Keys – Länge ist hier egal, weil wir appendBlock NICHT aufrufen
-    std::vector<uint8_t> dmPub  = {1,2,3};
-    std::vector<uint8_t> dmPriv = {9,9,9};
+    // Echte gültige Keys
+    crypto::KeyPair keypair = crypto::generateKeyPair();
+    std::vector<uint8_t> dmPub  = keypair.publicKey;
+    std::vector<uint8_t> dmPriv = keypair.privateKey;
 
     Blockchain chain(store, dmPub);
     ASSERT_TRUE(chain.ensureGenesisBlock(dmPriv));
@@ -25,18 +26,27 @@ TEST_CASE(selftest_chain_with_single_dnd_tx)
     // ---- Validator Setup ----
     dnd::DndValidationContext ctx;
 
-    ctx.characterExists = [&](const std::string&) { return true; };
-    ctx.monsterExists   = [&](const std::string&) { return true; };
-    ctx.encounterActive = [&](const std::string&) { return true; };
-
+    ctx.characterExists = [&](const std::string&) {
+        return true;
+    };
+    ctx.monsterExists = [&](const std::string&) {
+        return true;
+    };
+    ctx.encounterActive = [&](const std::string&) {
+        return true;
+    };
     ctx.hasControlPermission = [&](const std::string&,
                                    const std::vector<uint8_t>&,
-                                   bool) { return true; };
+                                   bool) {
+        return true;
+    };
 
     dnd::DndTxValidator validator(ctx);
 
     // ---- Mempool ----
     Mempool mempool(&validator);
+    mempool.ignoreSignatureCheck = true;
+
 
     // ---- TX erstellen ----
     dnd::DndEventTx evt;
@@ -45,8 +55,12 @@ TEST_CASE(selftest_chain_with_single_dnd_tx)
     evt.actorType   = 0;
     evt.timestamp   = static_cast<uint64_t>(time(nullptr));
 
+    // ===== WICHTIG: Target hinzufügen ====
+    evt.targetId    = "monster1";
+    evt.targetType  = 1;
+
     evt.senderPubKey = dmPub;
-    evt.signature    = {9,9,9};  // für diesen Test egal
+    evt.signature    = crypto::sign({1,2,3}, dmPriv);
 
     Transaction tx;
     tx.payload      = dnd::encodeDndTx(evt);
@@ -54,25 +68,24 @@ TEST_CASE(selftest_chain_with_single_dnd_tx)
     tx.signature    = evt.signature;
 
     std::string err;
-    ASSERT_TRUE(mempool.addTransactionValidated(tx, err));
+    bool ok = mempool.addTransactionValidated(tx, err);
+    if (!ok) {
+        printf("[VALIDATION ERROR] %s\n", err.c_str());
+    }
+    ASSERT_TRUE(ok);
+
 
     // ---- BlockBuilder ----
     BlockBuilder builder(chain, dmPriv, dmPub);
 
-    // WICHTIG: wir bauen NUR den Block,
-    // hängen ihn aber NICHT an die Chain (wegen PoA-Signaturcheck).
+    // KEIN append → PoA Signature wird nicht geprüft
     Block out = builder.buildBlockFromMempool(mempool);
 
     // ---- Prüfen ----
     ASSERT_EQ(out.transactions.size(), 1u);
-
-    // Optional: die Chain selbst bleibt nur Genesis hoch:
     ASSERT_EQ(chain.getHeight(), 0u);
 
-    // Falls du sicherstellen willst, dass Genesis existiert:
     auto latest = chain.getLatestBlock();
     ASSERT_EQ(latest.header.height, 0u);
-
-    // Keine zusätzliche PASS-Macro nötig, der Test ist bei Ende "OK"
 }
 

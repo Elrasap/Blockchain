@@ -14,7 +14,7 @@ namespace dnd {
 class Mempool {
 public:
     explicit Mempool(dnd::DndTxValidator* validator);
-
+    bool ignoreSignatureCheck = false;
     // Validierender Insert
     bool addTransactionValidated(const Transaction& tx, std::string& err);
 

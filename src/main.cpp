@@ -11,6 +11,7 @@ using json = nlohmann::json;
 #include "core/blockchain.hpp"
 #include "core/blockBuilder.hpp"
 #include "core/mempool.hpp"
+#include "core/crypto.hpp"   // <--- IMPORTANT
 
 // DnD
 #include "dnd/dndTxValidator.hpp"
@@ -33,7 +34,7 @@ static bool RUNNING = true;
 void signalHandler(int) { RUNNING = false; }
 
 // -------------------------------------------------------------
-// Config laden
+// Load config.json (safe)
 // -------------------------------------------------------------
 json loadConfig(const std::string& path)
 {
@@ -42,6 +43,7 @@ json loadConfig(const std::string& path)
         std::cerr << "[Config] Missing config.json\n";
         exit(1);
     }
+
     json j;
     in >> j;
     return j;
@@ -54,7 +56,7 @@ int main()
 {
     std::cout << "=== DND BLOCKCHAIN NODE STARTING ===\n";
 
-    // Shutdown-Signal
+    // Shutdown signal
     signal(SIGINT,  signalHandler);
     signal(SIGTERM, signalHandler);
 
@@ -63,15 +65,33 @@ int main()
     // ---------------------------------------------------------
     json cfg = loadConfig("config.json");
 
-    int httpPort     = cfg.value("port",         8080);
-    int gossipPort   = cfg.value("gossipPort",   8090);
-    int peerPort     = cfg.value("peerPort",     9000);
+    int httpPort   = cfg.value("port",       8080);
+    int gossipPort = cfg.value("gossipPort", 8090);
+    int peerPort   = cfg.value("peerPort",   9000);
+
     std::string db   = cfg.value("blockDb",      "blocks.db");
     std::string mpf  = cfg.value("mempoolFile",  "mempool.json");
     std::string snap = cfg.value("snapshotFile", "state_snapshot.json");
 
-    std::vector<uint8_t> dmPriv = cfg["dmPrivKey"].get<std::vector<uint8_t>>();
-    std::vector<uint8_t> dmPub  = cfg["dmPubKey"].get<std::vector<uint8_t>>();
+    // ---------------------------------------------------------
+    // DM KEYS: from config OR auto-generate
+    // ---------------------------------------------------------
+    std::vector<uint8_t> dmPriv;
+    std::vector<uint8_t> dmPub;
+
+    if (cfg.contains("dmPrivKey") && cfg["dmPrivKey"].is_array() &&
+        cfg.contains("dmPubKey")  && cfg["dmPubKey"].is_array())
+    {
+        dmPriv = cfg["dmPrivKey"].get<std::vector<uint8_t>>();
+        dmPub  = cfg["dmPubKey"].get<std::vector<uint8_t>>();
+        std::cout << "[Config] Using DM keys from config.json\n";
+    }
+    else {
+        auto kp = crypto::generateKeyPair();
+        dmPriv = kp.privateKey;
+        dmPub  = kp.publicKey;
+        std::cout << "[Config] Generated ephemeral DM keypair (no keys in config.json)\n";
+    }
 
     // ---------------------------------------------------------
     // STORAGE
@@ -83,14 +103,14 @@ int main()
     // ---------------------------------------------------------
     Blockchain chain(store, dmPub);
 
-    // Snapshot laden falls vorhanden
+    // Load snapshot & rebuild state
     chain.loadSnapshot(snap);
     chain.rebuildState();
 
     chain.ensureGenesisBlock(dmPriv);
 
     // ---------------------------------------------------------
-    // VALIDATOR
+    // VALIDATOR (DND)
     // ---------------------------------------------------------
     dnd::DndValidationContext ctx;
     ctx.characterExists = [&](const std::string&) { return true; };
@@ -103,7 +123,7 @@ int main()
     dnd::DndTxValidator validator(ctx);
 
     // ---------------------------------------------------------
-    // MEMPOOL (PERSISTENT)
+    // MEMPOOL
     // ---------------------------------------------------------
     Mempool mempool(&validator);
     mempool.loadFromFile(mpf);
@@ -116,26 +136,25 @@ int main()
     peers.setSync(&sync);
     global_sync = &sync;
 
-
     peers.startServer();
 
-    // Peer discovery
-    if (cfg.contains("peers")) {
+    // Safe peer loading
+    if (cfg.contains("peers") && cfg["peers"].is_array()) {
         for (auto& adr : cfg["peers"]) {
-            std::string host = adr["host"];
-            int p = adr["port"];
+            std::string host = adr.value("host", "127.0.0.1");
+            int         p    = adr.value("port", peerPort);
             peers.connectToPeer(host, p);
         }
     }
 
     // ---------------------------------------------------------
-    // GOSSIP SERVER (HTTP)
+    // GOSSIP SERVER
     // ---------------------------------------------------------
     GossipServer gossip(gossipPort, chain, mempool, &peers, &validator);
     std::thread tg([&]() { gossip.start(); });
 
     // ---------------------------------------------------------
-    // HTTP-API SERVER
+    // HTTP API
     // ---------------------------------------------------------
     httplib::Server http;
 
@@ -146,19 +165,17 @@ int main()
     dndapi.install(http);
 
     DashboardServer dashboard(httpPort, "reports/", db);
-    dashboard.attach(http);  // Jetzt funktioniert
-
+    dashboard.attach(http);
 
     MetricsServer metrics(9100);
     metrics.attach(http);
-
 
     std::thread thttp([&]() {
         http.listen("0.0.0.0", httpPort);
     });
 
     // ---------------------------------------------------------
-    // AUTO-MINER (runs every 4 seconds)
+    // AUTO-MINER (every 4 seconds)
     // ---------------------------------------------------------
     std::thread miner([&]() {
         BlockBuilder builder(chain, dmPriv, dmPub);
@@ -198,9 +215,8 @@ int main()
     http.stop();
     gossip.stop();
 
-
     if (miner.joinable()) miner.join();
-    if (tg.joinable()) tg.join();
+    if (tg.joinable())    tg.join();
     if (thttp.joinable()) thttp.join();
 
     return 0;

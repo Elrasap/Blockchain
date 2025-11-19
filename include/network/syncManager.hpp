@@ -1,4 +1,3 @@
-// include/network/syncManager.hpp
 #pragma once
 
 #include <array>
@@ -40,5 +39,7 @@ private:
     std::array<uint8_t,32> wanted_{};
     bool haveWanted_ = false;
 };
+
+// globale Sync-Instanz, von PeerManager benutzt
 extern SyncManager* global_sync;
 

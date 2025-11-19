@@ -18,20 +18,21 @@
 
 using namespace std;
 
-SyncManager* global_sync = nullptr;
+// global_sync wird in syncManager.cpp definiert
+extern SyncManager* global_sync;
 
 // --------------------------------------------------------
 // Konstruktoren
 // --------------------------------------------------------
 
 PeerManager::PeerManager(int port, SyncManager* syncManager)
-        : listen_port(port), sync(syncManager)
+    : listen_port(port), sync(syncManager)
 {
     cout << "[PeerManager] Created with sync at port " << port << endl;
 }
 
 PeerManager::PeerManager(int port)
-        : listen_port(port)
+    : listen_port(port)
 {
     cout << "[PeerManager] Created on port " << port << endl;
 }
@@ -81,7 +82,7 @@ void PeerManager::markSeen(const std::string& addr) {
 
 int PeerManager::peerCount() const {
     std::lock_guard<std::mutex> lock(mtx);
-    return peers.size();
+    return static_cast<int>(peers.size());
 }
 
 
@@ -92,7 +93,7 @@ int PeerManager::peerCount() const {
 void PeerManager::startServer()
 {
     running = true;
-    serverThread = thread(&PeerManager::serverLoop, this);
+    serverThread = std::thread(&PeerManager::serverLoop, this);
 }
 
 void PeerManager::stop()
@@ -101,7 +102,7 @@ void PeerManager::stop()
     running = false;
 
     {
-        lock_guard<mutex> lock(connMutex);
+        std::lock_guard<std::mutex> lock(connMutex);
         for (auto& [fd, _] : sockets)
             close(fd);
         sockets.clear();
@@ -142,11 +143,11 @@ void PeerManager::connectToPeer(const std::string& host, int port)
     }
 
     {
-        lock_guard<mutex> lock(connMutex);
+        std::lock_guard<std::mutex> lock(connMutex);
         sockets[sock] = port;
     }
 
-    addPeer(host + ":" + to_string(port));
+    addPeer(host + ":" + std::to_string(port));
 
     cout << "[PeerManager] Connected to peer "
          << host << ":" << port << endl;
@@ -169,7 +170,7 @@ void PeerManager::setMempool(Mempool* mp)
 
 void PeerManager::broadcastTransaction(const Transaction& tx)
 {
-    vector<uint8_t> serialized = tx.serialize();
+    std::vector<uint8_t> serialized = tx.serialize();
 
     Message msg;
     msg.type = MessageType::TX_BROADCAST;
@@ -177,7 +178,7 @@ void PeerManager::broadcastTransaction(const Transaction& tx)
 
     auto encoded = encodeMessage(msg);
 
-    lock_guard<mutex> lock(connMutex);
+    std::lock_guard<std::mutex> lock(connMutex);
 
     for (auto& [fd, _] : sockets) {
         send(fd, encoded.data(), encoded.size(), 0);
@@ -193,7 +194,7 @@ void PeerManager::broadcast(const Message& msg)
 {
     auto encoded = encodeMessage(msg);
 
-    lock_guard<std::mutex> lock(connMutex);
+    std::lock_guard<std::mutex> lock(connMutex);
 
     for (auto& [fd, _] : sockets) {
         send(fd, encoded.data(), encoded.size(), 0);
@@ -239,16 +240,17 @@ void PeerManager::serverLoop()
         int client_fd = accept(server_fd, (sockaddr*)&client_addr, &len);
 
         if (client_fd < 0) {
-            if (!running) break;
+            if (!running)
+                break;
             continue;
         }
 
         {
-            lock_guard<mutex> lock(connMutex);
+            std::lock_guard<std::mutex> lock(connMutex);
             sockets[client_fd] = ntohs(client_addr.sin_port);
         }
 
-        thread(&PeerManager::handleClient, this, client_fd).detach();
+        std::thread(&PeerManager::handleClient, this, client_fd).detach();
     }
 
     close(server_fd);
@@ -268,7 +270,7 @@ void PeerManager::handleClient(int client_fd)
         if (bytes <= 0)
             break;
 
-        vector<uint8_t> data(buffer, buffer + bytes);
+        std::vector<uint8_t> data(buffer, buffer + bytes);
         Message msg = decodeMessage(data);
 
         if (msg.type == MessageType::TX_BROADCAST) {
@@ -289,7 +291,8 @@ void PeerManager::handleClient(int client_fd)
         }
         else if (msg.type == MessageType::INV ||
                  msg.type == MessageType::GETBLOCK ||
-                 msg.type == MessageType::BLOCK) {
+                 msg.type == MessageType::BLOCK ||
+                 msg.type == MessageType::HEADER) {
 
             handleMessage(client_fd, msg);
         }
@@ -298,7 +301,7 @@ void PeerManager::handleClient(int client_fd)
     close(client_fd);
 
     {
-        lock_guard<mutex> lock(connMutex);
+        std::lock_guard<std::mutex> lock(connMutex);
         sockets.erase(client_fd);
     }
 }
@@ -313,15 +316,19 @@ void PeerManager::handleMessage(int fd, const Message& msg)
     if (msg.type == MessageType::HEADER) {
         BlockHeader h = decodeHeader(msg.payload);
         if (fastSync) fastSync->handleHeader(h);
+        return;
     }
 
+    if (!global_sync)
+        return;
+
     if (msg.type == MessageType::INV) {
-        array<uint8_t, 32> h{};
+        std::array<uint8_t,32> h{};
         memcpy(h.data(), msg.payload.data(), 32);
         global_sync->handleInv(h);
     }
     else if (msg.type == MessageType::GETBLOCK) {
-        array<uint8_t, 32> h{};
+        std::array<uint8_t,32> h{};
         memcpy(h.data(), msg.payload.data(), 32);
         global_sync->handleGetBlock(h, fd);
     }
@@ -339,7 +346,7 @@ void PeerManager::handleMessage(int fd, const Message& msg)
 
 void PeerManager::shutdownAllConnections()
 {
-    lock_guard<mutex> lock(connMutex);
+    std::lock_guard<std::mutex> lock(connMutex);
 
     for (auto& [fd, _] : sockets)
         shutdown(fd, SHUT_RDWR);
@@ -378,6 +385,7 @@ void PeerManager::broadcastRaw(const std::vector<uint8_t>& data)
     for (auto& [fd, _] : sockets)
         send(fd, data.data(), data.size(), 0);
 }
+
 bool PeerManager::isConnected(const std::string& host, int port) const
 {
     std::lock_guard<std::mutex> lock(connMutex);

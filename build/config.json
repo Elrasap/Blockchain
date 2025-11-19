@@ -1,0 +1,10 @@
+{
+  "port": 8080,
+  "gossipPort": 8090,
+  "peerPort": 9000,
+  "blockDb": "blocks.db",
+  "mempoolFile": "mempool.json",
+  "snapshotFile": "state_snapshot.json",
+  "peers": []
+}
+
