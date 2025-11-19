@@ -372,3 +372,22 @@ void PeerManager::broadcastBlock(const Block& block)
               << " peers\n";
 }
 
+void PeerManager::broadcastRaw(const std::vector<uint8_t>& data)
+{
+    std::lock_guard<std::mutex> lock(connMutex);
+    for (auto& [fd, _] : sockets)
+        send(fd, data.data(), data.size(), 0);
+}
+bool PeerManager::isConnected(const std::string& host, int port) const
+{
+    std::lock_guard<std::mutex> lock(connMutex);
+
+    std::string full = host + ":" + std::to_string(port);
+
+    for (auto& p : peers)
+        if (p.address == full)
+            return true;
+
+    return false;
+}
+

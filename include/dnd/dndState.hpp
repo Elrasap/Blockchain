@@ -41,6 +41,15 @@ struct EncounterState {
     std::vector<combat::CombatActorRef> actors;
     std::vector<DndEventTx>             events;
 };
+struct Character {
+    std::string id;
+    std::string name;
+    int hp = 10;
+    int maxHp = 10;
+    int level = 1;
+
+    std::vector<uint8_t> ownerPubKey;   // <-- NEU
+};
 
 // ---------------------------------------------------------
 // DndState – Zentrales Game-State Objekt

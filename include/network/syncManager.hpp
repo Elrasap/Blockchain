@@ -1,30 +1,43 @@
+// include/network/syncManager.hpp
 #pragma once
-#include <map>
-#include <string>
-#include <vector>
+
+#include <array>
+#include <cstdint>
 #include <mutex>
-#include "core/block.hpp"
-#include "storage/blockStore.hpp"
-#include "network/messages.hpp"
-#include "core/validation.hpp"
+#include <thread>
+#include <atomic>
 
-class BlockStore;   // forward declaration
-
+class Blockchain;
+class PeerManager;
 
 class SyncManager {
 public:
-    SyncManager(BlockStore* store);
-    void handleInv(const std::array<uint8_t, 32>& hash);
-    void handleGetBlock(const std::array<uint8_t, 32>& hash, int peer_fd);
-    void handleBlock(const Block& block);
-    void announceBlock(const Block& block);
-    void attachPeer(int peer_fd);
-    std::vector<int> getPeers();
+    SyncManager(Blockchain& chain, PeerManager& peers);
+    ~SyncManager();
+
+    void start();     // Hintergrundloop starten
+    void stop();
+
+    // Eingehende Netzwerknachrichten:
+    void handleInv(const std::array<uint8_t,32>& hash);
+    void handleGetBlock(const std::array<uint8_t,32>& hash, int fd);
+    void handleBlock(const class Block& block);
 
 private:
-    BlockStore* store;
-    std::map<std::array<uint8_t, 32>, bool> known_blocks;
-    std::mutex mtx;
-    std::vector<int> peer_fds;
+    void loop();      // Hintergrund-Sync-Thread
+    bool hasBlock(const std::array<uint8_t,32>& hash) const;
+    void requestBlock(const std::array<uint8_t,32>& hash);
+
+private:
+    Blockchain& chain_;
+    PeerManager& peers_;
+
+    std::thread worker_;
+    std::atomic<bool> running{false};
+
+    // zuletzt gesehener Block-Hash, der uns interessiert
+    std::mutex mtx_;
+    std::array<uint8_t,32> wanted_{};
+    bool haveWanted_ = false;
 };
 

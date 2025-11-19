@@ -14,6 +14,15 @@
 // =====================================================
 // Constructor
 // =====================================================
+extern SyncManager* global_sync;
+if (global_sync) {
+    Message msg;
+    msg.type = MessageType::INV;
+    auto h = block.hash();
+    msg.payload.assign(h.begin(), h.end());
+    auto encoded = encodeMessage(msg);
+    peers.broadcastRaw(encoded);
+}
 
 Blockchain::Blockchain(BlockStore& store,
                        const std::vector<uint8_t>& dmValidatorPubKey)
@@ -184,14 +193,43 @@ bool Blockchain::validateTransaction(const Transaction& tx,
 // Append Block
 // =====================================================
 
-bool Blockchain::appendBlock(const Block& block) {
+bool Blockchain::appendBlock(const Block& block)
+{
+    uint64_t expectedHeight = chain_.empty() ? 0 : chain_.back().header.height + 1;
+
+    // ---------- NEW: CONSENSUS CONFLICT CHECK ----------
+    // FALL 1: Block ist älter als unsere Chain → sofort reject
+    if (block.header.height < expectedHeight) {
+        std::cerr << "[Consensus] Reject block " << block.header.height
+                  << " because we already have a longer chain.\n";
+        return false;
+    }
+
+    // FALL 2: Block ist in Zukunft → wir haben die Vorgänger nicht
+    if (block.header.height > expectedHeight) {
+        std::cerr << "[Consensus] Reject block " << block.header.height
+                  << " because it is ahead of our chain (missing parent).\n";
+        return false;
+    }
+
+    // FALL 3: Block ist EXAKT auf derselben Höhe → Fork → reject
+    if (!chain_.empty() && block.header.height == chain_.back().header.height) {
+        std::cerr << "[Consensus] Reject block at same height "
+                  << block.header.height << " (fork detected).\n";
+        return false;
+    }
+    // ----------------------------------------------------
+
+    // Normale Validierung (PoA, Merkle, Timestamp)
     if (!validateBlock(block)) return false;
 
+    // In persistent storage schreiben
     if (!store_.appendBlock(block)) {
         std::cerr << "[Blockchain] Store append failed\n";
         return false;
     }
 
+    // Zur Chain hinzufügen
     chain_.push_back(block);
 
     // apply all block txs to state
@@ -209,6 +247,7 @@ bool Blockchain::appendBlock(const Block& block) {
 
     return true;
 }
+
 
 // =====================================================
 // Genesis

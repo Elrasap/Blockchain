@@ -3,16 +3,13 @@
 #include <vector>
 
 #include "thirdparty/httplib.h"
-#include <nlohmann/json.hpp>
-
+#include "core/blockchain.hpp"
 #include "core/mempool.hpp"
-#include "core/transaction.hpp"
 #include "network/peerManager.hpp"
 #include "dnd/dndTx.hpp"
-#include "dnd/dndTxCodec.hpp"
 #include "dnd/dndTxValidator.hpp"
 
-class Blockchain;
+#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
@@ -23,31 +20,32 @@ public:
     DndApi(Blockchain& chain,
            Mempool& mempool,
            PeerManager* peers,
-           DndTxValidator& validator,
-           const std::vector<uint8_t>& dmPriv,
-           const std::vector<uint8_t>& dmPub);
+           dnd::DndTxValidator& validator,
+           const std::vector<uint8_t>& dmPrivKey,
+           const std::vector<uint8_t>& dmPubKey);
 
-    void install(httplib::Server& svr);
+    void install(httplib::Server& server);
 
 private:
     Blockchain& chain_;
     Mempool& mempool_;
     PeerManager* peers_;
-    DndTxValidator& validator_;
-
+    dnd::DndTxValidator& validator_;
     std::vector<uint8_t> dmPriv_;
     std::vector<uint8_t> dmPub_;
 
-    // helpers
-    static httplib::Response jsonOK(const json& obj = json::object());
     static httplib::Response jsonError(const std::string& msg, int status = 400);
+    static httplib::Response jsonOK(const json& data = json::object());
 
     bool parseJsonToEvent(const httplib::Request& req,
-                          DndEventTx& evt,
+                          dnd::DndEventTx& evt,
                           std::string& errOut);
 
-    bool wrapAndInsert(const DndEventTx& evt,
+    bool wrapAndInsert(const dnd::DndEventTx& evt,
                        std::string& errOut);
+
+    // Neu: History-Antwort
+    httplib::Response getEncounterHistory(const std::string& encId);
 };
 
 } // namespace dnd

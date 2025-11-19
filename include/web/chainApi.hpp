@@ -1,20 +1,16 @@
 #pragma once
-#include <thirdparty/httplib.h>
+#include "thirdparty/httplib.h"
 #include "core/blockchain.hpp"
-#include "dnd/dndState.hpp"
-
-namespace web {
 
 class ChainApi {
 public:
-    ChainApi(Blockchain& chain, dnd::DndState& dndState);
+    explicit ChainApi(Blockchain& chain);
 
-    void registerRoutes(httplib::Server& server);
+    void bind(httplib::Server& svr);
 
 private:
     Blockchain& chain_;
-    dnd::DndState& dndState_;
-};
 
-} // namespace web
+    std::string hashToHex(const std::array<uint8_t, 32>& h) const;
+};
 

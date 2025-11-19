@@ -1,174 +1,114 @@
 #include "web/chainApi.hpp"
 #include <nlohmann/json.hpp>
 
-using nlohmann::json;
-using namespace std;
+using json = nlohmann::json;
 
-namespace web {
-
-ChainApi::ChainApi(Blockchain& chain, dnd::DndState& dnd)
-    : chain_(chain), dndState_(dnd)
+ChainApi::ChainApi(Blockchain& chain)
+    : chain_(chain)
 {
 }
 
-void ChainApi::registerRoutes(httplib::Server& server)
+std::string ChainApi::hashToHex(const std::array<uint8_t, 32>& h) const
 {
-    // ============================================================
-    //  GET /chain/height
-    // ============================================================
-    server.Get("/chain/height", [&](const httplib::Request& req,
-                                    httplib::Response& res)
-    {
-        json j = {
-            {"height", chain_.getHeight()}
-        };
+    static const char* hex = "0123456789abcdef";
+    std::string out;
+    out.reserve(64);
+    for (auto b : h) {
+        out.push_back(hex[(b >> 4) & 0xF]);
+        out.push_back(hex[b & 0xF]);
+    }
+    return out;
+}
 
-        res.status = 200;
+void ChainApi::bind(httplib::Server& svr)
+{
+    // /chain/height (falls noch nicht vorhanden, ansonsten egal)
+    svr.Get("/chain/height", [this](const httplib::Request&, httplib::Response& res) {
+        json j;
+        j["height"] = chain_.getHeight();
         res.set_content(j.dump(2), "application/json");
     });
 
-
-    // ============================================================
-    //  GET /chain/block/<n>
-    // ============================================================
-    server.Get(R"(/chain/block/(\d+))", [&](const httplib::Request& req,
-                                            httplib::Response& res)
-    {
-        uint64_t height = std::stoull(req.matches[1].str());
-
-        Block b = chain_.getBlock(height);
-        if (b.header.height != height) {
-            res.status = 404;
-            res.set_content("{\"error\":\"block not found\"}", "application/json");
-            return;
-        }
-
+    // /chain/latest
+    svr.Get("/chain/latest", [this](const httplib::Request&, httplib::Response& res) {
+        auto blk = chain_.getLatestBlock();
         json j;
-        j["height"] = b.header.height;
-        j["timestamp"] = b.header.timestamp;
-        j["prevHash"] = b.header.prevHash;
-        j["merkleRoot"] = b.header.merkleRoot;
-        j["validatorPubKey"] = b.header.validatorPubKey;
 
-        j["transactions"] = json::array();
-        for (const auto& tx : b.transactions) {
-            json t;
-            t["senderPubKey"] = tx.senderPubkey;
-            t["payloadSize"]  = tx.payload.size();
-            j["transactions"].push_back(t);
-        }
+        j["height"]    = blk.header.height;
+        j["timestamp"] = blk.header.timestamp;
+        j["hash"]      = hashToHex(blk.hash());
+        j["prevHash"]  = hashToHex(blk.header.prevHash);
+        j["txCount"]   = blk.transactions.size();
 
-        res.status = 200;
         res.set_content(j.dump(2), "application/json");
     });
 
+    // /chain/range?from=..&to=..
+    svr.Get("/chain/range", [this](const httplib::Request& req,
+                                   httplib::Response& res) {
+        uint64_t from = 0;
+        uint64_t to   = chain_.getHeight();
 
-    // ============================================================
-    // GET /dnd/state
-    // ============================================================
-    server.Get("/dnd/state", [&](const httplib::Request&, httplib::Response& res)
-    {
-        json j;
-
-        // ===========================
-        // CHARACTERS
-        // ===========================
-        j["characters"] = json::array();
-        for (auto& [id, c] : dndState_.characters)
-        {
-            json cj;
-            cj["id"]   = c.sheet.id;
-            cj["name"] = c.sheet.name;
-            cj["level"] = c.sheet.level;
-            cj["hpCurrent"] = c.sheet.hpCurrent;
-            cj["hpMax"]     = c.sheet.hpMax;
-            cj["armorClass"] = c.sheet.armorClass;
-
-            j["characters"].push_back(cj);
+        if (auto it = req.get_param_value("from"); !it.empty()) {
+            from = std::stoull(it);
+        }
+        if (auto it = req.get_param_value("to"); !it.empty()) {
+            to = std::stoull(it);
         }
 
-        // ===========================
-        // MONSTERS
-        // ===========================
-        j["monsters"] = json::array();
-        for (auto& [id, m] : dndState_.monsters)
-        {
-            json mj;
-            mj["id"] = m.id;
-            mj["hp"] = m.hp;
-            mj["maxHp"] = m.maxHp;
+        json arr = json::array();
 
-            // Kein Name vorhanden in deiner Struktur,
-            // wir tragen den Key als "Name" ein
-            mj["name"] = m.id;
-
-            j["monsters"].push_back(mj);
-        }
-
-        // ===========================
-        // ENCOUNTERS
-        // ===========================
-        j["encounters"] = json::array();
-        for (auto& [id, e] : dndState_.encounters)
-        {
-            json ej;
-            ej["id"] = e.id;
-            ej["active"] = e.active;
-            ej["round"] = e.round;
-            ej["turnIndex"] = e.turnIndex;
-
-            ej["actors"] = json::array();
-            for (auto& a : e.actors)
-            {
-                json aj;
-                aj["id"]   = a.id;
-                aj["kind"] = a.kind;
-                ej["actors"].push_back(aj);
+        for (uint64_t h = from; h <= to; ++h) {
+            auto blk = chain_.getBlock(h);
+            if (blk.header.timestamp == 0 && blk.header.height == 0 &&
+                blk.header.merkleRoot == std::array<uint8_t, 32>{}) {
+                continue; // non-existent
             }
 
-            j["encounters"].push_back(ej);
+            json j;
+            j["height"]    = blk.header.height;
+            j["timestamp"] = blk.header.timestamp;
+            j["hash"]      = hashToHex(blk.hash());
+            j["prevHash"]  = hashToHex(blk.header.prevHash);
+            j["txCount"]   = blk.transactions.size();
+            arr.push_back(j);
         }
 
-        res.status = 200;
-        res.set_content(j.dump(2), "application/json");
+        res.set_content(arr.dump(2), "application/json");
     });
 
-
-    // ============================================================
-    // GET /dnd/encounter/<id>
-    // ============================================================
-    server.Get(R"(/dnd/encounter/(.+))", [&](const httplib::Request& req,
-                                              httplib::Response& res)
-    {
-        std::string encId = req.matches[1].str();
-
-        auto it = dndState_.encounters.find(encId);
-        if (it == dndState_.encounters.end()) {
-            res.status = 404;
-            res.set_content("{\"error\":\"encounter not found\"}", "application/json");
+    // /chain/tx/<hash>
+    svr.Get(R"(/chain/tx/(\w+))", [this](const httplib::Request& req,
+                                         httplib::Response& res) {
+        if (req.matches.size() < 2) {
+            res.status = 400;
+            res.set_content(R"({"error":"missing hash"})", "application/json");
             return;
         }
 
-        const auto& e = it->second;
+        std::string wantedHex = req.matches[1];
 
-        json j;
-        j["id"] = e.id;
-        j["active"] = e.active;
-        j["round"] = e.round;
-        j["turnIndex"] = e.turnIndex;
+        for (uint64_t h = 0; h <= chain_.getHeight(); ++h) {
+            auto blk = chain_.getBlock(h);
+            for (const auto& tx : blk.transactions) {
+                auto txh = tx.hash();
+                std::string hex = hashToHex(txh);
+                if (hex == wantedHex) {
+                    json j;
+                    j["blockHeight"] = h;
+                    j["hash"]        = hex;
+                    j["payload"]     = tx.payload;
+                    j["senderPubKey"]= tx.senderPubkey;
+                    j["signature"]   = tx.signature;
 
-        j["actors"] = json::array();
-        for (const auto& a : e.actors) {
-            json aj;
-            aj["id"] = a.id;
-            aj["kind"] = a.kind;
-            j["actors"].push_back(aj);
+                    res.set_content(j.dump(2), "application/json");
+                    return;
+                }
+            }
         }
 
-        res.status = 200;
-        res.set_content(j.dump(2), "application/json");
+        res.status = 404;
+        res.set_content(R"({"error":"tx not found"})", "application/json");
     });
 }
-
-} // namespace web
 

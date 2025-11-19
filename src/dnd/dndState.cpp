@@ -56,7 +56,46 @@ int DndState::getCharacterHp(const std::string& id) const
 // ========================================================
 bool DndState::apply(const DndEventTx& evt, std::string& err)
 {
-    // 1) Encounter holen oder automatisch anlegen
+    switch (evt.type)
+    {
+    // ======================================================
+    //  CREATE_CHARACTER
+    // ======================================================
+    case DndEventType::CREATE_CHARACTER: {
+        Character c;
+        c.id          = evt.actorId;
+        c.name        = evt.note;
+        c.hp          = 10;
+        c.maxHp       = 10;
+        c.level       = 1;
+
+        // NEU: Ownership
+        c.ownerPubKey = evt.senderPubKey;
+
+        characters[c.id] = c;
+        return true;
+    }
+
+    // ======================================================
+    //  SPAWN_MONSTER
+    // ======================================================
+    case DndEventType::SPAWN_MONSTER: {
+        Monster m;
+        m.id    = evt.actorId;
+        m.hp    = 10;
+        m.maxHp = 10;
+
+        monsters[m.id] = m;
+        return true;
+    }
+
+    default:
+        break;
+    }
+
+    // ======================================================
+    //  Für alle Kampf-Events: Encounter holen oder erstellen
+    // ======================================================
     auto encIt = encounters.find(evt.encounterId);
     if (encIt == encounters.end()) {
         EncounterState enc;
@@ -64,49 +103,58 @@ bool DndState::apply(const DndEventTx& evt, std::string& err)
         enc.active    = true;
         enc.round     = 1;
         enc.turnIndex = 0;
-
-        auto [it, ok] = encounters.emplace(enc.id, std::move(enc));
-        encIt = it;
+        encounters.emplace(enc.id, enc);
+        encIt = encounters.find(enc.id);
     }
 
     EncounterState& enc = encIt->second;
 
-    // 2) Event ins Log eintragen
+    // Log speichern
     enc.events.push_back(evt);
 
-    // 3) Schaden anwenden, falls Hit
+    // ======================================================
+    //  HIT / DAMAGE
+    // ======================================================
     if (evt.hit && evt.damage > 0)
     {
-        // TargetType 0 = Character
-        if (evt.targetType == 0) {
-            auto& sheet = characters[evt.targetId].sheet; // auto-create
-            sheet.hpCurrent -= evt.damage;
-            if (sheet.hpCurrent < 0) sheet.hpCurrent = 0;
-        }
-        // TargetType 1 = Monster
-        else if (evt.targetType == 1) {
-            auto& mon = monsters[evt.targetId]; // auto-create
-            if (mon.id.empty())
-                mon.id = evt.targetId;
-
-            // Falls Monster neu ist: Default-HP setzen (für einfache Tests)
-            if (mon.maxHp == 0 && mon.hp == 0) {
-                mon.maxHp = 5;   // so wird bei 5 Schaden sofort auf 0 gekillt
-                mon.hp    = mon.maxHp;
+        // DAMAGE ON CHARACTER
+        if (evt.targetType == 0)
+        {
+            auto it = characters.find(evt.targetId);
+            if (it == characters.end()) {
+                err = "Unknown character " + evt.targetId;
+                return false;
             }
 
-            mon.hp -= evt.damage;
-            if (mon.hp < 0) mon.hp = 0;
+            Character& c = it->second;
+            c.hp -= evt.damage;
+            if (c.hp < 0) c.hp = 0;
+        }
+        // DAMAGE ON MONSTER
+        else if (evt.targetType == 1)
+        {
+            auto& m = monsters[evt.targetId];
 
-            // Wenn Monster tot → prüfen ob Encounter beendet
-            if (mon.hp == 0) {
+            if (m.id.empty())
+                m.id = evt.targetId;
+
+            if (m.maxHp == 0)
+                m.maxHp = m.hp = 10;
+
+            m.hp -= evt.damage;
+            if (m.hp < 0) m.hp = 0;
+
+            // Auto-End Encounter wenn alle Monster tot
+            if (m.hp == 0)
+            {
                 bool allDead = true;
 
-                for (const auto& actor : enc.actors)
+                for (auto& actor : enc.actors)
                 {
-                    if (actor.kind == CombatActorKind::Monster) {
-                        auto itMon = monsters.find(actor.id);
-                        if (itMon != monsters.end() && itMon->second.hp > 0) {
+                    if (actor.kind == CombatActorKind::Monster)
+                    {
+                        auto it2 = monsters.find(actor.id);
+                        if (it2 != monsters.end() && it2->second.hp > 0) {
                             allDead = false;
                             break;
                         }
@@ -117,8 +165,9 @@ bool DndState::apply(const DndEventTx& evt, std::string& err)
                     enc.active = false;
             }
         }
-        else {
-            err = "Unknown targetType " + std::to_string(evt.targetType);
+        else
+        {
+            err = "Invalid targetType " + std::to_string(evt.targetType);
             return false;
         }
     }

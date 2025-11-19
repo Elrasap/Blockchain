@@ -47,7 +47,8 @@ public:
     void markSeen(const std::string& addr);
 
     void attachFastSync(FastSyncManager* f) { fastSync = f; }
-
+    void broadcastRaw(const std::vector<uint8_t>& data);
+    bool isConnected(const std::string& host, int port) const;
 private:
     int listen_port;
     bool running = false;

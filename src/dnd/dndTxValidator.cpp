@@ -73,19 +73,18 @@ bool DndTxValidator::validateEncounter(const DndEventTx& evt,
     return true;
 }
 
-bool DndTxValidator::validatePermissions(const DndEventTx& evt,
-                                         std::string& error) const {
-    if (!ctx_.hasControlPermission) {
-        return true;
-    }
-
+bool DndTxValidator::validatePermissions(const DndEventTx& evt, std::string& error) const
+{
     bool isMonster = (evt.actorType == 1);
+
     if (!ctx_.hasControlPermission(evt.actorId, evt.senderPubKey, isMonster)) {
-        error = "Sender is not allowed to control actor " + evt.actorId;
+        error = "permission denied for actorId=" + evt.actorId;
         return false;
     }
+
     return true;
 }
+
 
 bool DndTxValidator::validateTimestamp(const DndEventTx& evt,
                                        std::string& error) const {
