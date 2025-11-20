@@ -40,8 +40,12 @@ json loadConfig(const std::string& path)
 {
     std::ifstream in(path);
     if (!in) {
-        std::cerr << "[Config] Missing config.json\n";
-        exit(1);
+        std::cerr << "[Config] Missing " << path << "\n";
+        std::cerr << "         Please create a config.json (you can start with:\n"
+                     "         {\"port\":8080,\"gossipPort\":8090,\"peerPort\":9000,"
+                     "\"blockDb\":\"blocks\",\"mempoolFile\":\"mempool.json\","
+                     "\"snapshotFile\":\"state_snapshot.json\"}\n";
+        std::exit(1);
     }
 
     json j;
@@ -50,10 +54,25 @@ json loadConfig(const std::string& path)
 }
 
 // -------------------------------------------------------------
+// Save config.json (for persisting generated DM keys)
+// -------------------------------------------------------------
+bool saveConfig(const std::string& path, const json& cfg)
+{
+    std::ofstream out(path);
+    if (!out) {
+        std::cerr << "[Config] ERROR: Failed to write config file '" << path << "'\n";
+        return false;
+    }
+
+    out << cfg.dump(4) << "\n";
+    return static_cast<bool>(out);
+}
+
+// -------------------------------------------------------------
 // DM-KEY HELPER
 // -------------------------------------------------------------
-static constexpr std::size_t DM_PUBKEY_SIZE  = 32;
-static constexpr std::size_t DM_PRIVKEY_SIZE = 64;
+static constexpr std::size_t DM_PUBKEY_SIZE  = 32; // Ed25519 public key
+static constexpr std::size_t DM_PRIVKEY_SIZE = 64; // Ed25519 secret key
 
 bool loadDmKeysFromConfig(const json& cfg,
                           std::vector<uint8_t>& dmPriv,
@@ -61,7 +80,7 @@ bool loadDmKeysFromConfig(const json& cfg,
 {
     if (!cfg.contains("dmPrivKey") || !cfg["dmPrivKey"].is_array() ||
         !cfg.contains("dmPubKey")  || !cfg["dmPubKey"].is_array()) {
-        std::cerr << "[Config] dmPrivKey/dmPubKey not found or not arrays – falling back.\n";
+        std::cerr << "[Config] dmPrivKey/dmPubKey not found or not arrays.\n";
         return false;
     }
 
@@ -71,27 +90,19 @@ bool loadDmKeysFromConfig(const json& cfg,
     }
     catch (const std::exception& ex) {
         std::cerr << "[Config] Failed to parse dmPrivKey/dmPubKey: "
-                  << ex.what() << " – falling back.\n";
-        dmPriv.clear();
-        dmPub.clear();
+                  << ex.what() << "\n";
         return false;
     }
 
     if (dmPriv.size() != DM_PRIVKEY_SIZE) {
         std::cerr << "[Config] Invalid dmPrivKey length: expected "
-                  << DM_PRIVKEY_SIZE << " bytes, got " << dmPriv.size()
-                  << " – falling back.\n";
-        dmPriv.clear();
-        dmPub.clear();
+                  << DM_PRIVKEY_SIZE << " bytes, got " << dmPriv.size() << "\n";
         return false;
     }
 
     if (dmPub.size() != DM_PUBKEY_SIZE) {
         std::cerr << "[Config] Invalid dmPubKey length: expected "
-                  << DM_PUBKEY_SIZE << " bytes, got " << dmPub.size()
-                  << " – falling back.\n";
-        dmPriv.clear();
-        dmPub.clear();
+                  << DM_PUBKEY_SIZE << " bytes, got " << dmPub.size() << "\n";
         return false;
     }
 
@@ -109,10 +120,12 @@ int main()
     signal(SIGINT,  signalHandler);
     signal(SIGTERM, signalHandler);
 
+    const std::string configPath = "config.json";
+
     // ---------------------------------------------------------
     // CONFIG
     // ---------------------------------------------------------
-    json cfg = loadConfig("config.json");
+    json cfg = loadConfig(configPath);
 
     int httpPort   = cfg.value("port",       8080);
     int gossipPort = cfg.value("gossipPort", 8090);
@@ -128,13 +141,41 @@ int main()
     std::vector<uint8_t> dmPriv;
     std::vector<uint8_t> dmPub;
 
-    bool ok = loadDmKeysFromConfig(cfg, dmPriv, dmPub);
+    const bool configHasKeys =
+        cfg.contains("dmPrivKey") || cfg.contains("dmPubKey");
 
-    if (!ok) {
-        auto kp = crypto::generateKeyPair();
+    if (configHasKeys) {
+        // Es wurden Keys konfiguriert → sie müssen gültig sein
+        if (!loadDmKeysFromConfig(cfg, dmPriv, dmPub)) {
+            std::cerr << "[Config] FATAL: Invalid DM key material in "
+                      << configPath << ".\n"
+                      << "         Please fix or remove dmPrivKey/dmPubKey and restart.\n";
+            return 1;
+        }
+    } else {
+        // Keine Keys vorhanden → neues Keypair generieren und speichern
+        std::cout << "[Config] No DM keys found in config, generating new Ed25519 keypair...\n";
+        crypto::KeyPair kp;
+        try {
+            kp = crypto::generateKeyPair();
+        } catch (const std::exception& ex) {
+            std::cerr << "[Config] FATAL: DM key generation failed: " << ex.what() << "\n";
+            return 1;
+        }
+
         dmPriv = kp.privateKey;
         dmPub  = kp.publicKey;
-        std::cout << "[Config] Generated ephemeral DM keypair (fallback)\n";
+
+        cfg["dmPrivKey"] = dmPriv;
+        cfg["dmPubKey"]  = dmPub;
+
+        if (saveConfig(configPath, cfg)) {
+            std::cout << "[Config] Generated new DM keypair and stored in "
+                      << configPath << "\n";
+        } else {
+            std::cerr << "[Config] WARNING: Generated DM keys but failed to persist them.\n"
+                      << "         Node will run with ephemeral keys (identity will change on restart).\n";
+        }
     }
 
     // ---------------------------------------------------------
@@ -212,13 +253,11 @@ int main()
     metrics.attach(http);
 
     // ---------------------------------------------------------
-    // HTTP SERVER THREAD (with error logging)
+    // HTTP SERVER THREAD
     // ---------------------------------------------------------
     std::thread thttp([&]() {
         std::cout << "[HTTP] Starting server on port " << httpPort << "...\n";
-
         bool ok = http.listen("0.0.0.0", httpPort);
-
         if (!ok) {
             std::cerr << "[HTTP] ERROR: Failed to start HTTP server on port "
                       << httpPort << " (listen() returned false)\n";
@@ -226,7 +265,6 @@ int main()
             std::cout << "[HTTP] Listening on port " << httpPort << "\n";
         }
     });
-
 
     // ---------------------------------------------------------
     // AUTO-MINER
