@@ -28,7 +28,7 @@ CMAKE_BUILD_TYPE:STRING=
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
 //CXX compiler
-CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/c++
+CMAKE_CXX_COMPILER:STRING=/usr/bin/c++
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -125,7 +125,10 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=blockchain_node
+CMAKE_PROJECT_NAME:STATIC=DndBlockchain
+
+//Value Computed by CMake
+CMAKE_PROJECT_SPDX_LICENSE:STATIC=
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -204,6 +207,15 @@ CURL_LIBRARY_DEBUG:FILEPATH=CURL_LIBRARY_DEBUG-NOTFOUND
 //Path to a library.
 CURL_LIBRARY_RELEASE:FILEPATH=/usr/lib/libcurl.so
 
+//Value Computed by CMake
+DndBlockchain_BINARY_DIR:STATIC=/home/elrasap/programmieren/Blockchain/build
+
+//Value Computed by CMake
+DndBlockchain_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+DndBlockchain_SOURCE_DIR:STATIC=/home/elrasap/programmieren/Blockchain
+
 //Path to a library.
 OPENSSL_CRYPTO_LIBRARY:FILEPATH=/usr/lib/libcrypto.so
 
@@ -219,29 +231,14 @@ PKG_CONFIG_ARGN:STRING=
 //pkg-config executable
 PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
 
-//Path to a file.
-SQLite3_INCLUDE_DIR:PATH=/usr/include
+//Path to a library.
+SODIUM_LIB:FILEPATH=/usr/lib/libsodium.so
 
 //Path to a library.
-SQLite3_LIBRARY:FILEPATH=/usr/lib/libsqlite3.so
-
-//Value Computed by CMake
-blockchain_node_BINARY_DIR:STATIC=/home/elrasap/programmieren/Blockchain/build
-
-//Value Computed by CMake
-blockchain_node_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-blockchain_node_SOURCE_DIR:STATIC=/home/elrasap/programmieren/Blockchain
+SQLITE3_LIB:FILEPATH=/usr/lib/libsqlite3.so
 
 //Path to a library.
 pkgcfg_lib_PC_CURL_curl:FILEPATH=/usr/lib/libcurl.so
-
-//Path to a library.
-pkgcfg_lib_PC_SQLite3_sqlite3:FILEPATH=/usr/lib/libsqlite3.so
-
-//Path to a library.
-pkgcfg_lib_SODIUM_sodium:FILEPATH=/usr/lib/libsodium.so
 
 //Path to a library.
 pkgcfg_lib__OPENSSL_crypto:FILEPATH=/usr/lib/libcrypto.so
@@ -263,9 +260,9 @@ CMAKE_CACHEFILE_DIR:INTERNAL=/home/elrasap/programmieren/Blockchain/build
 //Major version of cmake used to create the current loaded cache
 CMAKE_CACHE_MAJOR_VERSION:INTERNAL=4
 //Minor version of cmake used to create the current loaded cache
-CMAKE_CACHE_MINOR_VERSION:INTERNAL=1
+CMAKE_CACHE_MINOR_VERSION:INTERNAL=2
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=2
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=0
 //ADVANCED property for variable: CMAKE_COLOR_MAKEFILE
 CMAKE_COLOR_MAKEFILE-ADVANCED:INTERNAL=1
 //Path to CMake executable.
@@ -318,6 +315,8 @@ CMAKE_GENERATOR_INSTANCE:INTERNAL=
 CMAKE_GENERATOR_PLATFORM:INTERNAL=
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
+//Test CMAKE_HAVE_LIBC_PTHREAD
+CMAKE_HAVE_LIBC_PTHREAD:INTERNAL=1
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=/home/elrasap/programmieren/Blockchain
@@ -399,10 +398,8 @@ CURL_LIBRARY_RELEASE-ADVANCED:INTERNAL=1
 FIND_PACKAGE_MESSAGE_DETAILS_CURL:INTERNAL=[/usr/lib/libcurl.so][/usr/include][ ][v8.17.0()]
 //Details about finding OpenSSL
 FIND_PACKAGE_MESSAGE_DETAILS_OpenSSL:INTERNAL=[/usr/lib/libcrypto.so][/usr/include][ ][v3.6.0()]
-//Details about finding PkgConfig
-FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v2.5.1()]
-//Details about finding SQLite3
-FIND_PACKAGE_MESSAGE_DETAILS_SQLite3:INTERNAL=[/usr/lib/libsqlite3.so][/usr/include][v3.51.0()]
+//Details about finding Threads
+FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //ADVANCED property for variable: OPENSSL_CRYPTO_LIBRARY
 OPENSSL_CRYPTO_LIBRARY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: OPENSSL_INCLUDE_DIR
@@ -444,84 +441,10 @@ PC_CURL_libcurl_INCLUDEDIR:INTERNAL=
 PC_CURL_libcurl_LIBDIR:INTERNAL=
 PC_CURL_libcurl_PREFIX:INTERNAL=
 PC_CURL_libcurl_VERSION:INTERNAL=
-PC_SQLite3_CFLAGS:INTERNAL=-I/usr/include
-PC_SQLite3_CFLAGS_I:INTERNAL=
-PC_SQLite3_CFLAGS_OTHER:INTERNAL=
-PC_SQLite3_FOUND:INTERNAL=1
-PC_SQLite3_INCLUDEDIR:INTERNAL=/usr/include
-PC_SQLite3_INCLUDE_DIRS:INTERNAL=/usr/include
-PC_SQLite3_LDFLAGS:INTERNAL=-L/usr/lib;-lsqlite3
-PC_SQLite3_LDFLAGS_OTHER:INTERNAL=
-PC_SQLite3_LIBDIR:INTERNAL=/usr/lib
-PC_SQLite3_LIBRARIES:INTERNAL=sqlite3
-PC_SQLite3_LIBRARY_DIRS:INTERNAL=/usr/lib
-PC_SQLite3_LIBS:INTERNAL=
-PC_SQLite3_LIBS_L:INTERNAL=
-PC_SQLite3_LIBS_OTHER:INTERNAL=
-PC_SQLite3_LIBS_PATHS:INTERNAL=
-PC_SQLite3_MODULE_NAME:INTERNAL=sqlite3
-PC_SQLite3_PREFIX:INTERNAL=/usr
-PC_SQLite3_STATIC_CFLAGS:INTERNAL=-I/usr/include
-PC_SQLite3_STATIC_CFLAGS_I:INTERNAL=
-PC_SQLite3_STATIC_CFLAGS_OTHER:INTERNAL=
-PC_SQLite3_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include
-PC_SQLite3_STATIC_LDFLAGS:INTERNAL=-L/usr/lib;-lsqlite3;-lm;-lz
-PC_SQLite3_STATIC_LDFLAGS_OTHER:INTERNAL=
-PC_SQLite3_STATIC_LIBDIR:INTERNAL=
-PC_SQLite3_STATIC_LIBRARIES:INTERNAL=sqlite3;m;z
-PC_SQLite3_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib
-PC_SQLite3_STATIC_LIBS:INTERNAL=
-PC_SQLite3_STATIC_LIBS_L:INTERNAL=
-PC_SQLite3_STATIC_LIBS_OTHER:INTERNAL=
-PC_SQLite3_STATIC_LIBS_PATHS:INTERNAL=
-PC_SQLite3_VERSION:INTERNAL=3.51.0
-PC_SQLite3_sqlite3_INCLUDEDIR:INTERNAL=
-PC_SQLite3_sqlite3_LIBDIR:INTERNAL=
-PC_SQLite3_sqlite3_PREFIX:INTERNAL=
-PC_SQLite3_sqlite3_VERSION:INTERNAL=
 //ADVANCED property for variable: PKG_CONFIG_ARGN
 PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
 PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
-SODIUM_CFLAGS:INTERNAL=-I/usr/include
-SODIUM_CFLAGS_I:INTERNAL=
-SODIUM_CFLAGS_OTHER:INTERNAL=
-SODIUM_FOUND:INTERNAL=1
-SODIUM_INCLUDEDIR:INTERNAL=/usr/include
-SODIUM_INCLUDE_DIRS:INTERNAL=/usr/include
-SODIUM_LDFLAGS:INTERNAL=-L/usr/lib;-lsodium
-SODIUM_LDFLAGS_OTHER:INTERNAL=
-SODIUM_LIBDIR:INTERNAL=/usr/lib
-SODIUM_LIBRARIES:INTERNAL=sodium
-SODIUM_LIBRARY_DIRS:INTERNAL=/usr/lib
-SODIUM_LIBS:INTERNAL=
-SODIUM_LIBS_L:INTERNAL=
-SODIUM_LIBS_OTHER:INTERNAL=
-SODIUM_LIBS_PATHS:INTERNAL=
-SODIUM_MODULE_NAME:INTERNAL=libsodium
-SODIUM_PREFIX:INTERNAL=/usr
-SODIUM_STATIC_CFLAGS:INTERNAL=-I/usr/include
-SODIUM_STATIC_CFLAGS_I:INTERNAL=
-SODIUM_STATIC_CFLAGS_OTHER:INTERNAL=
-SODIUM_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include
-SODIUM_STATIC_LDFLAGS:INTERNAL=-L/usr/lib;-lsodium;-lpthread;-pthread
-SODIUM_STATIC_LDFLAGS_OTHER:INTERNAL=-pthread
-SODIUM_STATIC_LIBDIR:INTERNAL=
-SODIUM_STATIC_LIBRARIES:INTERNAL=sodium;pthread
-SODIUM_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib
-SODIUM_STATIC_LIBS:INTERNAL=
-SODIUM_STATIC_LIBS_L:INTERNAL=
-SODIUM_STATIC_LIBS_OTHER:INTERNAL=
-SODIUM_STATIC_LIBS_PATHS:INTERNAL=
-SODIUM_VERSION:INTERNAL=1.0.20
-SODIUM_libsodium_INCLUDEDIR:INTERNAL=
-SODIUM_libsodium_LIBDIR:INTERNAL=
-SODIUM_libsodium_PREFIX:INTERNAL=
-SODIUM_libsodium_VERSION:INTERNAL=
-//ADVANCED property for variable: SQLite3_INCLUDE_DIR
-SQLite3_INCLUDE_DIR-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: SQLite3_LIBRARY
-SQLite3_LIBRARY-ADVANCED:INTERNAL=1
 _OPENSSL_CFLAGS:INTERNAL=-I/usr/include
 _OPENSSL_CFLAGS_I:INTERNAL=
 _OPENSSL_CFLAGS_OTHER:INTERNAL=
@@ -558,22 +481,14 @@ _OPENSSL_openssl_LIBDIR:INTERNAL=
 _OPENSSL_openssl_PREFIX:INTERNAL=
 _OPENSSL_openssl_VERSION:INTERNAL=
 __pkg_config_arguments_PC_CURL:INTERNAL=QUIET;libcurl
-__pkg_config_arguments_PC_SQLite3:INTERNAL=QUIET;sqlite3
-__pkg_config_arguments_SODIUM:INTERNAL=REQUIRED;libsodium
 __pkg_config_arguments__OPENSSL:INTERNAL=QUIET;openssl
 __pkg_config_checked_PC_CURL:INTERNAL=1
-__pkg_config_checked_PC_SQLite3:INTERNAL=1
-__pkg_config_checked_SODIUM:INTERNAL=1
 __pkg_config_checked__OPENSSL:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_PC_CURL_curl
 pkgcfg_lib_PC_CURL_curl-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: pkgcfg_lib_PC_SQLite3_sqlite3
-pkgcfg_lib_PC_SQLite3_sqlite3-ADVANCED:INTERNAL=1
-//ADVANCED property for variable: pkgcfg_lib_SODIUM_sodium
-pkgcfg_lib_SODIUM_sodium-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib__OPENSSL_crypto
 pkgcfg_lib__OPENSSL_crypto-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib__OPENSSL_ssl
 pkgcfg_lib__OPENSSL_ssl-ADVANCED:INTERNAL=1
-prefix_result:INTERNAL=/usr/lib
+prefix_result:INTERNAL=alt-svc;AsynchDNS;brotli;GSS-API;HSTS;HTTP2;HTTP3;HTTPS-proxy;IDN;IPv6;Kerberos;Largefile;libz;NTLM;PSL;SPNEGO;SSL;threadsafe;TLS-SRP;UnixSockets;zstd
 

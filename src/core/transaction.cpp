@@ -1,51 +1,77 @@
 #include "core/transaction.hpp"
 #include "core/crypto.hpp"
-#include <sodium.h>
-#include <iostream>
+#include <nlohmann/json.hpp>
 
-using namespace std;
+using json = nlohmann::json;
 
-vector<uint8_t> Transaction::serialize() const {
-    vector<uint8_t> data;
+// -----------------------------------------------------------
+// serialize()
+//  -> Body der Transaction OHNE Signatur
+//  -> wird benutzt für Hash UND Signatur
+// -----------------------------------------------------------
 
-    data.insert(data.end(), senderPubkey.begin(), senderPubkey.end());
-
-    for (int i = 0; i < 8; i++)
-        data.push_back((nonce >> (i * 8)) & 0xFF);
-
-    for (int i = 0; i < 8; i++)
-        data.push_back((fee >> (i * 8)) & 0xFF);
-
-    data.insert(data.end(), payload.begin(), payload.end());
-    return data;
+std::vector<uint8_t> Transaction::serialize() const {
+    json j = {
+        {"senderPubkey", senderPubkey},
+        {"payload_b64",  crypto::toBase64(payload)},
+        {"nonce",        nonce},
+        {"fee",          fee}
+    };
+    std::string s = j.dump();
+    return std::vector<uint8_t>(s.begin(), s.end());
 }
 
-void Transaction::sign(const vector<uint8_t>& priv) {
-    const auto msg = serialize();
-    signature = crypto::sign(msg, priv);   // <-- FIX
-}
 
-bool Transaction::verifySignature() const {
-    const auto msg = serialize();
-
-    if (senderPubkey.size() != crypto_sign_PUBLICKEYBYTES) {
-        cerr << "[DEBUG] Invalid pubkey length: " << senderPubkey.size() << "\n";
-        return false;
-    }
-
-    if (signature.size() != crypto_sign_BYTES) {
-        cerr << "[DEBUG] Invalid signature length: " << signature.size() << "\n";
-        return false;
-    }
-
-    return crypto::verify(msg, signature, senderPubkey);  // <-- FIX
-}
-
-array<uint8_t, 32> Transaction::hash() const {
+// -----------------------------------------------------------
+// Hash = sha256(serialize())
+// -----------------------------------------------------------
+std::array<uint8_t,32> Transaction::hash() const {
     return crypto::sha256(serialize());
 }
 
-void Transaction::deserialize(const vector<uint8_t>& data) {
-    payload = data;
+// -----------------------------------------------------------
+// Signiert den kompletten TX-Body (serialize()),
+// NICHT nur die Payload.
+// -----------------------------------------------------------
+void Transaction::sign(const std::vector<uint8_t>& priv) {
+    auto body = serialize();
+    signature = crypto::sign(body, priv);
+}
+
+// -----------------------------------------------------------
+// Verifiziert die Signatur über denselben Body wie beim Signen.
+// -----------------------------------------------------------
+bool Transaction::verifySignature() const {
+    if (senderPubkey.empty() || signature.empty())
+        return false;
+
+    auto body = serialize();
+    return crypto::verify(body, signature, senderPubkey);
+}
+
+// -----------------------------------------------------------
+// deserialize()
+//  -> Wird nur benutzt, wenn irgendwo der TX-Body als JSON
+//     gespeichert/übertragen wird. Signatur kann optional sein.
+// -----------------------------------------------------------
+void Transaction::deserialize(const std::vector<uint8_t>& data)
+{
+    std::string s(data.begin(), data.end());
+    json j = json::parse(s);
+
+    senderPubkey = j.value("senderPubkey", std::vector<uint8_t>{});
+
+    if (j.contains("payload_b64"))
+        payload = crypto::fromBase64(j["payload_b64"].get<std::string>());
+    else
+        payload.clear();
+
+    nonce        = j.value("nonce", 0ull);
+    fee          = j.value("fee",   0ull);
+
+    if (j.contains("signature"))
+        signature = j["signature"].get<std::vector<uint8_t>>();
+    else
+        signature.clear();
 }
 

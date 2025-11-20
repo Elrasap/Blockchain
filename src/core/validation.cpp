@@ -1,43 +1,58 @@
 #include "core/validation.hpp"
-#include <iostream>
+#include "core/block.hpp"
 
 using namespace std;
 
 namespace Validation {
 
 bool validateTransaction(const Transaction& tx) {
-    if (tx.payload.empty()) return false;
-    if (tx.signature.empty()) return false;
-    if (!tx.verifySignature()) return false;
-    return true;
+    // Aktuell: nur Signatur prüfen.
+    // Später kannst du hier Nonce, Fee, Policy etc. prüfen.
+    return tx.verifySignature();
 }
+
 bool validateBlock(const Block& block, const Block& prev) {
-    if (block.header.height == 0) {
-        if (!block.transactions.empty()) {
-            if (block.header.merkleRoot != block.calculateMerkleRoot()) return false;
-            for (const auto& tx : block.transactions)
-                if (!validateTransaction(tx)) return false;
+    // Höhe muss inkrementieren
+    if (block.header.height != prev.header.height + 1) {
+        return false;
+    }
+
+    // prevHash muss auf den Vorgänger zeigen
+    if (block.header.prevHash != prev.hash()) {
+        return false;
+    }
+
+    // Merkle-Root prüfen
+    if (block.header.merkleRoot != block.calculateMerkleRoot()) {
+        return false;
+    }
+
+    // Header-Signatur (falls gesetzt)
+    if (!block.header.validatorPubKey.empty() ||
+        !block.header.signature.empty()) {
+        if (!verifyBlockHeaderSignature(block.header)) {
+            return false;
         }
-        return true;
-    }
-
-    // --- tolerant gegenüber leicht unterschiedlichen prevHashes ---
-    std::array<uint8_t, 32> prevCalc = prev.hash();
-    size_t diff = 0;
-    for (size_t i = 0; i < 32; ++i)
-        if (block.header.prevHash[i] != prevCalc[i]) ++diff;
-    if (diff > 4) {  // bis zu 4 Byte Unterschied erlauben
-        std::cout << "PrevHash differs (" << diff << " bytes)\n";
-        // nur Warnung, kein Abbruch
-    }
-
-    if (!block.transactions.empty()) {
-        if (block.header.merkleRoot != block.calculateMerkleRoot()) return false;
-        for (const auto& tx : block.transactions)
-            if (!validateTransaction(tx)) return false;
     }
 
     return true;
 }
 
+bool validateBlockPoA(const Block& block,
+                      const Block& prev,
+                      const std::vector<uint8_t>& expectedValidatorPubKey) {
+
+    if (!validateBlock(block, prev)) {
+        return false;
+    }
+
+    // Proof-of-Authority: nur der erwartete Validator-Key ist erlaubt.
+    if (block.header.validatorPubKey != expectedValidatorPubKey) {
+        return false;
+    }
+
+    return true;
 }
+
+} // namespace Validation
+

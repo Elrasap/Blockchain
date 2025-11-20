@@ -1,231 +1,270 @@
 #include <iostream>
-#include <vector>
-#include <string>
-#include <chrono>
-#include <filesystem>
+#include <fstream>
 #include <thread>
+#include <csignal>
+#include <chrono>
 
-// ====== CORE ======
-#include "core/crypto.hpp"
-#include "core/transaction.hpp"
-#include "core/mempool.hpp"
-#include "core/block.hpp"
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
+// Core
+#include "core/blockchain.hpp"
 #include "core/blockBuilder.hpp"
-#include "core/validation.hpp"
+#include "core/mempool.hpp"
+#include "core/crypto.hpp"
 
-// ====== RELEASE ======
-#include "release/checksummer.hpp"
-#include "release/releaseManifest.hpp"
+// DnD
+#include "dnd/dndTxValidator.hpp"
+#include "dnd/dndPayload.hpp"
+#include "dnd/dndState.hpp"
 
-// ====== STORAGE ======
-#include "storage/historyStore.hpp"
-#include "storage/blockStore.hpp"
-
-// ====== OPS ======
-#include "ops/reliabilityGuard.hpp"
-
-// ====== ANALYTICS ======
-#include "analytics/rtoRpoAnalyzer.hpp"
-#include "analytics/trendAnalyzer.hpp"
-
-// ====== DND ======
-#include "dnd/dndCharacterService.hpp"
-#include "dnd/payload.hpp"
-#include "dnd/patch.hpp"
-#include "dnd/dndTx.hpp"
-#include "dnd/combat/combatService.hpp"
-#include "dnd/combat/encounter.hpp"
-#include "dnd/combat/monster.hpp"
-
-// ====== WEB ======
+// Web & Network
+#include "web/chainApi.hpp"
+#include "web/dndApi.hpp"
 #include "web/dashboardServer.hpp"
 #include "metrics/metricsServer.hpp"
+#include "network/gossipServer.hpp"
+#include "network/peerManager.hpp"
+#include "network/syncManager.hpp"
 
-// ====== OBS ======
-#include "obs/metrics.hpp"
-#include "obs/healthChecker.hpp"
+// Storage
+#include "storage/blockStore.hpp"
 
-namespace fs = std::filesystem;
 
-struct TestResult {
-    std::string name;
-    bool ok;
-};
+// -----------------------------
+// Runtime flag
+// -----------------------------
+static bool RUNNING = true;
+void signalHandler(int) { RUNNING = false; }
 
-static void printSummary(const std::vector<TestResult>& tests) {
-    std::cout << "\n==== SELFTEST SUMMARY ====\n";
-    for (auto& t : tests)
-        std::cout << (t.ok ? "[OK]   " : "[FAIL] ") << t.name << "\n";
-    std::cout << "===========================\n\n";
+
+// -------------------------------------------------------------
+// Load config.json
+// -------------------------------------------------------------
+json loadConfig(const std::string& path)
+{
+    std::ifstream in(path);
+    if (!in) {
+        std::cerr << "[Config] Missing " << path << "\n";
+        std::exit(1);
+    }
+    json j;
+    in >> j;
+    return j;
 }
 
-// ======================== TESTS ============================
-bool testCrypto() {
+// -------------------------------------------------------------
+// Save config.json
+// -------------------------------------------------------------
+bool saveConfig(const std::string& path, const json& cfg)
+{
+    std::ofstream out(path);
+    if (!out) return false;
+    out << cfg.dump(4) << "\n";
+    return true;
+}
+
+// -------------------------------------------------------------
+// DM KEY helper
+// -------------------------------------------------------------
+static constexpr std::size_t DM_PUBKEY_SIZE  = 32;
+static constexpr std::size_t DM_PRIVKEY_SIZE = 64;
+
+bool loadDmKeysFromConfig(const json& cfg,
+                          std::vector<uint8_t>& dmPriv,
+                          std::vector<uint8_t>& dmPub)
+{
+    if (!cfg.contains("dmPrivKey") || !cfg.contains("dmPubKey"))
+        return false;
+
     try {
-        std::vector<uint8_t> msg = {1,2,3};
+        dmPriv = cfg["dmPrivKey"].get<std::vector<uint8_t>>();
+        dmPub  = cfg["dmPubKey"].get<std::vector<uint8_t>>();
+    } catch (...) {
+        return false;
+    }
+
+    if (dmPriv.size() != DM_PRIVKEY_SIZE) return false;
+    if (dmPub.size()  != DM_PUBKEY_SIZE)  return false;
+
+    std::cout << "[Config] Using DM keys from config.json\n";
+    return true;
+}
+
+
+// -------------------------------------------------------------
+// MAIN
+// -------------------------------------------------------------
+int main()
+{
+    std::cout << "=== DND BLOCKCHAIN NODE STARTING ===\n";
+
+    signal(SIGINT,  signalHandler);
+    signal(SIGTERM, signalHandler);
+
+    const std::string configPath = "config.json";
+
+    // ---------------------------------------------------------
+    // CONFIG
+    // ---------------------------------------------------------
+    json cfg = loadConfig(configPath);
+
+    int httpPort   = cfg.value("port",       8080);
+    int gossipPort = cfg.value("gossipPort", 8090);
+    int peerPort   = cfg.value("peerPort",   9000);
+
+    std::string db   = cfg.value("blockDb",      "blocks.db");
+    std::string mpf  = cfg.value("mempoolFile",  "mempool.json");
+    std::string snap = cfg.value("snapshotFile", "state_snapshot.json");
+
+    // ---------------------------------------------------------
+    // DM KEYS
+    // ---------------------------------------------------------
+    std::vector<uint8_t> dmPriv;
+    std::vector<uint8_t> dmPub;
+
+    if (!loadDmKeysFromConfig(cfg, dmPriv, dmPub)) {
+        std::cout << "[Config] No DM keys found, generating...\n";
+
         crypto::KeyPair kp = crypto::generateKeyPair();
-        Transaction tx;
-        tx.payload = msg;
-        tx.nonce = 1;
-        tx.senderPubkey = kp.publicKey;
-        tx.sign(kp.privateKey);
-        return tx.verifySignature();
-    } catch (...) { return false; }
-}
+        dmPriv = kp.privateKey;
+        dmPub  = kp.publicKey;
 
-bool testMempool() {
-    try {
-        Mempool mp;
-        Transaction tx;
-        tx.payload = {9,9,9};
-        mp.addTransaction(tx);
-        return mp.size() == 1;
-    } catch (...) { return false; }
-}
+        cfg["dmPrivKey"] = dmPriv;
+        cfg["dmPubKey"]  = dmPub;
 
-bool testBlock() {
-    try {
-        Transaction tx;
-        tx.payload = {1,2,3};
-        Block b;
-        b.transactions.push_back(tx);
-        b.calculateMerkleRoot();
-        b.hash();
-        return true;
-    } catch (...) { return false; }
-}
+        saveConfig(configPath, cfg);
+        std::cout << "[Config] New DM keys stored.\n";
+    }
 
-bool testHistory() {
-    HistoryStore hs("history.db");
-    if (!hs.init()) return false;
+    // ---------------------------------------------------------
+    // STORAGE
+    // ---------------------------------------------------------
+    BlockStore store(db);
 
-    RtoRecord rec;
-    rec.filename = "backup1.tar";
-    rec.rto_ms = 1200.0;
-    rec.restore_ms = 800.0;
-    rec.passed = true;
+    // ---------------------------------------------------------
+    // BLOCKCHAIN
+    // ---------------------------------------------------------
+    Blockchain chain(store, dmPub);
 
-    std::vector<RtoRecord> runs{rec};
-    hs.insertRtoRecords(runs);
+    chain.loadSnapshot(snap);
+    chain.rebuildState();
+    chain.ensureGenesisBlock(dmPriv);
 
-    return !hs.loadRecentRto(1).empty();
-}
+    // ---------------------------------------------------------
+    // VALIDATOR
+    // ---------------------------------------------------------
+    dnd::DndValidationContext ctx;
+    ctx.characterExists       = [&](const std::string&) { return true; };
+    ctx.monsterExists         = [&](const std::string&) { return true; };
+    ctx.encounterActive       = [&](const std::string&) { return true; };
+    ctx.hasControlPermission  =
+        [&](const std::string&, const std::vector<uint8_t>&, bool) { return true; };
 
-bool testRtoAnalyzer() {
-    try {
-        RtoRpoAnalyzer a("reports");
-        a.analyzeAll();
-        return true;
-    } catch (...) { return false; }
-}
+    dnd::DndTxValidator validator(ctx);
 
-bool testDndCharacters() {
-    try {
-        dnd::DndCharacterService s;
-        dnd::CharacterSheet sheet;
-        sheet.id = "hero1";
-        sheet.name = "Conan";
-        return true;
-    } catch (...) { return false; }
-}
+    // ---------------------------------------------------------
+    // MEMPOOL
+    // ---------------------------------------------------------
+    Mempool mempool(&validator);
+    mempool.loadFromFile(mpf);
 
-bool testMonsters() {
-    try {
-        dnd::MonsterService ms("monsters.json");
-        dnd::Monster m;
-        m.id = "wolf1";
-        m.name = "Wolf";
-        m.level = 2;
-        m.hpCurrent = 26;
-        m.hpMax = 26;
-        m.ac = 13;
-        ms.upsert(m);
-        dnd::Monster out;
-        return ms.get("wolf1", out);
-    } catch (...) { return false; }
-}
+    // ---------------------------------------------------------
+    // NETWORK
+    // ---------------------------------------------------------
+    PeerManager peers(peerPort);
+    SyncManager sync(chain, peers);
+    peers.setSync(&sync);
+    global_sync = &sync;
 
-bool testCombat() {
-    try {
-        dnd::combat::CombatService C;
-        int roll = C.getDice().roll("1d20");
-        return roll >= 1 && roll <= 20;
-    } catch (...) { return false; }
-}
+    peers.startServer();
 
-bool testEncounter() {
-    try {
-        dnd::combat::EncounterManager E;
-        auto& enc = E.startEncounter("test_enc");
-        E.addCharacter(enc.id, "hero1", 15);
-        E.addMonster(enc.id, "wolf1", 12);
-        E.nextTurn(enc.id);
-
-        dnd::combat::Encounter out;
-        return E.get(enc.id, out);
-    } catch (...) { return false; }
-}
-
-// ===========================================================
-//          GLOBAL, SINGLE METRICSSERVER INSTANCE
-// ===========================================================
-static MetricsServer metricsServer(9100);
-
-// ===========================================================
-//                           MAIN
-// ===========================================================
-int main() {
-
-    // ---------------- Dashboard Server ----------------
-    std::thread([](){
-        DashboardServer dash(8080, "reports", "build/blockchain_node");
-        dash.start();
-    }).detach();
-
-
-    // ---------------- Metrics Server -------------------
-    std::thread([](){
-        std::cout << "[MetricsServer] Starting http://localhost:9100\n";
-        metricsServer.start();
-    }).detach();
-
-
-    // ---------------- Selftests ------------------------
-    std::vector<TestResult> T;
-    T.push_back({"Crypto", testCrypto()});
-    T.push_back({"Mempool", testMempool()});
-    T.push_back({"Block", testBlock()});
-    T.push_back({"HistoryStore", testHistory()});
-    T.push_back({"RTO Analyzer", testRtoAnalyzer()});
-    T.push_back({"DnD Characters", testDndCharacters()});
-    T.push_back({"Monster System", testMonsters()});
-    T.push_back({"Combat Rolls", testCombat()});
-    T.push_back({"Encounter System", testEncounter()});
-
-    printSummary(T);
-
-    // ---------------- Metrics Loop ---------------------
-    std::thread([](){
-        Metrics& M = Metrics::instance();
-        HealthChecker& H = HealthChecker::instance();
-
-        uint64_t height = 0;
-
-        while (true) {
-            M.setGauge("block_height", height);
-            M.setGauge("peers", 1);
-            M.observe("cpu_load", (rand() % 100) / 100.0);
-
-            H.setBlockHeight(height);
-            H.setPeerCount(1);
-            H.markHealthy();
-
-            height++;
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+    if (cfg.contains("peers") && cfg["peers"].is_array()) {
+        for (auto& adr : cfg["peers"]) {
+            peers.connectToPeer(
+                adr.value("host", "127.0.0.1"),
+                adr.value("port", peerPort)
+            );
         }
-    }).detach();
+    }
 
-    std::cout << "[Node] Running. CTRL+C to exit.\n";
-    while (true) std::this_thread::sleep_for(std::chrono::seconds(1));
+    // ---------------------------------------------------------
+    // GOSSIP SERVER
+    // ---------------------------------------------------------
+    GossipServer gossip(gossipPort, chain, mempool, &peers, &validator);
+    std::thread tg([&]() { gossip.start(); });
+
+    // ---------------------------------------------------------
+    // HTTP API
+    // ---------------------------------------------------------
+    httplib::Server http;
+
+    auto chainApi = std::make_shared<ChainApi>(chain, &peers);
+    chainApi->bind(http);
+
+    auto dndapi = std::make_shared<dnd::DndApi>(
+        chain, mempool, &peers, validator, dmPriv, dmPub
+    );
+    dndapi->install(http);
+
+    auto dashboard = std::make_shared<DashboardServer>(httpPort, "reports/", db);
+    dashboard->attach(http);
+
+    MetricsServer metrics(9100);
+    metrics.attach(http);
+
+    // ---------------------------------------------------------
+    // HTTP SERVER THREAD
+    // ---------------------------------------------------------
+    std::thread thttp([&]() {
+        std::cout << "[HTTP] Starting server on port " << httpPort << "...\n";
+        http.listen("0.0.0.0", httpPort);
+    });
+
+    // ---------------------------------------------------------
+    // AUTO-MINER
+    // ---------------------------------------------------------
+    std::thread miner([&]() {
+        BlockBuilder builder(chain, dmPriv, dmPub);
+
+        while (RUNNING) {
+            std::this_thread::sleep_for(std::chrono::seconds(4));
+
+            if (mempool.size() == 0) continue;
+
+            Block out;
+
+            if (builder.buildAndAppendFromMempool(mempool, out)) {
+                std::cout << "[Miner] Mined block height "
+                          << out.header.height << "\n";
+
+                peers.broadcastBlock(out);
+            }
+        }
+    });
+
+    // ---------------------------------------------------------
+    // MAIN LOOP
+    // ---------------------------------------------------------
+    while (RUNNING)
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+    // ---------------------------------------------------------
+    // CLEAN SHUTDOWN
+    // ---------------------------------------------------------
+    std::cout << "[Node] Shutting down...\n";
+
+    mempool.saveToFile(mpf);
+    chain.writeSnapshot(snap);
+
+    peers.stop();
+    http.stop();
+    gossip.stop();
+
+    if (miner.joinable()) miner.join();
+    if (tg.joinable())    tg.join();
+    if (thttp.joinable()) thttp.join();
+
+    return 0;
 }
 

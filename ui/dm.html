@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DM Control Panel</title>
+    <link rel="stylesheet" href="/ui/style.css">
+    <script src="/ui/app.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <h1>Dungeon Master UI</h1>
+
+    <div class="card">
+        <h2>Send Event</h2>
+
+        <label>Encounter ID:</label>
+        <input id="encounterId" value="t1"><br><br>
+
+        <label>Actor ID:</label>
+        <input id="actorId" value="dm"><br><br>
+
+        <button onclick="dmSend('createCharacter')">Create Character</button>
+        <button onclick="dmSend('spawnMonster')">Spawn Monster</button>
+        <button onclick="dmSend('startEncounter')">Start Encounter</button>
+        <button onclick="dmSend('endEncounter')">End Encounter</button>
+
+        <h3>Output:</h3>
+        <pre id="output"></pre>
+    </div>
+
+    <div class="card">
+        <h2>Global State</h2>
+        <button onclick="loadState()">Load State</button>
+        <pre id="state"></pre>
+    </div>
+</div>
+</body>
+</html>
+

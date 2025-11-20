@@ -5,6 +5,10 @@
 
 class MetricsCollector {
 public:
+    uint64_t network_peers_total;
+    uint64_t network_tx_gossip_total;
+    uint64_t network_block_gossip_total;
+
     MetricsCollector(int nodeId);
     void recordBlockTime(double seconds);
     void recordPeerCount(int peers);

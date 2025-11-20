@@ -1,0 +1,19 @@
+{
+  "header": {
+    "height": 1,
+    "merkleRootHex": "52ed8b4b9c8b4a2afe71aa998300b6cb301c170c6425bb9e1f8bff89b2399751",
+    "prevHashHex": "efe3f2e45b67aa460fa79e36b514ef8a7a8f33da4d9b7186578812c1f4a477ad",
+    "signature": "4b04855e395c7c9927e00253a1508b9edb87e07a538c2fc52526b5269d549fdc6e6f7b433958f065bd6e95040dade5cd48a2d72a9983f4c7ebb25fa86e332307",
+    "timestamp": 1763657859,
+    "validatorPubKey": "916321d7157e080c69b345f8b8ead1ffad5ed0d51860431fe3a19cade6ed9aba"
+  },
+  "transactions": [
+    {
+      "fee": 0,
+      "nonce": 0,
+      "payload": "d10102743100046865726f00000000000000000000000081481f6900000000",
+      "senderPubkey": "916321d7157e080c69b345f8b8ead1ffad5ed0d51860431fe3a19cade6ed9aba",
+      "signature": "2952639d9a3de325c172a3e11290e69b94ff33673d029963fc4b4189ddbd3a7d6adc5e9def052ecc5e869669b7ae00ca16bf9af22a80bc27b36ab4327179520f"
+    }
+  ]
+}

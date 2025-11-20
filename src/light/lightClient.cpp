@@ -1,25 +1,15 @@
 #include "light/lightClient.hpp"
 #include "core/crypto.hpp"
 #include <vector>
+#include "core/blockEncoding.hpp"
 
 //
 // Helper: serialize block header (same as in headerChain.cpp)
 //
-static std::vector<uint8_t> encodeHeader(const BlockHeader& h) {
-    std::vector<uint8_t> buf;
-    buf.reserve(32 + 32 + 8 + 8 + 8);
+#include "light/lightClient.hpp"
+#include "core/block.hpp"
+#include <vector>
 
-    buf.insert(buf.end(), h.prevHash.begin(), h.prevHash.end());
-    buf.insert(buf.end(), h.merkleRoot.begin(), h.merkleRoot.end());
-
-    for (int i = 0; i < 8; ++i) buf.push_back((h.height    >> (i * 8)) & 0xFF);
-    for (int i = 0; i < 8; ++i) buf.push_back((h.timestamp >> (i * 8)) & 0xFF);
-    for (int i = 0; i < 8; ++i) buf.push_back((h.nonce     >> (i * 8)) & 0xFF);
-
-    return buf;
-}
-
-//
 // Ingest header into chain
 //
 bool LightClient::ingestHeader(const BlockHeader& h) {

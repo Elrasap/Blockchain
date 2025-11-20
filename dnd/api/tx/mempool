@@ -1,0 +1,33 @@
+void DndApi::handleGetMempool(const httplib::Request&,
+                              httplib::Response& res)
+{
+    auto list = mempool_.getAll();
+
+    json arr = json::array();
+
+    for (const auto& tx : list) {
+        json item;
+
+        item["hash"] = crypto::toHex(tx.hash());
+        item["senderPubKey"] = crypto::toHex(tx.senderPubkey);
+
+        if (dnd::isDndPayload(tx.payload)) {
+            auto evt = dnd::extractDndEventTx(tx);
+            item["type"]     = "dnd";
+            item["encounter"] = evt.encounterId;
+            item["actor"]     = evt.actorId;
+            item["target"]    = evt.targetId;
+            item["roll"]      = evt.roll;
+            item["hit"]       = evt.hit;
+            item["damage"]    = evt.damage;
+            item["note"]      = evt.note;
+        } else {
+            item["type"] = "generic";
+        }
+
+        arr.push_back(item);
+    }
+
+    res.set_content(arr.dump(2), "application/json");
+}
+

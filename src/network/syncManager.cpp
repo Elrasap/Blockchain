@@ -1,71 +1,112 @@
 #include "network/syncManager.hpp"
-#include "core/validation.hpp"
+
+#include "core/block.hpp"
+#include "core/blockchain.hpp"
+#include "network/peerManager.hpp"
 #include "network/messages.hpp"
-#include <algorithm>
-#include <cstring>
+
 #include <sys/socket.h>
+#include <unistd.h>   // ::send
 #include <iostream>
+#include <cstring>
 
-using namespace std;
+SyncManager* global_sync = nullptr;
 
-SyncManager::SyncManager(BlockStore* s) : store(s) {}
+SyncManager::SyncManager(Blockchain& chain, PeerManager& peers)
+    : chain_(chain), peers_(peers)
+{}
 
-void SyncManager::attachPeer(int peer_fd) {
-    lock_guard<mutex> lock(mtx);
-    peer_fds.push_back(peer_fd);
+SyncManager::~SyncManager() {
+    stop();
 }
 
-vector<int> SyncManager::getPeers() {
-    lock_guard<mutex> lock(mtx);
-    return peer_fds;
+void SyncManager::start() {
+    running = true;
+    worker_ = std::thread(&SyncManager::loop, this);
 }
 
-void SyncManager::handleInv(const array<uint8_t, 32>& hash) {
-    lock_guard<mutex> lock(mtx);
-    if (known_blocks.count(hash)) return;
-    known_blocks[hash] = true;
+void SyncManager::stop() {
+    running = false;
+    if (worker_.joinable())
+        worker_.join();
+}
+
+bool SyncManager::hasBlock(const std::array<uint8_t,32>& hash) const {
+    auto& ch = chain_.getChain();
+    for (auto& b : ch) {
+        if (b.hash() == hash)
+            return true;
+    }
+    return false;
+}
+
+void SyncManager::requestBlock(const std::array<uint8_t,32>& hash) {
     Message msg;
     msg.type = MessageType::GETBLOCK;
     msg.payload.assign(hash.begin(), hash.end());
     auto encoded = encodeMessage(msg);
-    for (auto fd : peer_fds) send(fd, encoded.data(), encoded.size(), 0);
+
+    // über alle Peers rausschicken
+    peers_.broadcastRaw(encoded);
 }
 
-void SyncManager::handleGetBlock(const array<uint8_t, 32>& hash, int peer_fd) {
-    auto blocks = store->loadAllBlocks();
-    for (auto& b : blocks) {
-        auto h = b.hash();
-        if (memcmp(h.data(), hash.data(), 32) == 0) {
+void SyncManager::handleInv(const std::array<uint8_t,32>& hash) {
+    if (hasBlock(hash))
+        return; // schon vorhanden — ignorieren
+
+    {
+        std::lock_guard<std::mutex> lock(mtx_);
+        wanted_ = hash;
+        haveWanted_ = true;
+    }
+}
+
+void SyncManager::handleGetBlock(const std::array<uint8_t,32>& hash, int fd) {
+    auto& ch = chain_.getChain();
+    for (auto& b : ch) {
+        if (b.hash() == hash) {
+            auto bytes = b.serialize();
+
             Message msg;
             msg.type = MessageType::BLOCK;
-            auto bytes = b.serialize();
             msg.payload = bytes;
-            auto encoded = encodeMessage(msg);
-            send(peer_fd, encoded.data(), encoded.size(), 0);
-            break;
+
+            auto out = encodeMessage(msg);
+            ::send(fd, out.data(), out.size(), 0);
+            return;
         }
     }
 }
 
 void SyncManager::handleBlock(const Block& block) {
-    auto blocks = store->loadAllBlocks();
-    if (!blocks.empty()) {
-        Block prev = blocks.back();
-        if (!Validation::validateBlock(block, prev)) return;
+    if (!chain_.appendBlock(block)) {
+        std::cerr << "[Sync] incoming BLOCK rejected\n";
+        return;
     }
-    store->appendBlock(block);
-    auto h = block.hash();
-    known_blocks[h] = true;
-    announceBlock(block);
+
+    std::cout << "[Sync] accepted block height=" << block.header.height << "\n";
 }
 
-void SyncManager::announceBlock(const Block& block) {
-    auto h = block.hash();
-    Message msg;
-    msg.type = MessageType::INV;
-    msg.payload.assign(h.begin(), h.end());
-    auto encoded = encodeMessage(msg);
-    lock_guard<mutex> lock(mtx);
-    for (auto fd : peer_fds) send(fd, encoded.data(), encoded.size(), 0);
+void SyncManager::loop() {
+    while (running) {
+        std::array<uint8_t,32> want{};
+        bool wantSet = false;
+
+        {
+            std::lock_guard<std::mutex> lock(mtx_);
+            if (haveWanted_) {
+                want = wanted_;
+                wantSet = true;
+                haveWanted_ = false;
+            }
+        }
+
+        if (wantSet) {
+            std::cout << "[Sync] requesting block...\n";
+            requestBlock(want);
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
 }
 

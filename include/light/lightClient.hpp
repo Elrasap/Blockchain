@@ -4,6 +4,8 @@
 #include <cstdint>
 #include "light/headerChain.hpp"
 #include "light/merkleProof.hpp"
+#include "core/blockEncoding.hpp"
+
 
 class LightClient {
 public:
