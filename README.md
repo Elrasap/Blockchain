@@ -253,5 +253,4 @@ Planned features (optional):
 * `cpp-httplib` (Yhirose)
 * `nlohmann-json`
 * `libsodium` for cryptography
-* And you — for building a blockchain-powered tabletop engine!
 
