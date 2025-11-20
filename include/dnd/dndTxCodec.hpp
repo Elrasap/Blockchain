@@ -8,7 +8,9 @@
 namespace dnd {
 
 // Encode DnDEventTx into a compact binary payload:
+//
 // [0]         = 0xD1  (magic)
+// [1]         = eventType (uint8, DndEventType)
 // varuint32   = len(encounterId), then bytes
 // uint8       = actorType
 // varuint32   = len(actorId), then bytes

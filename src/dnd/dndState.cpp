@@ -56,109 +56,190 @@ int DndState::getCharacterHp(const std::string& id) const
 bool DndState::apply(const DndEventTx& evt, std::string& err)
 {
     // ======================================================
-    // 1) Encounter holen oder ggf. neu anlegen
-    //    (auch wenn encounterId leer ist, ist ein Eintrag
-    //     mit "" als Key nicht schlimm)
+    // 0) Event typ prüfen
+    // ======================================================
+    switch(evt.eventType)
+    {
+        case DndEventType::CreateCharacter:
+            break;
+        case DndEventType::SpawnMonster:
+            break;
+        case DndEventType::StartEncounter:
+            break;
+        case DndEventType::Initiative:
+            break;
+        case DndEventType::Hit:
+            break;
+        case DndEventType::Damage:
+            break;
+        case DndEventType::SkillCheck:
+            break;
+        case DndEventType::EndEncounter:
+            break;
+        default:
+            err = "Unknown eventType";
+            return false;
+    }
+
+    // ======================================================
+    // 1) Encounter automatisch erstellen
     // ======================================================
     auto encIt = encounters.find(evt.encounterId);
     if (encIt == encounters.end()) {
-        EncounterState enc;
-        enc.id        = evt.encounterId;
-        enc.active    = true;
-        enc.round     = 1;
-        enc.turnIndex = 0;
-
-        encIt = encounters.emplace(enc.id, enc).first;
+        encounters[evt.encounterId] = EncounterState{
+            evt.encounterId,
+            true,
+            1,
+            0,
+            {},
+            {}
+        };
+        encIt = encounters.find(evt.encounterId);
     }
 
     EncounterState& enc = encIt->second;
 
-    // Event ins Log schreiben
+    // Event ins Log aufnehmen
     enc.events.push_back(evt);
 
     // ======================================================
-    // 2) Character-Ownership setzen (falls actor ein Character ist)
-    //    Idee: Der erste Event mit actorId X "claimt" den Charakter.
+    // EventType Dispatch
     // ======================================================
-    if (evt.actorType == 0 && !evt.actorId.empty()) {
-        auto& cs = characters[evt.actorId]; // auto-create
 
-        // Falls HP noch nie gesetzt → Default-HP
-        if (cs.sheet.hpCurrent == 0) {
-            cs.sheet.hpCurrent = 10;  // einfache Default-Logik
-        }
-
-        // Owner einmalig setzen, wenn noch leer
-        if (cs.ownerPubKey.empty() && !evt.senderPubKey.empty()) {
-            cs.ownerPubKey = evt.senderPubKey;
-        }
-    }
-
-    // ======================================================
-    // 3) Kampflogik: nur wenn Hit + Damage
-    // ======================================================
-    if (evt.hit && evt.damage > 0)
+    switch(evt.eventType)
     {
         // --------------------------------------------------
-        // DAMAGE ON CHARACTER (targetType == 0)
+        // CHARACTER CREATION
         // --------------------------------------------------
-        if (evt.targetType == 0) {
-            auto& cs = characters[evt.targetId]; // auto-create
+        case DndEventType::CreateCharacter:
+        {
+            auto& cs = characters[evt.actorId];
 
-            // Default-HP, falls der Char vorher nicht bekannt war
-            if (cs.sheet.hpCurrent == 0) {
+            // default HP
+            if (cs.sheet.hpCurrent == 0)
                 cs.sheet.hpCurrent = 10;
-            }
 
-            cs.sheet.hpCurrent -= evt.damage;
-            if (cs.sheet.hpCurrent < 0)
-                cs.sheet.hpCurrent = 0;
+            if (cs.ownerPubKey.empty() && !evt.senderPubKey.empty())
+                cs.ownerPubKey = evt.senderPubKey;
+
+            return true;
         }
-        // --------------------------------------------------
-        // DAMAGE ON MONSTER (targetType == 1)
-        // --------------------------------------------------
-        else if (evt.targetType == 1) {
-            auto& mon = monsters[evt.targetId]; // auto-create
 
-            if (mon.id.empty())
-                mon.id = evt.targetId;
+        // --------------------------------------------------
+        // SPAWN MONSTER
+        // --------------------------------------------------
+        case DndEventType::SpawnMonster:
+        {
+            auto& mon = monsters[evt.actorId];
+            mon.id = evt.actorId;
 
-            // Wenn Monster neu ist: Default-HP
-            if (mon.maxHp == 0 && mon.hp == 0) {
+            if (mon.maxHp == 0)
                 mon.maxHp = 10;
-                mon.hp    = mon.maxHp;
+
+            mon.hp = mon.maxHp;
+            return true;
+        }
+
+        // --------------------------------------------------
+        // START ENCOUNTER
+        // --------------------------------------------------
+        case DndEventType::StartEncounter:
+        {
+            enc.active = true;
+            enc.round = 1;
+            enc.turnIndex = 0;
+            return true;
+        }
+
+        // --------------------------------------------------
+        // INITIATIVE (nur Logging)
+        // --------------------------------------------------
+        case DndEventType::Initiative:
+            return true;
+
+        // --------------------------------------------------
+        // HIT (nur Flag, keine HP Änderung)
+        // --------------------------------------------------
+        case DndEventType::Hit:
+            return true;
+
+        // --------------------------------------------------
+        // DAMAGE (HP ändern)
+        // --------------------------------------------------
+        case DndEventType::Damage:
+        {
+            if (evt.damage <= 0)
+                return true;
+
+            // character
+            if (evt.targetType == 0)
+            {
+                auto& cs = characters[evt.targetId];
+                if (cs.sheet.hpCurrent == 0)
+                    cs.sheet.hpCurrent = 10;
+
+                cs.sheet.hpCurrent -= evt.damage;
+                if (cs.sheet.hpCurrent < 0)
+                    cs.sheet.hpCurrent = 0;
+
+                return true;
             }
 
-            mon.hp -= evt.damage;
-            if (mon.hp < 0)
-                mon.hp = 0;
+            // monster
+            if (evt.targetType == 1)
+            {
+                auto& mon = monsters[evt.targetId];
+                if (mon.maxHp == 0)
+                    mon.maxHp = 10;
+                if (mon.hp == 0)
+                    mon.hp = mon.maxHp;
 
-            // Wenn dieses Monster tot ist → prüfen,
-            // ob ALLE Monster im Encounter tot sind.
-            if (mon.hp == 0) {
-                bool allDead = true;
+                mon.hp -= evt.damage;
+                if (mon.hp < 0)
+                    mon.hp = 0;
 
-                for (const auto& actor : enc.actors) {
-                    if (actor.kind == CombatActorKind::Monster) {
-                        auto itMon = monsters.find(actor.id);
-                        if (itMon != monsters.end() && itMon->second.hp > 0) {
-                            allDead = false;
-                            break;
+                if (mon.hp == 0)
+                {
+                    // wenn alle Monster tot → Encounter enden
+                    bool allDead = true;
+
+                    for (const auto& ev : enc.events)
+                    {
+                        if (ev.targetType == 1)
+                        {
+                            auto it = monsters.find(ev.targetId);
+                            if (it != monsters.end() && it->second.hp > 0)
+                            {
+                                allDead = false;
+                                break;
+                            }
                         }
                     }
+
+                    if (allDead)
+                        enc.active = false;
                 }
 
-                if (allDead) {
-                    enc.active = false;
-                }
+                return true;
             }
-        }
-        // --------------------------------------------------
-        // Ungültiger targetType
-        // --------------------------------------------------
-        else {
-            err = "Invalid targetType " + std::to_string(evt.targetType);
+
+            err = "Invalid targetType";
             return false;
+        }
+
+        // --------------------------------------------------
+        // SKILL CHECK (nur Logging)
+        // --------------------------------------------------
+        case DndEventType::SkillCheck:
+            return true;
+
+        // --------------------------------------------------
+        // END ENCOUNTER
+        // --------------------------------------------------
+        case DndEventType::EndEncounter:
+        {
+            enc.active = false;
+            return true;
         }
     }
 

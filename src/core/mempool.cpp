@@ -6,6 +6,7 @@
 
 #include <sodium.h>
 #include <nlohmann/json.hpp>
+#include "core/crypto.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -28,7 +29,7 @@ Mempool::Mempool(dnd::DndTxValidator* validator)
 bool Mempool::addTransactionValidated(const Transaction& tx, std::string& err)
 {
     // Hash als String
-    auto h = tx.hash();
+    auto h   = tx.hash();
     std::string key = hashToStr(h);
 
     // ------------------------------------
@@ -43,10 +44,9 @@ bool Mempool::addTransactionValidated(const Transaction& tx, std::string& err)
     }
 
     // ------------------------------------
-    // 1) Signatur prüfen
+    // 1) Signatur prüfen (falls vorhanden)
     // ------------------------------------
     if (!tx.signature.empty()) {
-
         if (tx.signature.size() != crypto_sign_BYTES) {
             std::cerr << "[Mempool] invalid signature length: "
                       << tx.signature.size() << "\n";
@@ -78,40 +78,13 @@ bool Mempool::addTransactionValidated(const Transaction& tx, std::string& err)
     }
 
     // ------------------------------------
-    // 2) DnD-Validator (falls gesetzt)
+    // 2) KEIN DnD-Validator mehr hier
+    //    -> kein decodeDndTx() im Mempool
     // ------------------------------------
-    if (validator_ && dnd::isDndPayload(tx.payload)) {
-
-        dnd::DndEventTx evt;
-
-        try {
-            evt = dnd::decodeDndTx(tx.payload);
-        }
-        catch (const std::exception& e) {
-            std::cerr << "[Mempool] decodeDndTx exception: " << e.what() << "\n";
-            err = "invalid dnd payload";
-            return false;
-        }
-        catch (...) {
-            std::cerr << "[Mempool] decodeDndTx unknown exception\n";
-            err = "invalid dnd payload";
-            return false;
-        }
-
-        // Signatur und Pubkey übernehmen
-        evt.senderPubKey = tx.senderPubkey;
-        evt.signature    = tx.signature;
-
-        std::string vErr;
-        if (!validator_->validate(evt, vErr)) {
-            std::cerr << "[Mempool] DnD validation failed: " << vErr << "\n";
-            err = "DnD validation failed: " + vErr;
-            return false;
-        }
-    }
+    // if (validator_ && dnd::isDndPayload(tx.payload)) { ... }  --> ENTFERNT
 
     // ------------------------------------
-    // 3) Mempool aufnehmen
+    // 3) In den Mempool aufnehmen
     // ------------------------------------
     {
         std::lock_guard<std::mutex> lock(mtx_);

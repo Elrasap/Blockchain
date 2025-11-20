@@ -8,10 +8,9 @@ namespace dnd {
 
 namespace {
 
-// ---------- kleine Helfer: Varuint + LE-Encode ----------
+// ---------- Helpers: Varuint + little-endian ----------
 
 void writeVarUint32(std::vector<uint8_t>& out, uint32_t v) {
-    // simple LEB128-Varint
     while (v >= 0x80) {
         out.push_back(static_cast<uint8_t>((v & 0x7F) | 0x80));
         v >>= 7;
@@ -84,10 +83,14 @@ void writeString(std::vector<uint8_t>& out, const std::string& s) {
     out.insert(out.end(), s.begin(), s.end());
 }
 
+// ❗ Sichere Variante ohne Overflow → kein bad_alloc
 std::string readString(const std::vector<uint8_t>& buf, size_t& off) {
     uint32_t len = readVarUint32(buf, off);
-    if (off + len > buf.size())
+
+    // Schutz vor size_t overflow & absurden Längen
+    if (len > buf.size() - off) {
         throw std::runtime_error("decodeDndTx: string length out of range");
+    }
 
     std::string s;
     s.assign(reinterpret_cast<const char*>(&buf[off]), len);
@@ -107,6 +110,9 @@ std::vector<uint8_t> encodeDndTx(const DndEventTx& tx)
 
     // Magic
     out.push_back(0xD1);
+
+    // Event-Type (semantisch, aber im Body signiert)
+    out.push_back(static_cast<uint8_t>(tx.eventType));
 
     // encounterId
     writeString(out, tx.encounterId);
@@ -148,18 +154,34 @@ DndEventTx decodeDndTx(const std::vector<uint8_t>& buf)
         throw std::runtime_error("decodeDndTx: invalid magic byte (not DnD payload)");
     }
 
+    if (off >= buf.size())
+        throw std::runtime_error("decodeDndTx: missing eventType");
+
+    uint8_t et = buf[off++];
+    DndEventType evtType = DndEventType::Unknown;
+    switch (et) {
+        case 1: evtType = DndEventType::CreateCharacter; break;
+        case 2: evtType = DndEventType::SpawnMonster;    break;
+        case 3: evtType = DndEventType::StartEncounter;  break;
+        case 4: evtType = DndEventType::Initiative;      break;
+        case 5: evtType = DndEventType::Hit;             break;
+        case 6: evtType = DndEventType::Damage;          break;
+        case 7: evtType = DndEventType::SkillCheck;      break;
+        case 8: evtType = DndEventType::EndEncounter;    break;
+        default: evtType = DndEventType::Unknown;        break;
+    }
+
     DndEventTx tx;
+    tx.eventType = evtType;
 
     tx.encounterId = readString(buf, off);
 
-    tx.actorType = 0;
     if (off >= buf.size())
         throw std::runtime_error("decodeDndTx: missing actorType");
     tx.actorType = buf[off++];
 
     tx.actorId = readString(buf, off);
 
-    tx.targetType = 0;
     if (off >= buf.size())
         throw std::runtime_error("decodeDndTx: missing targetType");
     tx.targetType = buf[off++];
@@ -176,7 +198,6 @@ DndEventTx decodeDndTx(const std::vector<uint8_t>& buf)
     tx.note      = readString(buf, off);
     tx.timestamp = readUint64LE(buf, off);
 
-    // Diese Felder werden extern aus der Transaction gesetzt:
     tx.senderPubKey.clear();
     tx.signature.clear();
 

@@ -6,6 +6,21 @@
 
 namespace dnd {
 
+// -------------------------
+// Event-Typen (semantisch)
+// -------------------------
+enum class DndEventType : uint8_t {
+    Unknown         = 0,
+    CreateCharacter = 1,
+    SpawnMonster    = 2,
+    StartEncounter  = 3,
+    Initiative      = 4,
+    Hit             = 5,
+    Damage          = 6,
+    SkillCheck      = 7,
+    EndEncounter    = 8
+};
+
 struct DndEventTx {
     std::string encounterId;
 
@@ -22,13 +37,17 @@ struct DndEventTx {
 
     uint64_t timestamp = 0;
 
+    // Semantischer Typ (wird vom Server gesetzt, nicht vom Client)
+    DndEventType eventType = DndEventType::Unknown;
+
     // Signatur-Metadaten (nicht Teil des signierten Bodies)
     std::vector<uint8_t> senderPubKey;
     std::vector<uint8_t> signature;
 };
 
 // -------------------------------------------------------
-// Signing API
+// Signing API – aktuell NICHT im Hotpath benutzt, aber
+// als Utility für spätere Player-Keys behalten.
 // -------------------------------------------------------
 bool generatePlayerKeypair(std::vector<uint8_t>& pubOut,
                            std::vector<uint8_t>& privOut);
@@ -41,7 +60,6 @@ bool verifyDndEventSignature(const DndEventTx& evt,
 
 // -------------------------------------------------------
 // JSON support (für State/Logging, NICHT fürs Signing)
-// Der signierte Body enthält KEINE senderPubKey/signature.
 // -------------------------------------------------------
 using json = nlohmann::json;
 
@@ -57,7 +75,8 @@ inline void to_json(json& j, const DndEventTx& e)
         {"damage",      e.damage},
         {"hit",         e.hit},
         {"note",        e.note},
-        {"timestamp",   e.timestamp}
+        {"timestamp",   e.timestamp},
+        {"eventType",   static_cast<int>(e.eventType)}
         // senderPubKey & signature sind NICHT Teil des Bodies
     };
 }
@@ -75,7 +94,12 @@ inline void from_json(const json& j, DndEventTx& e)
     j.at("note").get_to(e.note);
     j.at("timestamp").get_to(e.timestamp);
 
-    // Metadaten werden ggf. extern gesetzt
+    int et = 0;
+    if (j.contains("eventType"))
+        et = j.at("eventType").get<int>();
+    e.eventType = static_cast<DndEventType>(et);
+
+    // Metadaten werden extern gesetzt
     e.senderPubKey.clear();
     e.signature.clear();
 }

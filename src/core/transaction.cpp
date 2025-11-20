@@ -13,13 +13,14 @@ using json = nlohmann::json;
 std::vector<uint8_t> Transaction::serialize() const {
     json j = {
         {"senderPubkey", senderPubkey},
-        {"payload",      payload},
+        {"payload_b64",  crypto::toBase64(payload)},
         {"nonce",        nonce},
         {"fee",          fee}
     };
     std::string s = j.dump();
     return std::vector<uint8_t>(s.begin(), s.end());
 }
+
 
 // -----------------------------------------------------------
 // Hash = sha256(serialize())
@@ -59,12 +60,15 @@ void Transaction::deserialize(const std::vector<uint8_t>& data)
     json j = json::parse(s);
 
     senderPubkey = j.value("senderPubkey", std::vector<uint8_t>{});
-    payload      = j.value("payload",      std::vector<uint8_t>{});
-    nonce        = j.value("nonce",        0ull);
-    fee          = j.value("fee",          0ull);
 
-    // Signatur ist NICHT Bestandteil des Hash-Bodies,
-    // kann aber optional im JSON mit drin sein.
+    if (j.contains("payload_b64"))
+        payload = crypto::fromBase64(j["payload_b64"].get<std::string>());
+    else
+        payload.clear();
+
+    nonce        = j.value("nonce", 0ull);
+    fee          = j.value("fee",   0ull);
+
     if (j.contains("signature"))
         signature = j["signature"].get<std::vector<uint8_t>>();
     else

@@ -21,6 +21,8 @@ std::vector<uint8_t> sign(const std::vector<uint8_t>& msg,
 bool verify(const std::vector<uint8_t>& msg,
             const std::vector<uint8_t>& sig,
             const std::vector<uint8_t>& pub);
+std::string toBase64(const std::vector<uint8_t>& data);
+std::vector<uint8_t> fromBase64(const std::string& s);
 
 } // namespace crypto
 

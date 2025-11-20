@@ -47,6 +47,9 @@ public:
 private:
     DndValidationContext ctx_;
 
+    // 🔹 NEU: reine "Regel-Logik" basierend auf eventType
+    bool validateSemantic(const DndEventTx& evt, std::string& error) const;
+
     bool validateActorExists(const DndEventTx& evt, std::string& error) const;
     bool validateTargetExists(const DndEventTx& evt, std::string& error) const;
     bool validateEncounter(const DndEventTx& evt, std::string& error) const;
