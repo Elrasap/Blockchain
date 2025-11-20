@@ -1,11 +1,14 @@
-// ==========================================================
-// dndApi.cpp — komplette fehlerfreie Version
-// ==========================================================
+// dndApi.cpp — robuste Version mit Error-Handling
+// ===============================================
 
 #include "web/dndApi.hpp"
 
 #include "thirdparty/httplib.h"
 #include <nlohmann/json.hpp>
+
+#include <iostream>
+#include <set>
+#include <unordered_map>
 
 #include "core/blockchain.hpp"
 #include "core/transaction.hpp"
@@ -98,7 +101,8 @@ bool DndApi::parseJsonToEvent(const httplib::Request& req,
     evt.hit         = j.value("hit", false);
     evt.note        = j.value("note", "");
 
-    evt.timestamp = (uint64_t)time(nullptr);
+    evt.timestamp = j.value("timestamp",
+                            static_cast<uint64_t>(time(nullptr)));
 
     if (j.contains("senderPubKey"))
         evt.senderPubKey = j["senderPubKey"].get<std::vector<uint8_t>>();
@@ -106,7 +110,7 @@ bool DndApi::parseJsonToEvent(const httplib::Request& req,
     if (j.contains("signature"))
         evt.signature = j["signature"].get<std::vector<uint8_t>>();
 
-    // Auto-sign by DM if no signature present
+    // Auto-sign by DM if client does not sign
     if (!j.contains("signature")) {
         evt.senderPubKey = dmPub_;
         dnd::signDndEvent(evt, dmPriv_);
@@ -116,18 +120,16 @@ bool DndApi::parseJsonToEvent(const httplib::Request& req,
 }
 
 // -----------------------------------------------------------
-// B) Wrap Tx + Validate + Mempool Insert + Broadcast
+// B) Wrap, Validate, Insert into Mempool
 // -----------------------------------------------------------
 bool DndApi::wrapAndInsert(const DndEventTx& evtInput,
                            std::string& errOut)
 {
-    // 1. TX aufbauen
     Transaction tx;
     tx.payload      = dnd::encodeDndTx(evtInput);
     tx.senderPubkey = evtInput.senderPubKey;
     tx.signature    = evtInput.signature;
 
-    // 2. DnD Payload → Event extrahieren
     dnd::DndEventTx ev;
     try {
         ev = dnd::decodeDndTx(tx.payload);
@@ -136,27 +138,22 @@ bool DndApi::wrapAndInsert(const DndEventTx& evtInput,
         return false;
     }
 
-    // Korrekte Felder übernehmen
     ev.senderPubKey = tx.senderPubkey;
     ev.signature    = tx.signature;
 
-    // 3. VALIDATION (richtige Methode!)
     if (!validator_.validate(ev, errOut)) {
         return false;
     }
 
-    // 4. In Mempool
     if (!mempool_.addTransactionValidated(tx, errOut)) {
         return false;
     }
 
-    // 5. Broadcast an Peers
     if (peers_)
         peers_->broadcastTransaction(tx);
 
     return true;
 }
-
 
 // -----------------------------------------------------------
 // GET /dnd/history/<encId>
@@ -200,6 +197,101 @@ httplib::Response DndApi::getEncounterHistory(const std::string& encId)
 }
 
 // -----------------------------------------------------------
+// GET /dnd/state
+// -----------------------------------------------------------
+httplib::Response DndApi::getState()
+{
+    const DndState& st = chain_.getDndState();
+
+    std::set<std::string> characterIds;
+    std::set<std::string> monsterIds;
+    std::unordered_map<std::string, int> dmgChar;
+    std::unordered_map<std::string, int> dmgMon;
+
+    for (const auto& [encId, enc] : st.encounters) {
+        for (const auto& e : enc.events) {
+            if (!e.actorId.empty()) {
+                if (e.actorType == 0)
+                    characterIds.insert(e.actorId);
+                else if (e.actorType == 1)
+                    monsterIds.insert(e.actorId);
+            }
+            if (!e.targetId.empty()) {
+                if (e.targetType == 0)
+                    characterIds.insert(e.targetId);
+                else if (e.targetType == 1)
+                    monsterIds.insert(e.targetId);
+            }
+
+            if (e.hit && e.damage > 0 && !e.targetId.empty()) {
+                if (e.targetType == 0)
+                    dmgChar[e.targetId] += e.damage;
+                else if (e.targetType == 1)
+                    dmgMon[e.targetId] += e.damage;
+            }
+        }
+    }
+
+    json jChars = json::object();
+    for (const auto& id : characterIds) {
+        int hpNow = st.getCharacterHp(id);
+        int dmg   = dmgChar[id];
+        int maxHp = hpNow + dmg;
+        if (maxHp <= 0) maxHp = 10;
+
+        json c;
+        c["id"]     = id;
+        c["name"]   = id;
+        c["hp"]     = hpNow;
+        c["maxHp"]  = maxHp;
+        c["ac"]     = 12;
+        c["level"]  = 1;
+
+        c["str"] = 14; c["dex"] = 12; c["con"] = 14;
+        c["int"] = 10; c["wis"] = 10; c["cha"] = 12;
+
+        jChars[id] = c;
+    }
+
+    json jMons = json::object();
+    for (const auto& id : monsterIds) {
+        int hpNow = st.getMonsterHp(id);
+        int dmg   = dmgMon[id];
+        int maxHp = hpNow + dmg;
+        if (maxHp <= 0) maxHp = 12;
+
+        json m;
+        m["id"]    = id;
+        m["name"]  = id;
+        m["hp"]    = hpNow;
+        m["maxHp"] = maxHp;
+        m["ac"]    = 11;
+
+        m["str"] = 12; m["dex"] = 11; m["con"] = 12;
+        m["int"] = 8;  m["wis"] = 9;  m["cha"] = 8;
+
+        jMons[id] = m;
+    }
+
+    json jEncs = json::object();
+    for (const auto& [encId, enc] : st.encounters) {
+        json e;
+        e["id"]        = enc.id;
+        e["active"]    = enc.active;
+        e["round"]     = enc.round;
+        e["turnIndex"] = enc.turnIndex;
+        jEncs[encId]   = e;
+    }
+
+    json out;
+    out["characters"] = jChars;
+    out["monsters"]   = jMons;
+    out["encounters"] = jEncs;
+
+    return jsonOK(out);
+}
+
+// -----------------------------------------------------------
 // Install all endpoints
 // -----------------------------------------------------------
 void DndApi::install(httplib::Server& server)
@@ -208,25 +300,33 @@ void DndApi::install(httplib::Server& server)
                       httplib::Response& res,
                       const std::string& endpointName)
     {
-        DndEventTx evt;
-        std::string err;
+        try {
+            DndEventTx evt;
+            std::string err;
 
-        if (!parseJsonToEvent(req, evt, err)) {
-            res = jsonError(endpointName + ": " + err, 400);
-            return;
+            if (!parseJsonToEvent(req, evt, err)) {
+                res = jsonError(endpointName + ": " + err, 400);
+                return;
+            }
+
+            if (!wrapAndInsert(evt, err)) {
+                res = jsonError(endpointName + ": " + err, 400);
+                return;
+            }
+
+            res = jsonOK({{"event", endpointName}});
         }
-
-        if (!wrapAndInsert(evt, err)) {
-            res = jsonError(endpointName + ": " + err, 400);
-            return;
+        catch (const std::exception& ex) {
+            std::cerr << "[DndApi] Exception in handler '" << endpointName
+                      << "': " << ex.what() << "\n";
+            res = jsonError("internal error in " + endpointName, 500);
         }
-
-        res = jsonOK({{"event", endpointName}});
+        catch (...) {
+            std::cerr << "[DndApi] Unknown exception in handler '"
+                      << endpointName << "'\n";
+            res = jsonError("internal error in " + endpointName, 500);
+        }
     };
-
-    // -------------------------------------------
-    // POST Endpoints: Kampfaktionen
-    // -------------------------------------------
 
     server.Post("/dnd/createCharacter",
                 [&](const httplib::Request& req, httplib::Response& res) {
@@ -268,10 +368,6 @@ void DndApi::install(httplib::Server& server)
                     handle(req, res, "endEncounter");
                 });
 
-    // -------------------------------------------
-    // GET /dnd/history/<encId>
-    // -------------------------------------------
-
     server.Get(R"(/dnd/history/(\w+))",
                [this](const httplib::Request& req,
                       httplib::Response& res)
@@ -283,6 +379,13 @@ void DndApi::install(httplib::Server& server)
 
                    std::string encId = req.matches[1];
                    res = getEncounterHistory(encId);
+               });
+
+    server.Get("/dnd/state",
+               [this](const httplib::Request&,
+                      httplib::Response& res)
+               {
+                   res = getState();
                });
 }
 

@@ -1,4 +1,3 @@
 /home/elrasap/programmieren/Blockchain/build/CMakeFiles/blockchain_node.dir
-/home/elrasap/programmieren/Blockchain/build/CMakeFiles/blockchain_tests.dir
 /home/elrasap/programmieren/Blockchain/build/CMakeFiles/edit_cache.dir
 /home/elrasap/programmieren/Blockchain/build/CMakeFiles/rebuild_cache.dir

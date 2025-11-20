@@ -1,128 +1,94 @@
 #include "web/chainApi.hpp"
 #include <nlohmann/json.hpp>
+#include "core/blockchain.hpp"
+#include "core/crypto.hpp"
 
 using json = nlohmann::json;
 
 ChainApi::ChainApi(Blockchain& chain)
-    : chain_(chain)
-{
-}
+    : chain_(chain) {}
 
-std::string ChainApi::hashToHex(const std::array<uint8_t, 32>& h) const
+static json blockToJson(const Block& b)
 {
-    static const char* hex = "0123456789abcdef";
-    std::string out;
-    out.reserve(64);
-    for (auto b : h) {
-        out.push_back(hex[(b >> 4) & 0xF]);
-        out.push_back(hex[b & 0xF]);
+    json j;
+
+    j["height"] = b.header.height;
+    j["timestamp"] = b.header.timestamp;
+
+    auto h = b.header.hash();
+    j["hash"] = crypto::toHex(h);
+    j["prevHash"] = crypto::toHex(b.header.prevHash);
+
+    j["txCount"] = b.transactions.size();
+    j["transactions"] = json::array();
+
+    for (const auto& tx : b.transactions) {
+        json t;
+        t["size"] = tx.payload.size();
+        j["transactions"].push_back(t);
     }
-    return out;
+
+    return j;
 }
 
 void ChainApi::bind(httplib::Server& server)
 {
+    // -------------------------------
+    // GET /chain/height
+    // -------------------------------
     server.Get("/chain/height", [&](const httplib::Request&, httplib::Response& res) {
         json j;
         j["height"] = chain_.getHeight();
         res.set_content(j.dump(2), "application/json");
     });
 
+    // -------------------------------
+    // GET /chain/latest
+    // -------------------------------
     server.Get("/chain/latest", [&](const httplib::Request&, httplib::Response& res) {
-        auto b = chain_.getLatestBlock();
-        res.set_content(serializeBlock(b), "application/json");
+        Block b = chain_.getLatestBlock();
+        json j = blockToJson(b);
+        res.set_content(j.dump(2), "application/json");
     });
 
+    // -------------------------------
+    // GET /chain/block/<n>
+    // -------------------------------
     server.Get(R"(/chain/block/(\d+))", [&](const httplib::Request& req, httplib::Response& res) {
         int h = std::stoi(req.matches[1]);
-        auto block = chain_.getBlock(h);
-        if (!block) {
+
+        Block b = chain_.getBlock(h);
+
+        // ======= FIX: block existence check =======
+        if (b.header.height != h) {
             res.status = 404;
             res.set_content("{\"error\":\"block not found\"}", "application/json");
             return;
         }
-        res.set_content(serializeBlock(*block), "application/json");
+
+        json j = blockToJson(b);
+        res.set_content(j.dump(2), "application/json");
     });
 
-    // 👉 ADD THIS (your missing endpoint)
+    // -------------------------------
+    // GET /chain/status
+    // -------------------------------
     server.Get("/chain/status", [&](const httplib::Request&, httplib::Response& res) {
         json j;
 
         j["height"] = chain_.getHeight();
-        auto latest = chain_.getLatestBlock();
-        j["latestHash"] = latest.header.hashHex();
-        j["timestamp"]  = latest.header.timestamp;
-        j["txCount"]    = latest.transactions.size();
+        j["latest"] = blockToJson(chain_.getLatestBlock());
 
         res.set_content(j.dump(2), "application/json");
     });
-}
-    // /chain/range?from=..&to=..
-    svr.Get("/chain/range", [this](const httplib::Request& req,
-                                   httplib::Response& res) {
-        uint64_t from = 0;
-        uint64_t to   = chain_.getHeight();
 
-        if (auto it = req.get_param_value("from"); !it.empty()) {
-            from = std::stoull(it);
-        }
-        if (auto it = req.get_param_value("to"); !it.empty()) {
-            to = std::stoull(it);
-        }
-
-        json arr = json::array();
-
-        for (uint64_t h = from; h <= to; ++h) {
-            auto blk = chain_.getBlock(h);
-            if (blk.header.timestamp == 0 && blk.header.height == 0 &&
-                blk.header.merkleRoot == std::array<uint8_t, 32>{}) {
-                continue; // non-existent
-            }
-
-            json j;
-            j["height"]    = blk.header.height;
-            j["timestamp"] = blk.header.timestamp;
-            j["hash"]      = hashToHex(blk.hash());
-            j["prevHash"]  = hashToHex(blk.header.prevHash);
-            j["txCount"]   = blk.transactions.size();
-            arr.push_back(j);
-        }
-
-        res.set_content(arr.dump(2), "application/json");
-    });
-
-    // /chain/tx/<hash>
-    svr.Get(R"(/chain/tx/(\w+))", [this](const httplib::Request& req,
-                                         httplib::Response& res) {
-        if (req.matches.size() < 2) {
-            res.status = 400;
-            res.set_content(R"({"error":"missing hash"})", "application/json");
-            return;
-        }
-
-        std::string wantedHex = req.matches[1];
-
-        for (uint64_t h = 0; h <= chain_.getHeight(); ++h) {
-            auto blk = chain_.getBlock(h);
-            for (const auto& tx : blk.transactions) {
-                auto txh = tx.hash();
-                std::string hex = hashToHex(txh);
-                if (hex == wantedHex) {
-                    json j;
-                    j["blockHeight"] = h;
-                    j["hash"]        = hex;
-                    j["payload"]     = tx.payload;
-                    j["senderPubKey"]= tx.senderPubkey;
-                    j["signature"]   = tx.signature;
-
-                    res.set_content(j.dump(2), "application/json");
-                    return;
-                }
-            }
-        }
-
-        res.status = 404;
-        res.set_content(R"({"error":"tx not found"})", "application/json");
+    // -------------------------------
+    // GET /chain/peers (placeholder)
+    // -------------------------------
+    server.Get("/chain/peers", [&](const httplib::Request&, httplib::Response& res) {
+        json j;
+        j["peers"] = json::array();
+        res.set_content(j.dump(2), "application/json");
     });
 }
 

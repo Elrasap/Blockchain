@@ -1,63 +1,41 @@
 #include "dnd/dndTx.hpp"
-#include "core/serialization.hpp"
-#include "core/crypto.hpp"
-#include <sodium.h>
-#include <ctime>
 #include "dnd/dndTxCodec.hpp"
+#include "core/crypto.hpp"
 
 namespace dnd {
-
-// ============================================================
-// Spieler-Key erzeugen
-// ============================================================
 
 bool generatePlayerKeypair(std::vector<uint8_t>& pubOut,
                            std::vector<uint8_t>& privOut)
 {
-    pubOut.resize(crypto_sign_PUBLICKEYBYTES);
-    privOut.resize(crypto_sign_SECRETKEYBYTES);
-
-    crypto_sign_keypair(pubOut.data(), privOut.data());
+    auto kp = crypto::generateKeyPair();
+    pubOut  = kp.publicKey;
+    privOut = kp.privateKey;
     return true;
 }
 
-// ============================================================
-// Signiere DnD Event
-// ============================================================
-
+// signiert den DnD-Event-Body (encodeDndTx) mit privKey
 void signDndEvent(DndEventTx& evt,
                   const std::vector<uint8_t>& privKey)
 {
-    // Set timestamp automatically
-    evt.timestamp = time(nullptr);
-
-    // Serialize DnD payload into JSON bytes
-    auto payloadBytes = encodeDndTx(evt);
-
-    // signature = sign(payload, privKey)
-    evt.signature = crypto::sign(payloadBytes, privKey);
+    std::vector<uint8_t> body = encodeDndTx(evt);
+    evt.signature = crypto::sign(body, privKey);
 }
-
-// ============================================================
-// Prüfe Signatur
-// ============================================================
 
 bool verifyDndEventSignature(const DndEventTx& evt,
                              std::string& err)
 {
-    if (evt.senderPubKey.size() != crypto_sign_PUBLICKEYBYTES) {
-        err = "Bad pubkey length";
+    if (evt.senderPubKey.empty()) {
+        err = "missing senderPubKey";
         return false;
     }
-    if (evt.signature.size() != crypto_sign_BYTES) {
-        err = "Bad signature length";
+    if (evt.signature.empty()) {
+        err = "missing signature";
         return false;
     }
 
-    auto payloadBytes = encodeDndTx(evt);
-
-    if (!crypto::verify(payloadBytes, evt.signature, evt.senderPubKey)) {
-        err = "Signature invalid";
+    std::vector<uint8_t> body = encodeDndTx(evt);
+    if (!crypto::verify(body, evt.signature, evt.senderPubKey)) {
+        err = "invalid DnD event signature";
         return false;
     }
 

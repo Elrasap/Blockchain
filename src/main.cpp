@@ -11,7 +11,7 @@ using json = nlohmann::json;
 #include "core/blockchain.hpp"
 #include "core/blockBuilder.hpp"
 #include "core/mempool.hpp"
-#include "core/crypto.hpp"   // <--- IMPORTANT
+#include "core/crypto.hpp"
 
 // DnD
 #include "dnd/dndTxValidator.hpp"
@@ -50,13 +50,62 @@ json loadConfig(const std::string& path)
 }
 
 // -------------------------------------------------------------
+// DM-KEY HELPER
+// -------------------------------------------------------------
+static constexpr std::size_t DM_PUBKEY_SIZE  = 32;
+static constexpr std::size_t DM_PRIVKEY_SIZE = 64;
+
+bool loadDmKeysFromConfig(const json& cfg,
+                          std::vector<uint8_t>& dmPriv,
+                          std::vector<uint8_t>& dmPub)
+{
+    if (!cfg.contains("dmPrivKey") || !cfg["dmPrivKey"].is_array() ||
+        !cfg.contains("dmPubKey")  || !cfg["dmPubKey"].is_array()) {
+        std::cerr << "[Config] dmPrivKey/dmPubKey not found or not arrays – falling back.\n";
+        return false;
+    }
+
+    try {
+        dmPriv = cfg["dmPrivKey"].get<std::vector<uint8_t>>();
+        dmPub  = cfg["dmPubKey"].get<std::vector<uint8_t>>();
+    }
+    catch (const std::exception& ex) {
+        std::cerr << "[Config] Failed to parse dmPrivKey/dmPubKey: "
+                  << ex.what() << " – falling back.\n";
+        dmPriv.clear();
+        dmPub.clear();
+        return false;
+    }
+
+    if (dmPriv.size() != DM_PRIVKEY_SIZE) {
+        std::cerr << "[Config] Invalid dmPrivKey length: expected "
+                  << DM_PRIVKEY_SIZE << " bytes, got " << dmPriv.size()
+                  << " – falling back.\n";
+        dmPriv.clear();
+        dmPub.clear();
+        return false;
+    }
+
+    if (dmPub.size() != DM_PUBKEY_SIZE) {
+        std::cerr << "[Config] Invalid dmPubKey length: expected "
+                  << DM_PUBKEY_SIZE << " bytes, got " << dmPub.size()
+                  << " – falling back.\n";
+        dmPriv.clear();
+        dmPub.clear();
+        return false;
+    }
+
+    std::cout << "[Config] Using DM keys from config.json\n";
+    return true;
+}
+
+// -------------------------------------------------------------
 // MAIN
 // -------------------------------------------------------------
 int main()
 {
     std::cout << "=== DND BLOCKCHAIN NODE STARTING ===\n";
 
-    // Shutdown signal
     signal(SIGINT,  signalHandler);
     signal(SIGTERM, signalHandler);
 
@@ -74,23 +123,18 @@ int main()
     std::string snap = cfg.value("snapshotFile", "state_snapshot.json");
 
     // ---------------------------------------------------------
-    // DM KEYS: from config OR auto-generate
+    // DM KEYS
     // ---------------------------------------------------------
     std::vector<uint8_t> dmPriv;
     std::vector<uint8_t> dmPub;
 
-    if (cfg.contains("dmPrivKey") && cfg["dmPrivKey"].is_array() &&
-        cfg.contains("dmPubKey")  && cfg["dmPubKey"].is_array())
-    {
-        dmPriv = cfg["dmPrivKey"].get<std::vector<uint8_t>>();
-        dmPub  = cfg["dmPubKey"].get<std::vector<uint8_t>>();
-        std::cout << "[Config] Using DM keys from config.json\n";
-    }
-    else {
+    bool ok = loadDmKeysFromConfig(cfg, dmPriv, dmPub);
+
+    if (!ok) {
         auto kp = crypto::generateKeyPair();
         dmPriv = kp.privateKey;
         dmPub  = kp.publicKey;
-        std::cout << "[Config] Generated ephemeral DM keypair (no keys in config.json)\n";
+        std::cout << "[Config] Generated ephemeral DM keypair (fallback)\n";
     }
 
     // ---------------------------------------------------------
@@ -103,14 +147,12 @@ int main()
     // ---------------------------------------------------------
     Blockchain chain(store, dmPub);
 
-    // Load snapshot & rebuild state
     chain.loadSnapshot(snap);
     chain.rebuildState();
-
     chain.ensureGenesisBlock(dmPriv);
 
     // ---------------------------------------------------------
-    // VALIDATOR (DND)
+    // VALIDATOR
     // ---------------------------------------------------------
     dnd::DndValidationContext ctx;
     ctx.characterExists = [&](const std::string&) { return true; };
@@ -138,7 +180,6 @@ int main()
 
     peers.startServer();
 
-    // Safe peer loading
     if (cfg.contains("peers") && cfg["peers"].is_array()) {
         for (auto& adr : cfg["peers"]) {
             std::string host = adr.value("host", "127.0.0.1");
@@ -170,12 +211,25 @@ int main()
     MetricsServer metrics(9100);
     metrics.attach(http);
 
+    // ---------------------------------------------------------
+    // HTTP SERVER THREAD (with error logging)
+    // ---------------------------------------------------------
     std::thread thttp([&]() {
-        http.listen("0.0.0.0", httpPort);
+        std::cout << "[HTTP] Starting server on port " << httpPort << "...\n";
+
+        bool ok = http.listen("0.0.0.0", httpPort);
+
+        if (!ok) {
+            std::cerr << "[HTTP] ERROR: Failed to start HTTP server on port "
+                      << httpPort << " (listen() returned false)\n";
+        } else {
+            std::cout << "[HTTP] Listening on port " << httpPort << "\n";
+        }
     });
 
+
     // ---------------------------------------------------------
-    // AUTO-MINER (every 4 seconds)
+    // AUTO-MINER
     // ---------------------------------------------------------
     std::thread miner([&]() {
         BlockBuilder builder(chain, dmPriv, dmPub);

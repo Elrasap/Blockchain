@@ -21,6 +21,9 @@ bool writeUint64(ofstream& out, uint64_t v) {
 } // namespace
 
 bool loadOrCreateDmKey(const std::string& path, DmKeyPair& out) {
+    static constexpr uint64_t DM_PUBKEY_BYTES  = 32;
+    static constexpr uint64_t DM_PRIVKEY_BYTES = 64;
+
     // 1. Versuchen zu laden
     {
         ifstream in(path, ios::binary);
@@ -29,8 +32,8 @@ bool loadOrCreateDmKey(const std::string& path, DmKeyPair& out) {
             uint64_t privLen = 0;
 
             if (readUint64(in, pubLen) && readUint64(in, privLen) &&
-                pubLen > 0 && privLen > 0 &&
-                pubLen < (1ull << 20) && privLen < (1ull << 20)) {
+                pubLen == DM_PUBKEY_BYTES &&
+                privLen == DM_PRIVKEY_BYTES) {
 
                 out.publicKey.resize(static_cast<size_t>(pubLen));
                 out.privateKey.resize(static_cast<size_t>(privLen));
@@ -41,9 +44,14 @@ bool loadOrCreateDmKey(const std::string& path, DmKeyPair& out) {
                 if (in) {
                     return true; // erfolgreich geladen
                 }
-            }
 
-            std::cerr << "[DmKeyManager] Invalid key file, regenerating: " << path << "\n";
+                std::cerr << "[DmKeyManager] Failed to read key bytes from "
+                          << path << " – regenerating.\n";
+            } else {
+                std::cerr << "[DmKeyManager] Invalid key lengths in " << path
+                          << " (pub=" << pubLen << ", priv=" << privLen
+                          << ") – regenerating.\n";
+            }
         }
     }
 
@@ -52,12 +60,20 @@ bool loadOrCreateDmKey(const std::string& path, DmKeyPair& out) {
         auto kp = crypto::generateKeyPair();
         out.publicKey  = kp.publicKey;
         out.privateKey = kp.privateKey;
+
+        if (out.publicKey.size() != DM_PUBKEY_BYTES ||
+            out.privateKey.size() != DM_PRIVKEY_BYTES) {
+            std::cerr << "[DmKeyManager] Generated keypair has unexpected sizes "
+                      << "(pub=" << out.publicKey.size()
+                      << ", priv=" << out.privateKey.size() << ")\n";
+            return false;
+        }
     } catch (const std::exception& ex) {
         std::cerr << "[DmKeyManager] Key generation failed: " << ex.what() << "\n";
         return false;
     }
 
-    // 3. Speichern
+    // 3. Speichern (unverändert wie bei dir)
     {
         ofstream outFile(path, ios::binary | ios::trunc);
         if (!outFile.is_open()) {

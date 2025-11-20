@@ -12,16 +12,17 @@ struct DndEventTx {
     std::string actorId;
     std::string targetId;
 
-    int actorType = 0;   // 0 = Character, 1 = Monster
+    int actorType  = 0;  // 0 = Character, 1 = Monster
     int targetType = 0;  // 0 = Character, 1 = Monster
 
-    int roll = 0;
-    int damage = 0;
-    bool hit = false;
+    int  roll   = 0;
+    int  damage = 0;
+    bool hit    = false;
     std::string note;
 
     uint64_t timestamp = 0;
 
+    // Signatur-Metadaten (nicht Teil des signierten Bodies)
     std::vector<uint8_t> senderPubKey;
     std::vector<uint8_t> signature;
 };
@@ -39,25 +40,25 @@ bool verifyDndEventSignature(const DndEventTx& evt,
                              std::string& err);
 
 // -------------------------------------------------------
-// JSON support (if used)
+// JSON support (für State/Logging, NICHT fürs Signing)
+// Der signierte Body enthält KEINE senderPubKey/signature.
 // -------------------------------------------------------
 using json = nlohmann::json;
 
 inline void to_json(json& j, const DndEventTx& e)
 {
     j = json{
-        {"encounterId",  e.encounterId},
-        {"actorId",      e.actorId},
-        {"actorType",    e.actorType},
-        {"targetId",     e.targetId},
-        {"targetType",   e.targetType},
-        {"roll",         e.roll},
-        {"damage",       e.damage},
-        {"hit",          e.hit},
-        {"note",         e.note},
-        {"timestamp",    e.timestamp},
-        {"senderPubKey", e.senderPubKey},
-        {"signature",    e.signature}
+        {"encounterId", e.encounterId},
+        {"actorId",     e.actorId},
+        {"actorType",   e.actorType},
+        {"targetId",    e.targetId},
+        {"targetType",  e.targetType},
+        {"roll",        e.roll},
+        {"damage",      e.damage},
+        {"hit",         e.hit},
+        {"note",        e.note},
+        {"timestamp",   e.timestamp}
+        // senderPubKey & signature sind NICHT Teil des Bodies
     };
 }
 
@@ -74,15 +75,9 @@ inline void from_json(const json& j, DndEventTx& e)
     j.at("note").get_to(e.note);
     j.at("timestamp").get_to(e.timestamp);
 
-    if (j.contains("senderPubKey"))
-        e.senderPubKey = j["senderPubKey"].get<std::vector<uint8_t>>();
-    else
-        e.senderPubKey.clear();
-
-    if (j.contains("signature"))
-        e.signature = j["signature"].get<std::vector<uint8_t>>();
-    else
-        e.signature.clear();
+    // Metadaten werden ggf. extern gesetzt
+    e.senderPubKey.clear();
+    e.signature.clear();
 }
 
 } // namespace dnd

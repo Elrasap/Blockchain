@@ -11,7 +11,7 @@ struct DndEventTx;
 // Ist der Payload JSON und enthält ein "encounterId"? → DnD TX
 bool isDndPayload(const std::vector<uint8_t>& payload);
 
-// DnDEventTx ↔ JSON-binary
+// DnDEventTx ↔ JSON-binary (signierter Body OHNE Signatur)
 std::vector<uint8_t> encodeDndTx(const DndEventTx& tx);
 DndEventTx decodeDndTx(const std::vector<uint8_t>& buf);
 

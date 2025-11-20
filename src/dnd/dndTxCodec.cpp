@@ -18,8 +18,7 @@ bool isDndPayload(const std::vector<uint8_t>& payload)
     try {
         std::string s(payload.begin(), payload.end());
         auto j = json::parse(s);
-
-        return j.contains("encounterId"); // wichtigste Struktur
+        return j.contains("encounterId");
     } catch (...) {
         return false;
     }
@@ -27,6 +26,8 @@ bool isDndPayload(const std::vector<uint8_t>& payload)
 
 // -------------------------------------------------------------
 // Encode DnD TX → JSON → bytes
+// WICHTIG: Dies ist der signierte Body → KEINE Signatur,
+// KEIN senderPubKey im JSON.
 // -------------------------------------------------------------
 std::vector<uint8_t> encodeDndTx(const DndEventTx& tx)
 {
@@ -40,9 +41,7 @@ std::vector<uint8_t> encodeDndTx(const DndEventTx& tx)
         {"damage",      tx.damage},
         {"hit",         tx.hit},
         {"note",        tx.note},
-        {"timestamp",   tx.timestamp},
-        {"senderPubKey", tx.senderPubKey},
-        {"signature",   tx.signature}
+        {"timestamp",   tx.timestamp}
     };
 
     const std::string s = j.dump();
@@ -51,6 +50,7 @@ std::vector<uint8_t> encodeDndTx(const DndEventTx& tx)
 
 // -------------------------------------------------------------
 // Decode bytes → JSON → DndEventTx
+// (Signatur & senderPubKey werden extern gesetzt)
 // -------------------------------------------------------------
 DndEventTx decodeDndTx(const std::vector<uint8_t>& buf)
 {
@@ -72,11 +72,8 @@ DndEventTx decodeDndTx(const std::vector<uint8_t>& buf)
 
     tx.timestamp   = j.value("timestamp", 0ull);
 
-    if (j.contains("senderPubKey"))
-        tx.senderPubKey = j["senderPubKey"].get<std::vector<uint8_t>>();
-
-    if (j.contains("signature"))
-        tx.signature = j["signature"].get<std::vector<uint8_t>>();
+    tx.senderPubKey.clear();
+    tx.signature.clear();
 
     return tx;
 }

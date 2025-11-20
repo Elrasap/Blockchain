@@ -1,51 +1,56 @@
 #include "core/transaction.hpp"
 #include "core/crypto.hpp"
-#include <sodium.h>
-#include <iostream>
+#include <nlohmann/json.hpp>
 
-using namespace std;
+using json = nlohmann::json;
 
-vector<uint8_t> Transaction::serialize() const {
-    vector<uint8_t> data;
+// -----------------------------------------------------------
+// serialize() (wie vorher) ...
+// -----------------------------------------------------------
 
-    data.insert(data.end(), senderPubkey.begin(), senderPubkey.end());
-
-    for (int i = 0; i < 8; i++)
-        data.push_back((nonce >> (i * 8)) & 0xFF);
-
-    for (int i = 0; i < 8; i++)
-        data.push_back((fee >> (i * 8)) & 0xFF);
-
-    data.insert(data.end(), payload.begin(), payload.end());
-    return data;
+std::vector<uint8_t> Transaction::serialize() const {
+    json j = {
+        {"senderPubkey", senderPubkey},
+        {"payload",      payload},
+        {"nonce",        nonce},
+        {"fee",          fee}
+    };
+    std::string s = j.dump();
+    return std::vector<uint8_t>(s.begin(), s.end());
 }
 
-void Transaction::sign(const vector<uint8_t>& priv) {
-    const auto msg = serialize();
-    signature = crypto::sign(msg, priv);   // <-- FIX
-}
-
-bool Transaction::verifySignature() const {
-    const auto msg = serialize();
-
-    if (senderPubkey.size() != crypto_sign_PUBLICKEYBYTES) {
-        cerr << "[DEBUG] Invalid pubkey length: " << senderPubkey.size() << "\n";
-        return false;
-    }
-
-    if (signature.size() != crypto_sign_BYTES) {
-        cerr << "[DEBUG] Invalid signature length: " << signature.size() << "\n";
-        return false;
-    }
-
-    return crypto::verify(msg, signature, senderPubkey);  // <-- FIX
-}
-
-array<uint8_t, 32> Transaction::hash() const {
+std::array<uint8_t,32> Transaction::hash() const {
     return crypto::sha256(serialize());
 }
 
-void Transaction::deserialize(const vector<uint8_t>& data) {
-    payload = data;
+void Transaction::sign(const std::vector<uint8_t>& priv) {
+    signature = crypto::sign(payload, priv);
+}
+
+bool Transaction::verifySignature() const {
+    if (senderPubkey.empty() || signature.empty())
+        return false;
+    return crypto::verify(payload, signature, senderPubkey);
+}
+
+// -----------------------------------------------------------
+// ⭐ IMPLEMENTATION: Transaction::deserialize
+// -----------------------------------------------------------
+void Transaction::deserialize(const std::vector<uint8_t>& data)
+{
+    std::string s(data.begin(), data.end());
+    json j = json::parse(s);
+
+    senderPubkey = j.value("senderPubkey", std::vector<uint8_t>{});
+    payload      = j.value("payload",      std::vector<uint8_t>{});
+    nonce        = j.value("nonce",        0ull);
+    fee          = j.value("fee",          0ull);
+
+    // Signatur ist NICHT Bestandteil des serialisierten Hash-Bodies
+    // → wird bei P2P separat übergeben
+    if (j.contains("signature"))
+        signature = j["signature"].get<std::vector<uint8_t>>();
+    else
+        signature.clear();
 }
 

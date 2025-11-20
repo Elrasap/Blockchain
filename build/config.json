@@ -2,9 +2,11 @@
   "port": 8080,
   "gossipPort": 8090,
   "peerPort": 9000,
-  "blockDb": "blocks.db",
+  "blockDb": "blocks",
   "mempoolFile": "mempool.json",
   "snapshotFile": "state_snapshot.json",
-  "peers": []
+
+  "dmPrivKey": [1,2,3,4],
+  "dmPubKey":  [9,8,7,6]
 }
 
