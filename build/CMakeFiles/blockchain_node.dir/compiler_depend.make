@@ -26009,9 +26009,12 @@ CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o: /home/elrasap/programmier
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/syslimits.h
 
 CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o: /home/elrasap/programmieren/Blockchain/src/web/dashboardServer.cpp \
+  /home/elrasap/programmieren/Blockchain/include/dnd/dndTx.hpp \
+  /home/elrasap/programmieren/Blockchain/include/dnd/dndTxValidator.hpp \
   /home/elrasap/programmieren/Blockchain/include/thirdparty/httplib.h \
   /home/elrasap/programmieren/Blockchain/include/web/chainApi.hpp \
   /home/elrasap/programmieren/Blockchain/include/web/dashboardServer.hpp \
+  /home/elrasap/programmieren/Blockchain/include/web/dndApi.hpp \
   /usr/include/alloca.h \
   /usr/include/arpa/inet.h \
   /usr/include/asm-generic/bitsperlong.h \
