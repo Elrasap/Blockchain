@@ -1,4 +1,4 @@
-// dndApi.cpp — robuste Version mit Error-Handling
+// dndApi.cpp — robuste Version mit sauberer TX-Signatur
 // ===============================================
 
 #include "web/dndApi.hpp"
@@ -9,6 +9,7 @@
 #include <iostream>
 #include <set>
 #include <unordered_map>
+#include <ctime>
 
 #include "core/blockchain.hpp"
 #include "core/transaction.hpp"
@@ -66,7 +67,7 @@ httplib::Response DndApi::jsonOK(const json& data)
 }
 
 // -----------------------------------------------------------
-// A) Parse JSON → DndEventTx
+// A) Parse JSON → DndEventTx (OHNE Signatur)
 // -----------------------------------------------------------
 bool DndApi::parseJsonToEvent(const httplib::Request& req,
                               DndEventTx& evt,
@@ -104,56 +105,80 @@ bool DndApi::parseJsonToEvent(const httplib::Request& req,
     evt.timestamp = j.value("timestamp",
                             static_cast<uint64_t>(time(nullptr)));
 
-    if (j.contains("senderPubKey"))
+    // optional: wer "angeblich" handelt
+    if (j.contains("senderPubKey")) {
         evt.senderPubKey = j["senderPubKey"].get<std::vector<uint8_t>>();
-
-    if (j.contains("signature"))
-        evt.signature = j["signature"].get<std::vector<uint8_t>>();
-
-    // Auto-sign by DM if client does not sign
-    if (!j.contains("signature")) {
-        evt.senderPubKey = dmPub_;
-        dnd::signDndEvent(evt, dmPriv_);
+    } else {
+        evt.senderPubKey.clear();
     }
+
+    // WICHTIG:
+    // Event-Signaturen werden NICHT mehr benutzt.
+    // Die echte Signatur liegt auf der Transaction.
+    evt.signature.clear();
 
     return true;
 }
 
 // -----------------------------------------------------------
 // B) Wrap, Validate, Insert into Mempool
+//    -> Hier wird die Transaction signiert, nicht das Event.
 // -----------------------------------------------------------
 bool DndApi::wrapAndInsert(const DndEventTx& evtInput,
                            std::string& errOut)
 {
+    // 1. Payload: reines, binäres DnD-Event (ohne Signatur)
     Transaction tx;
-    tx.payload      = dnd::encodeDndTx(evtInput);
-    tx.senderPubkey = evtInput.senderPubKey;
-    tx.signature    = evtInput.signature;
+    tx.payload = dnd::encodeDndTx(evtInput);
 
+    // 2. Absender-Pubkey:
+    //    - Wenn Client einen senderPubKey setzt → könnte später
+    //      für Player-Mode benutzt werden.
+    //    - Aktuell: fallback auf DM-Pubkey.
+    if (!evtInput.senderPubKey.empty()) {
+        tx.senderPubkey = evtInput.senderPubKey;
+    } else {
+        tx.senderPubkey = dmPub_; // DM als Sender
+    }
+
+    // 3. Transaction signieren (nur hier!)
+    //    Signatur liegt NUR auf der TX, nicht im Event.
+    tx.sign(dmPriv_);
+
+    // 4. DnD-Event aus Payload extrahieren, um zu validieren
     dnd::DndEventTx ev;
     try {
         ev = dnd::decodeDndTx(tx.payload);
+    } catch (const std::exception& e) {
+        errOut = std::string("invalid DnD payload: ") + e.what();
+        return false;
     } catch (...) {
         errOut = "invalid DnD payload";
         return false;
     }
 
+    // Signatur-Metadaten für Validator:
     ev.senderPubKey = tx.senderPubkey;
-    ev.signature    = tx.signature;
+    ev.signature.clear(); // wird nicht mehr ausgewertet
 
+    // 5. Semantic Validation (DnD-Regeln)
     if (!validator_.validate(ev, errOut)) {
         return false;
     }
 
+    // 6. In Mempool
     if (!mempool_.addTransactionValidated(tx, errOut)) {
         return false;
     }
 
-    if (peers_)
+    // 7. Broadcast an Peers
+    if (peers_) {
         peers_->broadcastTransaction(tx);
+    }
 
     return true;
 }
+
 
 // -----------------------------------------------------------
 // GET /dnd/history/<encId>

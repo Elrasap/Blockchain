@@ -240,7 +240,8 @@ int main()
     // ---------------------------------------------------------
     httplib::Server http;
 
-    ChainApi api(chain);
+    ChainApi api(chain, &peers);
+
     api.bind(http);
 
     dnd::DndApi dndapi(chain, mempool, &peers, validator, dmPriv, dmPub);

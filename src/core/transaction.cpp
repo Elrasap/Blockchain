@@ -5,7 +5,9 @@
 using json = nlohmann::json;
 
 // -----------------------------------------------------------
-// serialize() (wie vorher) ...
+// serialize()
+//  -> Body der Transaction OHNE Signatur
+//  -> wird benutzt für Hash UND Signatur
 // -----------------------------------------------------------
 
 std::vector<uint8_t> Transaction::serialize() const {
@@ -19,22 +21,37 @@ std::vector<uint8_t> Transaction::serialize() const {
     return std::vector<uint8_t>(s.begin(), s.end());
 }
 
+// -----------------------------------------------------------
+// Hash = sha256(serialize())
+// -----------------------------------------------------------
 std::array<uint8_t,32> Transaction::hash() const {
     return crypto::sha256(serialize());
 }
 
+// -----------------------------------------------------------
+// Signiert den kompletten TX-Body (serialize()),
+// NICHT nur die Payload.
+// -----------------------------------------------------------
 void Transaction::sign(const std::vector<uint8_t>& priv) {
-    signature = crypto::sign(payload, priv);
-}
-
-bool Transaction::verifySignature() const {
-    if (senderPubkey.empty() || signature.empty())
-        return false;
-    return crypto::verify(payload, signature, senderPubkey);
+    auto body = serialize();
+    signature = crypto::sign(body, priv);
 }
 
 // -----------------------------------------------------------
-// ⭐ IMPLEMENTATION: Transaction::deserialize
+// Verifiziert die Signatur über denselben Body wie beim Signen.
+// -----------------------------------------------------------
+bool Transaction::verifySignature() const {
+    if (senderPubkey.empty() || signature.empty())
+        return false;
+
+    auto body = serialize();
+    return crypto::verify(body, signature, senderPubkey);
+}
+
+// -----------------------------------------------------------
+// deserialize()
+//  -> Wird nur benutzt, wenn irgendwo der TX-Body als JSON
+//     gespeichert/übertragen wird. Signatur kann optional sein.
 // -----------------------------------------------------------
 void Transaction::deserialize(const std::vector<uint8_t>& data)
 {
@@ -46,8 +63,8 @@ void Transaction::deserialize(const std::vector<uint8_t>& data)
     nonce        = j.value("nonce",        0ull);
     fee          = j.value("fee",          0ull);
 
-    // Signatur ist NICHT Bestandteil des serialisierten Hash-Bodies
-    // → wird bei P2P separat übergeben
+    // Signatur ist NICHT Bestandteil des Hash-Bodies,
+    // kann aber optional im JSON mit drin sein.
     if (j.contains("signature"))
         signature = j["signature"].get<std::vector<uint8_t>>();
     else

@@ -4147,6 +4147,7 @@ CMakeFiles/blockchain_node.dir/src/core/logger.cpp.o: /home/elrasap/programmiere
 CMakeFiles/blockchain_node.dir/src/core/mempool.cpp.o: /home/elrasap/programmieren/Blockchain/src/core/mempool.cpp \
   /home/elrasap/programmieren/Blockchain/include/core/mempool.hpp \
   /home/elrasap/programmieren/Blockchain/include/core/transaction.hpp \
+  /home/elrasap/programmieren/Blockchain/include/dnd/dndPayload.hpp \
   /home/elrasap/programmieren/Blockchain/include/dnd/dndTx.hpp \
   /home/elrasap/programmieren/Blockchain/include/dnd/dndTxCodec.hpp \
   /home/elrasap/programmieren/Blockchain/include/dnd/dndTxValidator.hpp \
@@ -25496,6 +25497,8 @@ CMakeFiles/blockchain_node.dir/src/upgrade/upgradeSafetyChecker.cpp.o: /home/elr
 
 CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o: /home/elrasap/programmieren/Blockchain/src/web/chainApi.cpp \
   /home/elrasap/programmieren/Blockchain/include/core/block.hpp \
+  /home/elrasap/programmieren/Blockchain/include/core/blockEncoding.hpp \
+  /home/elrasap/programmieren/Blockchain/include/core/blockJson.hpp \
   /home/elrasap/programmieren/Blockchain/include/core/blockchain.hpp \
   /home/elrasap/programmieren/Blockchain/include/core/crypto.hpp \
   /home/elrasap/programmieren/Blockchain/include/core/transaction.hpp \
@@ -25504,6 +25507,12 @@ CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o: /home/elrasap/programmier
   /home/elrasap/programmieren/Blockchain/include/dnd/dndState.hpp \
   /home/elrasap/programmieren/Blockchain/include/dnd/dndTx.hpp \
   /home/elrasap/programmieren/Blockchain/include/dnd/stateSnapshot.hpp \
+  /home/elrasap/programmieren/Blockchain/include/light/headerChain.hpp \
+  /home/elrasap/programmieren/Blockchain/include/light/lightClient.hpp \
+  /home/elrasap/programmieren/Blockchain/include/light/merkleProof.hpp \
+  /home/elrasap/programmieren/Blockchain/include/network/fastSyncManager.hpp \
+  /home/elrasap/programmieren/Blockchain/include/network/messages.hpp \
+  /home/elrasap/programmieren/Blockchain/include/network/peerManager.hpp \
   /home/elrasap/programmieren/Blockchain/include/storage/blockStore.hpp \
   /home/elrasap/programmieren/Blockchain/include/thirdparty/httplib.h \
   /home/elrasap/programmieren/Blockchain/include/web/chainApi.hpp \
@@ -25999,16 +26008,8 @@ CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o: /home/elrasap/programmier
   /usr/lib/gcc/x86_64-pc-linux-gnu/15.2.1/include/syslimits.h
 
 CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o: /home/elrasap/programmieren/Blockchain/src/web/dashboardServer.cpp \
-  /home/elrasap/programmieren/Blockchain/include/core/block.hpp \
-  /home/elrasap/programmieren/Blockchain/include/core/blockchain.hpp \
-  /home/elrasap/programmieren/Blockchain/include/core/transaction.hpp \
-  /home/elrasap/programmieren/Blockchain/include/dnd/character.hpp \
-  /home/elrasap/programmieren/Blockchain/include/dnd/combat/encounter.hpp \
-  /home/elrasap/programmieren/Blockchain/include/dnd/dndState.hpp \
   /home/elrasap/programmieren/Blockchain/include/dnd/dndTx.hpp \
   /home/elrasap/programmieren/Blockchain/include/dnd/dndTxValidator.hpp \
-  /home/elrasap/programmieren/Blockchain/include/dnd/stateSnapshot.hpp \
-  /home/elrasap/programmieren/Blockchain/include/storage/blockStore.hpp \
   /home/elrasap/programmieren/Blockchain/include/thirdparty/httplib.h \
   /home/elrasap/programmieren/Blockchain/include/web/chainApi.hpp \
   /home/elrasap/programmieren/Blockchain/include/web/dashboardServer.hpp \

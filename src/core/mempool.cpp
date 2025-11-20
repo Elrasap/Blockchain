@@ -1,26 +1,39 @@
 #include "core/mempool.hpp"
+
 #include "dnd/dndTxValidator.hpp"
 #include "dnd/dndTxCodec.hpp"
-#include <sodium.h>
+#include "dnd/dndPayload.hpp"   // <-- WICHTIG: damit isDndPayload gefunden wird
 
+#include <sodium.h>
 #include <nlohmann/json.hpp>
+
 #include <fstream>
 #include <iostream>
 
 using json = nlohmann::json;
+
+// ==========================================================
+// Konstruktor
+// ==========================================================
 
 Mempool::Mempool(dnd::DndTxValidator* validator)
     : validator_(validator)
 {
 }
 
+// ==========================================================
+// Validierte Transaktion hinzufügen
+// ==========================================================
+
 bool Mempool::addTransactionValidated(const Transaction& tx, std::string& err)
 {
     // Hash als String
-    auto h   = tx.hash();
+    auto h = tx.hash();
     std::string key = hashToStr(h);
 
-    // Doppelte TX vermeiden
+    // ------------------------------------
+    // 0) Duplikate verhindern
+    // ------------------------------------
     {
         std::lock_guard<std::mutex> lock(mtx_);
         if (knownHashes_.count(key) != 0) {
@@ -29,11 +42,11 @@ bool Mempool::addTransactionValidated(const Transaction& tx, std::string& err)
         }
     }
 
-    // ==========================
-    // 1) Signaturcheck (defensiv)
-    // ==========================
+    // ------------------------------------
+    // 1) Signatur prüfen
+    // ------------------------------------
     if (!tx.signature.empty()) {
-        // libsodium: crypto_sign_BYTES ist erwartete Länge
+
         if (tx.signature.size() != crypto_sign_BYTES) {
             std::cerr << "[Mempool] invalid signature length: "
                       << tx.signature.size() << "\n";
@@ -49,60 +62,57 @@ bool Mempool::addTransactionValidated(const Transaction& tx, std::string& err)
             }
         }
         catch (const std::exception& e) {
-            std::cerr << "[Mempool] verifySignature threw: "
+            std::cerr << "[Mempool] verifySignature exception: "
                       << e.what() << "\n";
             err = "signature verify exception";
             return false;
         }
         catch (...) {
-            std::cerr << "[Mempool] verifySignature threw unknown exception\n";
+            std::cerr << "[Mempool] verifySignature unknown exception\n";
             err = "signature verify exception";
             return false;
         }
     } else {
-        // Für jetzt erlauben wir uns das in Test-Phase;
-        // wenn du später nur signierte TXs willst, hier "return false" machen.
+        // Testmodus: nicht signierte TXs akzeptieren
         std::cerr << "[Mempool] WARNING: tx without signature accepted (test mode)\n";
     }
 
-    // ==========================
-    // 2) Optionaler DnD-Validator
-    // ==========================
-    if (validator_) {
-        if (dnd::isDndPayload(tx.payload)) {
-            dnd::DndEventTx evt;
-            try {
-                evt = dnd::decodeDndTx(tx.payload);
-            }
-            catch (const std::exception& e) {
-                std::cerr << "[Mempool] decodeDndTx exception: "
-                          << e.what() << "\n";
-                err = "invalid dnd payload";
-                return false;
-            }
-            catch (...) {
-                std::cerr << "[Mempool] decodeDndTx unknown exception\n";
-                err = "invalid dnd payload";
-                return false;
-            }
+    // ------------------------------------
+    // 2) DnD-Validator (falls gesetzt)
+    // ------------------------------------
+    if (validator_ && dnd::isDndPayload(tx.payload)) {
 
-            // Sender/Signatur aus der TX übernehmen
-            evt.senderPubKey = tx.senderPubkey;
-            evt.signature    = tx.signature;
+        dnd::DndEventTx evt;
 
-            std::string vErr;
-            if (!validator_->validate(evt, vErr)) {
-                std::cerr << "[Mempool] DnD validation failed: "
-                          << vErr << "\n";
-                err = "DnD validation failed: " + vErr;
-                return false;
-            }
+        try {
+            evt = dnd::decodeDndTx(tx.payload);
+        }
+        catch (const std::exception& e) {
+            std::cerr << "[Mempool] decodeDndTx exception: " << e.what() << "\n";
+            err = "invalid dnd payload";
+            return false;
+        }
+        catch (...) {
+            std::cerr << "[Mempool] decodeDndTx unknown exception\n";
+            err = "invalid dnd payload";
+            return false;
+        }
+
+        // Signatur und Pubkey übernehmen
+        evt.senderPubKey = tx.senderPubkey;
+        evt.signature    = tx.signature;
+
+        std::string vErr;
+        if (!validator_->validate(evt, vErr)) {
+            std::cerr << "[Mempool] DnD validation failed: " << vErr << "\n";
+            err = "DnD validation failed: " + vErr;
+            return false;
         }
     }
 
-    // ==========================
-    // 3) Aufnahme in Mempool
-    // ==========================
+    // ------------------------------------
+    // 3) Mempool aufnehmen
+    // ------------------------------------
     {
         std::lock_guard<std::mutex> lock(mtx_);
         txs_.push_back(tx);
@@ -112,6 +122,10 @@ bool Mempool::addTransactionValidated(const Transaction& tx, std::string& err)
     std::cout << "[Mempool] added tx " << key << "\n";
     return true;
 }
+
+// ==========================================================
+// Utility + Verwaltung
+// ==========================================================
 
 std::vector<Transaction> Mempool::getAll() const
 {
@@ -129,13 +143,13 @@ void Mempool::clear()
 void Mempool::remove(const std::array<uint8_t, 32>& hash)
 {
     std::string key = hashToStr(hash);
-
     std::lock_guard<std::mutex> lock(mtx_);
 
     auto it = std::remove_if(txs_.begin(), txs_.end(),
-                             [&](const Transaction& tx) {
-                                 return hashToStr(tx.hash()) == key;
-                             });
+        [&](const Transaction& tx){
+            return hashToStr(tx.hash()) == key;
+        });
+
     txs_.erase(it, txs_.end());
     knownHashes_.erase(key);
 }
@@ -146,9 +160,9 @@ size_t Mempool::size() const
     return txs_.size();
 }
 
-// ======================================================
-// Persistente Mempool-Datei
-// ======================================================
+// ==========================================================
+// Persistenz (mempool.json)
+// ==========================================================
 
 bool Mempool::saveToFile(const std::string& path) const
 {
@@ -167,16 +181,14 @@ bool Mempool::saveToFile(const std::string& path) const
     try {
         std::ofstream out(path, std::ios::binary);
         if (!out) {
-            std::cerr << "[Mempool] saveToFile failed: cannot open "
-                      << path << "\n";
+            std::cerr << "[Mempool] saveToFile failed: cannot open file\n";
             return false;
         }
         out << j.dump(2);
         return true;
     }
     catch (const std::exception& e) {
-        std::cerr << "[Mempool] saveToFile exception: "
-                  << e.what() << "\n";
+        std::cerr << "[Mempool] saveToFile exception: " << e.what() << "\n";
         return false;
     }
 }
@@ -186,10 +198,7 @@ bool Mempool::loadFromFile(const std::string& path)
     std::lock_guard<std::mutex> lock(mtx_);
 
     std::ifstream in(path, std::ios::binary);
-    if (!in) {
-        // Kein Fehler → Datei existiert evtl. noch nicht
-        return false;
-    }
+    if (!in) return false;
 
     json j;
     try {

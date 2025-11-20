@@ -25,6 +25,12 @@ bool DndTxValidator::validateActorExists(const DndEventTx& evt,
         return true;
 
     bool isMonster = (evt.actorType == 1);
+
+    // ⇨ NEU: Character- oder Monster-Spawn erlauben
+    if (evt.note == "spawn" || evt.note == "create") {
+        return true;
+    }
+
     if (isMonster) {
         if (!ctx_.monsterExists(evt.actorId)) {
             error = "Actor monster not found: " + evt.actorId;
@@ -38,6 +44,7 @@ bool DndTxValidator::validateActorExists(const DndEventTx& evt,
     }
     return true;
 }
+
 
 bool DndTxValidator::validateTargetExists(const DndEventTx& evt,
                                           std::string& error) const {
