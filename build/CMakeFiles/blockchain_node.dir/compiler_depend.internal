@@ -26089,12 +26089,9 @@ CMakeFiles/blockchain_node.dir/src/web/chainApi.cpp.o
 
 CMakeFiles/blockchain_node.dir/src/web/dashboardServer.cpp.o
  /home/elrasap/programmieren/Blockchain/src/web/dashboardServer.cpp
- /home/elrasap/programmieren/Blockchain/include/dnd/dndTx.hpp
- /home/elrasap/programmieren/Blockchain/include/dnd/dndTxValidator.hpp
  /home/elrasap/programmieren/Blockchain/include/thirdparty/httplib.h
  /home/elrasap/programmieren/Blockchain/include/web/chainApi.hpp
  /home/elrasap/programmieren/Blockchain/include/web/dashboardServer.hpp
- /home/elrasap/programmieren/Blockchain/include/web/dndApi.hpp
  /usr/include/alloca.h
  /usr/include/arpa/inet.h
  /usr/include/asm-generic/bitsperlong.h
@@ -27476,6 +27473,7 @@ CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.o
  /usr/include/c++/15.2.1/sstream
  /usr/include/c++/15.2.1/stack
  /usr/include/c++/15.2.1/stdexcept
+ /usr/include/c++/15.2.1/stdlib.h
  /usr/include/c++/15.2.1/stop_token
  /usr/include/c++/15.2.1/streambuf
  /usr/include/c++/15.2.1/string
@@ -27592,6 +27590,72 @@ CMakeFiles/blockchain_node.dir/src/web/dndApi.cpp.o
  /usr/include/sched.h
  /usr/include/semaphore.h
  /usr/include/signal.h
+ /usr/include/sodium.h
+ /usr/include/sodium/core.h
+ /usr/include/sodium/crypto_aead_aegis128l.h
+ /usr/include/sodium/crypto_aead_aegis256.h
+ /usr/include/sodium/crypto_aead_aes256gcm.h
+ /usr/include/sodium/crypto_aead_chacha20poly1305.h
+ /usr/include/sodium/crypto_aead_xchacha20poly1305.h
+ /usr/include/sodium/crypto_auth.h
+ /usr/include/sodium/crypto_auth_hmacsha256.h
+ /usr/include/sodium/crypto_auth_hmacsha512.h
+ /usr/include/sodium/crypto_auth_hmacsha512256.h
+ /usr/include/sodium/crypto_box.h
+ /usr/include/sodium/crypto_box_curve25519xchacha20poly1305.h
+ /usr/include/sodium/crypto_box_curve25519xsalsa20poly1305.h
+ /usr/include/sodium/crypto_core_ed25519.h
+ /usr/include/sodium/crypto_core_hchacha20.h
+ /usr/include/sodium/crypto_core_hsalsa20.h
+ /usr/include/sodium/crypto_core_ristretto255.h
+ /usr/include/sodium/crypto_core_salsa20.h
+ /usr/include/sodium/crypto_core_salsa2012.h
+ /usr/include/sodium/crypto_core_salsa208.h
+ /usr/include/sodium/crypto_generichash.h
+ /usr/include/sodium/crypto_generichash_blake2b.h
+ /usr/include/sodium/crypto_hash.h
+ /usr/include/sodium/crypto_hash_sha256.h
+ /usr/include/sodium/crypto_hash_sha512.h
+ /usr/include/sodium/crypto_kdf.h
+ /usr/include/sodium/crypto_kdf_blake2b.h
+ /usr/include/sodium/crypto_kdf_hkdf_sha256.h
+ /usr/include/sodium/crypto_kdf_hkdf_sha512.h
+ /usr/include/sodium/crypto_kx.h
+ /usr/include/sodium/crypto_onetimeauth.h
+ /usr/include/sodium/crypto_onetimeauth_poly1305.h
+ /usr/include/sodium/crypto_pwhash.h
+ /usr/include/sodium/crypto_pwhash_argon2i.h
+ /usr/include/sodium/crypto_pwhash_argon2id.h
+ /usr/include/sodium/crypto_pwhash_scryptsalsa208sha256.h
+ /usr/include/sodium/crypto_scalarmult.h
+ /usr/include/sodium/crypto_scalarmult_curve25519.h
+ /usr/include/sodium/crypto_scalarmult_ed25519.h
+ /usr/include/sodium/crypto_scalarmult_ristretto255.h
+ /usr/include/sodium/crypto_secretbox.h
+ /usr/include/sodium/crypto_secretbox_xchacha20poly1305.h
+ /usr/include/sodium/crypto_secretbox_xsalsa20poly1305.h
+ /usr/include/sodium/crypto_secretstream_xchacha20poly1305.h
+ /usr/include/sodium/crypto_shorthash.h
+ /usr/include/sodium/crypto_shorthash_siphash24.h
+ /usr/include/sodium/crypto_sign.h
+ /usr/include/sodium/crypto_sign_ed25519.h
+ /usr/include/sodium/crypto_stream.h
+ /usr/include/sodium/crypto_stream_chacha20.h
+ /usr/include/sodium/crypto_stream_salsa20.h
+ /usr/include/sodium/crypto_stream_salsa2012.h
+ /usr/include/sodium/crypto_stream_salsa208.h
+ /usr/include/sodium/crypto_stream_xchacha20.h
+ /usr/include/sodium/crypto_stream_xsalsa20.h
+ /usr/include/sodium/crypto_verify_16.h
+ /usr/include/sodium/crypto_verify_32.h
+ /usr/include/sodium/crypto_verify_64.h
+ /usr/include/sodium/export.h
+ /usr/include/sodium/randombytes.h
+ /usr/include/sodium/randombytes_internal_random.h
+ /usr/include/sodium/randombytes_sysrandom.h
+ /usr/include/sodium/runtime.h
+ /usr/include/sodium/utils.h
+ /usr/include/sodium/version.h
  /usr/include/stdc-predef.h
  /usr/include/stdint.h
  /usr/include/stdio.h
@@ -27854,6 +27918,8 @@ blockchain_node
  /usr/lib/Scrt1.o
  /usr/lib/crti.o
  /usr/lib/crtn.o
+ /usr/lib/libasan.so
+ /usr/lib/libasan_preinit.o
  /usr/lib/libc.so
  /usr/lib/libgcc_s.so
  /usr/lib/libgcc_s.so.1

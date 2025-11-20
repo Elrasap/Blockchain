@@ -35,6 +35,7 @@ private:
     Mempool&             mempool_;
     PeerManager*         peers_;
     dnd::DndTxValidator& validator_;
+
     std::vector<uint8_t> dmPriv_;
     std::vector<uint8_t> dmPub_;
 

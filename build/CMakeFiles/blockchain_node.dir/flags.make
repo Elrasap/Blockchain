@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/elrasap/programmieren/Blockchain/include -I/home/elrasap/programmieren/Blockchain/include/core -I/home/elrasap/programmieren/Blockchain/include/network -I/home/elrasap/programmieren/Blockchain/include/web -I/home/elrasap/programmieren/Blockchain/include/storage -I/home/elrasap/programmieren/Blockchain/include/dnd -I/home/elrasap/programmieren/Blockchain/include/metrics -I/home/elrasap/programmieren/Blockchain/include/upgrade -I/home/elrasap/programmieren/Blockchain/include/analytics -I/home/elrasap/programmieren/Blockchain/include/ops -I/home/elrasap/programmieren/Blockchain/include/light -I/home/elrasap/programmieren/Blockchain/include/thirdparty
 
-CXX_FLAGS = -std=gnu++20 -Wall -Wextra -Wpedantic -Wno-deprecated-declarations -DWITH_GZFILEOP
+CXX_FLAGS = -std=gnu++20 -fsanitize=address -fno-omit-frame-pointer -DWITH_GZFILEOP
 

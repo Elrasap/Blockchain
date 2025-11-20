@@ -20,6 +20,7 @@
 #include "dnd/dndTxCodec.hpp"
 #include "dnd/dndPayload.hpp"
 #include "dnd/dndState.hpp"
+#include <sodium.h>
 
 using json = nlohmann::json;
 
@@ -40,7 +41,11 @@ DndApi::DndApi(Blockchain& chain,
       validator_(validator),
       dmPriv_(dmPriv),
       dmPub_(dmPub)
-{}
+{
+    std::cerr << "[DndApi] DM key sizes: dmPriv_=" << dmPriv_.size()
+              << " bytes, dmPub_=" << dmPub_.size() << " bytes\n";
+}
+
 
 // -----------------------------------------------------------
 // JSON helpers
@@ -134,13 +139,12 @@ bool DndApi::parseJsonToEvent(const httplib::Request& req,
     // Event signature IMMER leeren
     evt.signature.clear();
 
-    // Fallback auf DM key
-    if (evt.senderPubKey.empty()) {
-        evt.senderPubKey = dmPub_;
-    }
+    // KEIN Fallback auf dmPub_ mehr hier.
+    // Das machen wir zentral in wrapAndInsert(), wo wir try/catch haben.
 
     std::cerr << "[DndApi] parseJsonToEvent DONE\n";
     return true;
+
 }
 
 
@@ -156,9 +160,20 @@ bool DndApi::wrapAndInsert(const DndEventTx& evtInput,
         DndEventTx evt = evtInput;
 
         // Fallback: wenn kein senderPubKey -> DM übernimmt
+                // Fallback: wenn kein senderPubKey -> DM übernimmt
         if (evt.senderPubKey.empty()) {
+            std::cerr << "[DndApi] wrapAndInsert: senderPubKey empty, using dmPub_ (size="
+                      << dmPub_.size() << ")\n";
+
+            if (dmPub_.size() != crypto_sign_PUBLICKEYBYTES) {
+                errOut = "server misconfigured: dmPub_ has invalid size " +
+                         std::to_string(dmPub_.size());
+                return false;
+            }
+
             evt.senderPubKey = dmPub_;
         }
+
 
         // 2. Transaction bauen
         Transaction tx;
@@ -429,114 +444,83 @@ httplib::Response DndApi::getState()
 // -----------------------------------------------------------
 void DndApi::install(httplib::Server& server)
 {
-    auto handle = [&](const httplib::Request& req,
-                      httplib::Response& res,
-                      const std::string& endpointName,
-                      DndEventType type)
+    // Handler-Methode als Funktionsobjekt, kein Stack-Lambda mehr
+    auto makeHandler = [this](const std::string& endpointName,
+                              DndEventType type)
     {
-        try {
-            std::cerr << "[DndApi] creating evt struct...\n";
+        return [this, endpointName, type](const httplib::Request& req,
+                                          httplib::Response& res)
+        {
+            try {
+                DndEventTx evt;
+                std::string err;
 
-            DndEventTx evt;
-            std::cerr << "[DndApi] evt struct constructed OK\n";
+                if (!parseJsonToEvent(req, evt, err)) {
+                    res = jsonError(endpointName + ": " + err, 400);
+                    return;
+                }
 
-            std::string err;
+                evt.eventType = type;
 
-            if (!parseJsonToEvent(req, evt, err)) {
-                res = jsonError(endpointName + ": " + err, 400);
-                return;
+                if (!wrapAndInsert(evt, err)) {
+                    res = jsonError(endpointName + ": " + err, 400);
+                    return;
+                }
+
+                res = jsonOK({{"event", endpointName}});
             }
-
-            // ✨ Hier setzen wir den semantischen Typ
-            evt.eventType = type;
-
-            if (!wrapAndInsert(evt, err)) {
-                res = jsonError(endpointName + ": " + err, 400);
-                return;
+            catch (const std::exception& ex) {
+                res = jsonError("internal error in " + endpointName, 500);
             }
-
-            res = jsonOK({{"event", endpointName}});
-        }
-        catch (const std::exception& ex) {
-            std::cerr << "[DndApi] Exception in handler '" << endpointName
-                      << "': " << ex.what() << "\n";
-            res = jsonError("internal error in " + endpointName, 500);
-        }
-        catch (...) {
-            std::cerr << "[DndApi] Unknown exception in handler '"
-                      << endpointName << "'\n";
-            res = jsonError("internal error in " + endpointName, 500);
-        }
+            catch (...) {
+                res = jsonError("internal error in " + endpointName, 500);
+            }
+        };
     };
 
     server.Post("/dnd/createCharacter",
-                [&](const httplib::Request& req, httplib::Response& res) {
-                    handle(req, res, "createCharacter",
-                           DndEventType::CreateCharacter);
-                });
+        makeHandler("createCharacter", DndEventType::CreateCharacter));
 
     server.Post("/dnd/spawnMonster",
-                [&](const httplib::Request& req, httplib::Response& res) {
-                    handle(req, res, "spawnMonster",
-                           DndEventType::SpawnMonster);
-                });
+        makeHandler("spawnMonster", DndEventType::SpawnMonster));
 
     server.Post("/dnd/startEncounter",
-                [&](const httplib::Request& req, httplib::Response& res) {
-                    handle(req, res, "startEncounter",
-                           DndEventType::StartEncounter);
-                });
+        makeHandler("startEncounter", DndEventType::StartEncounter));
 
     server.Post("/dnd/initiative",
-                [&](const httplib::Request& req, httplib::Response& res) {
-                    handle(req, res, "initiative",
-                           DndEventType::Initiative);
-                });
+        makeHandler("initiative", DndEventType::Initiative));
 
     server.Post("/dnd/hit",
-                [&](const httplib::Request& req, httplib::Response& res) {
-                    handle(req, res, "hit",
-                           DndEventType::Hit);
-                });
+        makeHandler("hit", DndEventType::Hit));
 
     server.Post("/dnd/damage",
-                [&](const httplib::Request& req, httplib::Response& res) {
-                    handle(req, res, "damage",
-                           DndEventType::Damage);
-                });
+        makeHandler("damage", DndEventType::Damage));
 
     server.Post("/dnd/skillCheck",
-                [&](const httplib::Request& req, httplib::Response& res) {
-                    handle(req, res, "skillCheck",
-                           DndEventType::SkillCheck);
-                });
+        makeHandler("skillCheck", DndEventType::SkillCheck));
 
     server.Post("/dnd/endEncounter",
-                [&](const httplib::Request& req, httplib::Response& res) {
-                    handle(req, res, "endEncounter",
-                           DndEventType::EndEncounter);
-                });
+        makeHandler("endEncounter", DndEventType::EndEncounter));
 
     server.Get(R"(/dnd/history/(\w+))",
-               [this](const httplib::Request& req,
-                      httplib::Response& res)
-               {
-                   if (req.matches.size() < 2) {
-                       res = jsonError("missing encounterId", 400);
-                       return;
-                   }
+        [this](const httplib::Request& req, httplib::Response& res)
+        {
+            if (req.matches.size() < 2) {
+                res = jsonError("missing encounterId", 400);
+                return;
+            }
 
-                   std::string encId = req.matches[1];
-                   res = getEncounterHistory(encId);
-               });
+            std::string encId = req.matches[1];
+            res = getEncounterHistory(encId);
+        });
 
     server.Get("/dnd/state",
-               [this](const httplib::Request&,
-                      httplib::Response& res)
-               {
-                   res = getState();
-               });
+        [this](const httplib::Request&, httplib::Response& res)
+        {
+            res = getState();
+        });
 }
+
 
 } // namespace dnd
 

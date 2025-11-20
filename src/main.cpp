@@ -30,85 +30,67 @@ using json = nlohmann::json;
 // Storage
 #include "storage/blockStore.hpp"
 
+
+// -----------------------------
+// Runtime flag
+// -----------------------------
 static bool RUNNING = true;
 void signalHandler(int) { RUNNING = false; }
 
+
 // -------------------------------------------------------------
-// Load config.json (safe)
+// Load config.json
 // -------------------------------------------------------------
 json loadConfig(const std::string& path)
 {
     std::ifstream in(path);
     if (!in) {
         std::cerr << "[Config] Missing " << path << "\n";
-        std::cerr << "         Please create a config.json (you can start with:\n"
-                     "         {\"port\":8080,\"gossipPort\":8090,\"peerPort\":9000,"
-                     "\"blockDb\":\"blocks\",\"mempoolFile\":\"mempool.json\","
-                     "\"snapshotFile\":\"state_snapshot.json\"}\n";
         std::exit(1);
     }
-
     json j;
     in >> j;
     return j;
 }
 
 // -------------------------------------------------------------
-// Save config.json (for persisting generated DM keys)
+// Save config.json
 // -------------------------------------------------------------
 bool saveConfig(const std::string& path, const json& cfg)
 {
     std::ofstream out(path);
-    if (!out) {
-        std::cerr << "[Config] ERROR: Failed to write config file '" << path << "'\n";
-        return false;
-    }
-
+    if (!out) return false;
     out << cfg.dump(4) << "\n";
-    return static_cast<bool>(out);
+    return true;
 }
 
 // -------------------------------------------------------------
-// DM-KEY HELPER
+// DM KEY helper
 // -------------------------------------------------------------
-static constexpr std::size_t DM_PUBKEY_SIZE  = 32; // Ed25519 public key
-static constexpr std::size_t DM_PRIVKEY_SIZE = 64; // Ed25519 secret key
+static constexpr std::size_t DM_PUBKEY_SIZE  = 32;
+static constexpr std::size_t DM_PRIVKEY_SIZE = 64;
 
 bool loadDmKeysFromConfig(const json& cfg,
                           std::vector<uint8_t>& dmPriv,
                           std::vector<uint8_t>& dmPub)
 {
-    if (!cfg.contains("dmPrivKey") || !cfg["dmPrivKey"].is_array() ||
-        !cfg.contains("dmPubKey")  || !cfg["dmPubKey"].is_array()) {
-        std::cerr << "[Config] dmPrivKey/dmPubKey not found or not arrays.\n";
+    if (!cfg.contains("dmPrivKey") || !cfg.contains("dmPubKey"))
         return false;
-    }
 
     try {
         dmPriv = cfg["dmPrivKey"].get<std::vector<uint8_t>>();
         dmPub  = cfg["dmPubKey"].get<std::vector<uint8_t>>();
-    }
-    catch (const std::exception& ex) {
-        std::cerr << "[Config] Failed to parse dmPrivKey/dmPubKey: "
-                  << ex.what() << "\n";
+    } catch (...) {
         return false;
     }
 
-    if (dmPriv.size() != DM_PRIVKEY_SIZE) {
-        std::cerr << "[Config] Invalid dmPrivKey length: expected "
-                  << DM_PRIVKEY_SIZE << " bytes, got " << dmPriv.size() << "\n";
-        return false;
-    }
-
-    if (dmPub.size() != DM_PUBKEY_SIZE) {
-        std::cerr << "[Config] Invalid dmPubKey length: expected "
-                  << DM_PUBKEY_SIZE << " bytes, got " << dmPub.size() << "\n";
-        return false;
-    }
+    if (dmPriv.size() != DM_PRIVKEY_SIZE) return false;
+    if (dmPub.size()  != DM_PUBKEY_SIZE)  return false;
 
     std::cout << "[Config] Using DM keys from config.json\n";
     return true;
 }
+
 
 // -------------------------------------------------------------
 // MAIN
@@ -141,41 +123,18 @@ int main()
     std::vector<uint8_t> dmPriv;
     std::vector<uint8_t> dmPub;
 
-    const bool configHasKeys =
-        cfg.contains("dmPrivKey") || cfg.contains("dmPubKey");
+    if (!loadDmKeysFromConfig(cfg, dmPriv, dmPub)) {
+        std::cout << "[Config] No DM keys found, generating...\n";
 
-    if (configHasKeys) {
-        // Es wurden Keys konfiguriert → sie müssen gültig sein
-        if (!loadDmKeysFromConfig(cfg, dmPriv, dmPub)) {
-            std::cerr << "[Config] FATAL: Invalid DM key material in "
-                      << configPath << ".\n"
-                      << "         Please fix or remove dmPrivKey/dmPubKey and restart.\n";
-            return 1;
-        }
-    } else {
-        // Keine Keys vorhanden → neues Keypair generieren und speichern
-        std::cout << "[Config] No DM keys found in config, generating new Ed25519 keypair...\n";
-        crypto::KeyPair kp;
-        try {
-            kp = crypto::generateKeyPair();
-        } catch (const std::exception& ex) {
-            std::cerr << "[Config] FATAL: DM key generation failed: " << ex.what() << "\n";
-            return 1;
-        }
-
+        crypto::KeyPair kp = crypto::generateKeyPair();
         dmPriv = kp.privateKey;
         dmPub  = kp.publicKey;
 
         cfg["dmPrivKey"] = dmPriv;
         cfg["dmPubKey"]  = dmPub;
 
-        if (saveConfig(configPath, cfg)) {
-            std::cout << "[Config] Generated new DM keypair and stored in "
-                      << configPath << "\n";
-        } else {
-            std::cerr << "[Config] WARNING: Generated DM keys but failed to persist them.\n"
-                      << "         Node will run with ephemeral keys (identity will change on restart).\n";
-        }
+        saveConfig(configPath, cfg);
+        std::cout << "[Config] New DM keys stored.\n";
     }
 
     // ---------------------------------------------------------
@@ -196,12 +155,11 @@ int main()
     // VALIDATOR
     // ---------------------------------------------------------
     dnd::DndValidationContext ctx;
-    ctx.characterExists = [&](const std::string&) { return true; };
-    ctx.monsterExists   = [&](const std::string&) { return true; };
-    ctx.encounterActive = [&](const std::string&) { return true; };
-    ctx.hasControlPermission = [&](const std::string&,
-                                   const std::vector<uint8_t>&,
-                                   bool) { return true; };
+    ctx.characterExists       = [&](const std::string&) { return true; };
+    ctx.monsterExists         = [&](const std::string&) { return true; };
+    ctx.encounterActive       = [&](const std::string&) { return true; };
+    ctx.hasControlPermission  =
+        [&](const std::string&, const std::vector<uint8_t>&, bool) { return true; };
 
     dnd::DndTxValidator validator(ctx);
 
@@ -223,9 +181,10 @@ int main()
 
     if (cfg.contains("peers") && cfg["peers"].is_array()) {
         for (auto& adr : cfg["peers"]) {
-            std::string host = adr.value("host", "127.0.0.1");
-            int         p    = adr.value("port", peerPort);
-            peers.connectToPeer(host, p);
+            peers.connectToPeer(
+                adr.value("host", "127.0.0.1"),
+                adr.value("port", peerPort)
+            );
         }
     }
 
@@ -240,15 +199,16 @@ int main()
     // ---------------------------------------------------------
     httplib::Server http;
 
-    ChainApi api(chain, &peers);
+    auto chainApi = std::make_shared<ChainApi>(chain, &peers);
+    chainApi->bind(http);
 
-    api.bind(http);
+    auto dndapi = std::make_shared<dnd::DndApi>(
+        chain, mempool, &peers, validator, dmPriv, dmPub
+    );
+    dndapi->install(http);
 
-    dnd::DndApi dndapi(chain, mempool, &peers, validator, dmPriv, dmPub);
-    dndapi.install(http);
-
-    DashboardServer dashboard(httpPort, "reports/", db);
-    dashboard.attach(http);
+    auto dashboard = std::make_shared<DashboardServer>(httpPort, "reports/", db);
+    dashboard->attach(http);
 
     MetricsServer metrics(9100);
     metrics.attach(http);
@@ -258,13 +218,7 @@ int main()
     // ---------------------------------------------------------
     std::thread thttp([&]() {
         std::cout << "[HTTP] Starting server on port " << httpPort << "...\n";
-        bool ok = http.listen("0.0.0.0", httpPort);
-        if (!ok) {
-            std::cerr << "[HTTP] ERROR: Failed to start HTTP server on port "
-                      << httpPort << " (listen() returned false)\n";
-        } else {
-            std::cout << "[HTTP] Listening on port " << httpPort << "\n";
-        }
+        http.listen("0.0.0.0", httpPort);
     });
 
     // ---------------------------------------------------------
@@ -276,10 +230,10 @@ int main()
         while (RUNNING) {
             std::this_thread::sleep_for(std::chrono::seconds(4));
 
-            if (mempool.size() == 0)
-                continue;
+            if (mempool.size() == 0) continue;
 
             Block out;
+
             if (builder.buildAndAppendFromMempool(mempool, out)) {
                 std::cout << "[Miner] Mined block height "
                           << out.header.height << "\n";
@@ -292,9 +246,8 @@ int main()
     // ---------------------------------------------------------
     // MAIN LOOP
     // ---------------------------------------------------------
-    while (RUNNING) {
+    while (RUNNING)
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    }
 
     // ---------------------------------------------------------
     // CLEAN SHUTDOWN

@@ -4,15 +4,12 @@
 #include <nlohmann/json.hpp>
 
 #include "thirdparty/httplib.h"
-#include "core/blockJson.hpp"      // <-- wichtig: to_json/from_json
+#include "core/blockJson.hpp"
 #include "core/blockchain.hpp"
 #include "network/peerManager.hpp"
 
 using json = nlohmann::json;
 
-// ------------------------------------------------------------
-// JSON helpers
-// ------------------------------------------------------------
 httplib::Response ChainApi::jsonOK(const json& j)
 {
     httplib::Response r;
@@ -32,17 +29,11 @@ httplib::Response ChainApi::jsonErr(const std::string& msg, int status)
     return r;
 }
 
-// ------------------------------------------------------------
-// Constructor
-// ------------------------------------------------------------
 ChainApi::ChainApi(Blockchain& chain, PeerManager* peers)
     : chain_(chain), peers_(peers)
 {
 }
 
-// ------------------------------------------------------------
-// Register endpoints
-// ------------------------------------------------------------
 void ChainApi::bind(httplib::Server& server)
 {
     // --------------------------------------------------------
