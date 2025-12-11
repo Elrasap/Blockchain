@@ -17,8 +17,8 @@ public:
 private:
     std::string path;
     mutable std::mutex mtx;
-    std::vector<nlohmann::json> buffer;   // In-Memory Ring-Buffer
+    std::vector<nlohmann::json> buffer;
 };
 
-} // namespace dnd::combat
+}
 

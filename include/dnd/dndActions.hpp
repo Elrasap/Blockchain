@@ -4,15 +4,15 @@
 
 namespace dnd::actions {
 
-// Saving Throw
+
 DndEventTx makeSavingThrow(const std::string& encounterId,
                            const std::string& actorId,
-                           const std::string& ability, // "DEX", "STR", ...
+                           const std::string& ability,
                            int roll,
                            int dc,
                            bool success);
 
-// Spell Cast
+
 DndEventTx makeSpellCast(const std::string& encounterId,
                          const std::string& casterId,
                          const std::string& targetId,
@@ -21,7 +21,7 @@ DndEventTx makeSpellCast(const std::string& encounterId,
                          int damage,
                          bool hit);
 
-// Status Effect (Buff/Debuff)
+
 DndEventTx makeStatusEffect(const std::string& encounterId,
                             const std::string& sourceId,
                             const std::string& targetId,
@@ -29,7 +29,7 @@ DndEventTx makeStatusEffect(const std::string& encounterId,
                             int durationRounds,
                             const std::string& effectDataJson);
 
-// Loot Drop
+
 DndEventTx makeLootDrop(const std::string& encounterId,
                         const std::string& sourceId,
                         const std::string& targetId,
@@ -37,5 +37,5 @@ DndEventTx makeLootDrop(const std::string& encounterId,
                         int quantity,
                         int goldValue);
 
-} // namespace dnd::actions
+}
 

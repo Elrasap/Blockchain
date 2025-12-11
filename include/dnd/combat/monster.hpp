@@ -33,7 +33,7 @@ public:
 
     std::vector<Monster> list() const;
     bool get(const std::string& id, Monster& out) const;
-    bool upsert(const Monster& m);        // create or update
+    bool upsert(const Monster& m);
     bool remove(const std::string& id);
 
 private:
@@ -41,7 +41,7 @@ private:
     std::vector<Monster> monsters_;
 };
 
-// JSON helpers
+
 inline void to_json(nlohmann::json& j, const MonsterStats& s) {
     j = nlohmann::json{
         {"str",  s.str},
@@ -86,5 +86,5 @@ inline void from_json(const nlohmann::json& j, Monster& m) {
     }
 }
 
-} // namespace dnd
+}
 

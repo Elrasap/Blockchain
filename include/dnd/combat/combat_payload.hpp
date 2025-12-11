@@ -15,13 +15,13 @@ struct AttackPayload {
 
 struct SkillCheckPayload {
     std::string characterId;
-    std::string skill;  // z.B. "Stealth"
+    std::string skill;
     int bonus = 0;
 };
 
 struct SavingThrowPayload {
     std::string characterId;
-    std::string type;   // "DEX", "WIS", ...
+    std::string type;
     int bonus = 0;
     int dc = 10;
 };
@@ -31,7 +31,6 @@ struct InitiativePayload {
     int bonus = 0;
 };
 
-// JSON Konverter:
 void to_json(nlohmann::json& j, const AttackPayload& p);
 void from_json(const nlohmann::json& j, AttackPayload& p);
 

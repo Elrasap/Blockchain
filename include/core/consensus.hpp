@@ -3,7 +3,6 @@
 #include <cstdint>
 #include "core/block.hpp"
 
-// PoA-Manager verwaltet DM-Key
 class PoAValidator {
 public:
     PoAValidator(const std::vector<uint8_t>& dmPubKey);

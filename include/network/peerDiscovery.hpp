@@ -13,10 +13,10 @@ public:
     void start();
     void stop();
 
-    // Nur einmal beim Start ausgeführt:
+
     void loadPeersFile();
 
-    // Direkt Peers speichern (optional)
+
     void savePeersFile();
 
 private:

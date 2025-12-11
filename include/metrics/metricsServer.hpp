@@ -8,16 +8,16 @@ private:
     int port;
     std::atomic<bool> running;
     std::thread server_thread;
-    httplib::Server svr;   // eigener Server (Port 9100)
+    httplib::Server svr;
 
 public:
     MetricsServer(int port);
     ~MetricsServer();
 
-    bool start();   // starts standalone server
+    bool start();
     void stop();
 
-    // ➜ NEU: attach an existing server (/metrics + /health)
+
     void attach(httplib::Server& http);
 };
 

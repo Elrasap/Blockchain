@@ -4,11 +4,6 @@
 #include <nlohmann/json.hpp>
 
 namespace dnd {
-
-/* ===========================
-   ENUMS: CLASS & RACE
-   =========================== */
-
 enum class CharacterClass {
     Fighter,
     Wizard,
@@ -29,9 +24,7 @@ enum class Race {
     Custom
 };
 
-/* ===========================
-   ABILITY SCORES
-   =========================== */
+
 
 struct AbilityScores {
     int str  = 10;
@@ -42,28 +35,22 @@ struct AbilityScores {
     int cha  = 10;
 };
 
-// Kompatibilität: alter Name "Stats"
 using Stats = AbilityScores;
 
-/* ===========================
-   PLAYER ACCOUNT
-   =========================== */
 
 struct PlayerAccount {
-    std::string address;        // Wallet / Chain-Adresse
-    std::string publicKeyHex;   // Public Key in Hex
-    std::string displayName;    // Anzeigename im UI
+    std::string address;
+    std::string publicKeyHex;
+    std::string displayName;
     bool        isDungeonMaster = false;
     int         permissionLevel  = 0;
 };
 
-/* ===========================
-   CHARACTER SHEET
-   =========================== */
+
 
 struct CharacterSheet {
     std::string id;
-    std::string playerAddress;   // Referenz auf PlayerAccount.address
+    std::string playerAddress;
     std::string name;
 
     CharacterClass cls = CharacterClass::Custom;
@@ -74,7 +61,7 @@ struct CharacterSheet {
     int hpCurrent  = 10;
     int hpMax      = 10;
 
-    int armorClass = 10;         // für Combat / Trefferwürfe
+    int armorClass = 10;
 
     int xp         = 0;
 
@@ -83,9 +70,6 @@ struct CharacterSheet {
     std::string notes;
 };
 
-/* ===========================
-   JSON-FUNKTIONEN (DEKLARATION)
-   =========================== */
 
 using nlohmann::json;
 
@@ -98,9 +82,6 @@ void from_json(const json& j, PlayerAccount& p);
 void to_json(json& j, const CharacterSheet& c);
 void from_json(const json& j, CharacterSheet& c);
 
-/* ===========================
-   HELFER & SERIALISIERUNG
-   =========================== */
 
 CharacterSheet makeDefaultCharacter(
     const std::string& id,
@@ -116,5 +97,5 @@ CharacterSheet deserializeCharacter(const std::string& jsonStr);
 std::string serializePlayer(const PlayerAccount& p);
 PlayerAccount deserializePlayer(const std::string& jsonStr);
 
-} // namespace dnd
+}
 

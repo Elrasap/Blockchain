@@ -3,7 +3,6 @@
 #include <cstdint>
 #include "core/block.hpp"
 
-// Using libsodium
 bool signBlockHeader(BlockHeader& header,
                      const std::vector<uint8_t>& privKey,
                      const std::vector<uint8_t>& pubKey);

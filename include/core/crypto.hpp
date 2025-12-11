@@ -7,8 +7,8 @@
 namespace crypto {
 
 struct KeyPair {
-    std::vector<uint8_t> publicKey;   // 32 bytes
-    std::vector<uint8_t> privateKey;  // 64 bytes
+    std::vector<uint8_t> publicKey;
+    std::vector<uint8_t> privateKey;
 };
 
 std::array<uint8_t, 32> sha256(const std::vector<uint8_t>& data);
@@ -24,5 +24,5 @@ bool verify(const std::vector<uint8_t>& msg,
 std::string toBase64(const std::vector<uint8_t>& data);
 std::vector<uint8_t> fromBase64(const std::string& s);
 
-} // namespace crypto
+}
 

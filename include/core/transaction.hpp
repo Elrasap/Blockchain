@@ -15,7 +15,6 @@ public:
 
     std::vector<uint8_t> serialize() const;
 
-    // SIGNIERT MIT PRIVATKEY (1 Parameter!)
     void sign(const std::vector<uint8_t>& priv);
 
     bool verifySignature() const;
@@ -32,7 +31,6 @@ enum TxType {
     TX_DND_CREATE_CHARACTER = 50,
     TX_DND_UPDATE_CHARACTER = 51,
 
-    // --- Combat ---
     TX_DND_ATTACK = 60,
     TX_DND_SKILL_CHECK = 61,
     TX_DND_SAVING_THROW = 62,

@@ -14,16 +14,16 @@ public:
     SyncManager(Blockchain& chain, PeerManager& peers);
     ~SyncManager();
 
-    void start();     // Hintergrundloop starten
+    void start();
     void stop();
 
-    // Eingehende Netzwerknachrichten:
+
     void handleInv(const std::array<uint8_t,32>& hash);
     void handleGetBlock(const std::array<uint8_t,32>& hash, int fd);
     void handleBlock(const class Block& block);
 
 private:
-    void loop();      // Hintergrund-Sync-Thread
+    void loop();
     bool hasBlock(const std::array<uint8_t,32>& hash) const;
     void requestBlock(const std::array<uint8_t,32>& hash);
 
@@ -34,12 +34,12 @@ private:
     std::thread worker_;
     std::atomic<bool> running{false};
 
-    // zuletzt gesehener Block-Hash, der uns interessiert
+
     std::mutex mtx_;
     std::array<uint8_t,32> wanted_{};
     bool haveWanted_ = false;
 };
 
-// globale Sync-Instanz, von PeerManager benutzt
+
 extern SyncManager* global_sync;
 

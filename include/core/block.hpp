@@ -3,7 +3,7 @@
 #include <vector>
 #include <cstdint>
 
-#include "core/transaction.hpp"   // <-- WICHTIG: kompletter Transaction-Typ
+#include "core/transaction.hpp"
 
 struct BlockHeader {
     std::array<uint8_t, 32> prevHash{};

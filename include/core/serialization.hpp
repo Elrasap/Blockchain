@@ -5,29 +5,24 @@
 
 namespace dnd {
 
-// Payload MUST begin with "DND:"
 static constexpr const char* DND_PREFIX = "DND:";
 
-// Prüft, ob payload ein DnD-Event ist
 inline bool isDndPayload(const std::vector<uint8_t>& raw)
 {
     if (raw.size() < 4)
         return false;
 
-    // Compare prefix
     std::string prefix(raw.begin(), raw.begin() + 4);
 
     return prefix == DND_PREFIX;
 }
 
-// JSON → Bytes: automatically add prefix
 inline std::vector<uint8_t> makeDndPayload(const nlohmann::json& j)
 {
     std::string s = std::string(DND_PREFIX) + j.dump();
     return std::vector<uint8_t>(s.begin(), s.end());
 }
 
-// Bytes → JSON: strip prefix
 inline nlohmann::json parseDndPayload(const std::vector<uint8_t>& raw)
 {
     std::string s(raw.begin(), raw.end());
@@ -39,5 +34,5 @@ inline nlohmann::json parseDndPayload(const std::vector<uint8_t>& raw)
     return nlohmann::json::parse(jsonPart);
 }
 
-} // namespace dnd
+}
 

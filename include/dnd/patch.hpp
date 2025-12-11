@@ -5,10 +5,9 @@
 
 namespace dnd {
 
-// Patch-Objekt: beliebige Felder -> neue Werte (als JSON)
 struct CharacterPatch {
     std::string characterId;
-    nlohmann::json patchData; // {"hpCurrent": 4, "xp": 120, ...}
+    nlohmann::json patchData;
 };
 
 void to_json(nlohmann::json& j, const CharacterPatch& p);

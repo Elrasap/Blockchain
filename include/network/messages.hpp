@@ -21,25 +21,25 @@ enum class MessageType {
     GETPROOF_TX = 12
 };
 
-// ---- Message Struct muss vor Funktionsdeklarationen stehen ----
+
 struct Message {
     MessageType type;
     std::vector<uint8_t> payload;
 };
 
-// ---- Funktionen für generische Message-Encoding ----
+
 std::vector<uint8_t> encodeMessage(const Message& msg);
 Message decodeMessage(const std::vector<uint8_t>& bytes);
 
-// ---- Header-spezifisch ----
+
 std::vector<uint8_t> encodeHeader(const BlockHeader& h);
 BlockHeader decodeHeader(const std::vector<uint8_t>& bytes);
 
-// ---- Proof-spezifisch ----
+
 std::vector<uint8_t> encodeMerkleProof(const MerkleProof& p);
 MerkleProof decodeMerkleProof(const std::vector<uint8_t>& bytes);
 
-// ---- GETHEADER / GETPROOF_TX ----
+
 std::vector<uint8_t> encodeGetHeader(uint64_t height);
 uint64_t decodeGetHeader(const std::vector<uint8_t>& bytes);
 

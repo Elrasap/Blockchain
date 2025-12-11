@@ -6,9 +6,9 @@
 
 namespace dnd {
 
-// -------------------------
-// Event-Typen (semantisch)
-// -------------------------
+
+
+
 enum class DndEventType : uint8_t {
     Unknown         = 0,
     CreateCharacter = 1,
@@ -27,8 +27,8 @@ struct DndEventTx {
     std::string actorId;
     std::string targetId;
 
-    int actorType  = 0;  // 0 = Character, 1 = Monster
-    int targetType = 0;  // 0 = Character, 1 = Monster
+    int actorType  = 0;
+    int targetType = 0;
 
     int  roll   = 0;
     int  damage = 0;
@@ -37,18 +37,18 @@ struct DndEventTx {
 
     uint64_t timestamp = 0;
 
-    // Semantischer Typ (wird vom Server gesetzt, nicht vom Client)
+
     DndEventType eventType = DndEventType::Unknown;
 
-    // Signatur-Metadaten (nicht Teil des signierten Bodies)
+
     std::vector<uint8_t> senderPubKey;
     std::vector<uint8_t> signature;
 };
 
-// -------------------------------------------------------
-// Signing API – aktuell NICHT im Hotpath benutzt, aber
-// als Utility für spätere Player-Keys behalten.
-// -------------------------------------------------------
+
+
+
+
 bool generatePlayerKeypair(std::vector<uint8_t>& pubOut,
                            std::vector<uint8_t>& privOut);
 
@@ -58,9 +58,9 @@ void signDndEvent(DndEventTx& evt,
 bool verifyDndEventSignature(const DndEventTx& evt,
                              std::string& err);
 
-// -------------------------------------------------------
-// JSON support (für State/Logging, NICHT fürs Signing)
-// -------------------------------------------------------
+
+
+
 using json = nlohmann::json;
 
 inline void to_json(json& j, const DndEventTx& e)
@@ -77,7 +77,7 @@ inline void to_json(json& j, const DndEventTx& e)
         {"note",        e.note},
         {"timestamp",   e.timestamp},
         {"eventType",   static_cast<int>(e.eventType)}
-        // senderPubKey & signature sind NICHT Teil des Bodies
+
     };
 }
 
@@ -99,10 +99,10 @@ inline void from_json(const json& j, DndEventTx& e)
         et = j.at("eventType").get<int>();
     e.eventType = static_cast<DndEventType>(et);
 
-    // Metadaten werden extern gesetzt
+
     e.senderPubKey.clear();
     e.signature.clear();
 }
 
-} // namespace dnd
+}
 

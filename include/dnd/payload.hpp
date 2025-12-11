@@ -11,15 +11,15 @@ enum class PayloadType : uint8_t {
 
 struct DndPayload {
     PayloadType type;
-    std::string jsonData; // enthält CharacterSheet oder Patch
+    std::string jsonData;
 };
 
-// JSON serialization
+
 void to_json(nlohmann::json& j, const DndPayload& p);
 void from_json(const nlohmann::json& j, DndPayload& p);
 
 std::string serializePayload(const DndPayload& p);
 DndPayload deserializePayload(const std::string& s);
 
-} // namespace dnd
+}
 

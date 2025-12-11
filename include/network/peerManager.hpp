@@ -22,7 +22,7 @@ struct PeerInfo {
 
 class PeerManager {
 public:
-    // Sync-Pointer setzen (wird vom main nach Konstruktion gemacht)
+
     void setSync(SyncManager* s) { sync = s; }
 
     FastSyncManager* fastSync = nullptr;

@@ -20,7 +20,6 @@ public:
     bool upsertCharacter(const CharacterSheet& sheet);
     bool removeCharacter(const std::string& id);
 
-    /// Public history log (ok)
     std::unordered_map<std::string, std::vector<nlohmann::json>> history;
 
     template<typename Block>
@@ -61,7 +60,6 @@ private:
 
     std::string path_;
 
-    // *** EINHEITLICHER STORAGE!!! ***
     std::unordered_map<std::string, CharacterSheet> characters_;
 };
 

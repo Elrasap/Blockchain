@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-// ---------- Types matching your backend JSON ----------
 
 type PingResponse = {
   pong?: boolean;
@@ -51,7 +50,6 @@ type EncounterEvent = {
   eventType?: number;
 };
 
-// eventType mapping to backend enum
 const EventType = {
   CreateCharacter: 1,
   SpawnMonster: 2,
@@ -69,9 +67,7 @@ type ApiActionState = {
   success: string | null;
 };
 
-const apiBase = ""; // same origin; if needed: "http://localhost:8080"
-
-// small helper to wrap fetch+JSON with error handling
+const apiBase = "";
 async function apiPostJson<T>(
   path: string,
   body: unknown
@@ -88,7 +84,6 @@ async function apiPostJson<T>(
     try {
       json = txt ? JSON.parse(txt) : null;
     } catch {
-      // ignore parse error
     }
 
     if (!res.ok) {
@@ -125,9 +120,7 @@ async function apiGetJson<T>(
   }
 }
 
-// --------------------------------------------------
-// Main App
-// --------------------------------------------------
+
 
 export const App: React.FC = () => {
   const [pingOk, setPingOk] = useState<boolean | null>(null);
@@ -150,7 +143,6 @@ export const App: React.FC = () => {
     success: null
   });
 
-  // forms
   const [newCharacterId, setNewCharacterId] = useState("");
   const [newMonsterId, setNewMonsterId] = useState("");
   const [newEncounterId, setNewEncounterId] = useState("enc1");
@@ -172,7 +164,6 @@ export const App: React.FC = () => {
   const [damageTargetType, setDamageTargetType] = useState<0 | 1>(1);
   const [damageValue, setDamageValue] = useState(5);
 
-  // --------- initial node ping + state load ----------
   useEffect(() => {
     (async () => {
       const { data, error } = await apiGetJson<PingResponse>("/ping");
@@ -198,7 +189,6 @@ export const App: React.FC = () => {
     }
     setState(data);
 
-    // choose a default encounter if none selected
     const ids = Object.keys(data.encounters);
     if (!selectedEncounterId && ids.length > 0) {
       setSelectedEncounterId(ids[0]);
@@ -207,12 +197,10 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     refreshState();
-    const id = setInterval(refreshState, 4000); // poll every 4s
+    const id = setInterval(refreshState, 4000);
     return () => clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // --------- load events for selected encounter ----------
   useEffect(() => {
     if (!selectedEncounterId) {
       setEncounterEvents([]);
@@ -236,9 +224,6 @@ export const App: React.FC = () => {
     })();
   }, [selectedEncounterId]);
 
-  // --------------------------------------------------
-  // helpers
-  // --------------------------------------------------
 
   const setActionLoading = () =>
     setActionState({ loading: true, error: null, success: null });
@@ -247,7 +232,6 @@ export const App: React.FC = () => {
   const setActionSuccess = (msg: string) =>
     setActionState({ loading: false, error: null, success: msg });
 
-  // ----- Actions -----
 
   const handleCreateCharacter = async () => {
     if (!newCharacterId.trim()) {
@@ -405,7 +389,7 @@ export const App: React.FC = () => {
     setActionLoading();
     const body = {
       encounterId: damageEncounterId || "enc1",
-      actorId: "", // could be filled, but not required für unsere Regeln
+      actorId: "",
       actorType: 0,
       targetId: damageTargetId.trim(),
       targetType: damageTargetType,
@@ -452,9 +436,6 @@ export const App: React.FC = () => {
     }
   };
 
-  // --------------------------------------------------
-  // Render helpers
-  // --------------------------------------------------
 
   const renderNodeStatus = () => (
     <div className="card">
@@ -869,7 +850,6 @@ export const App: React.FC = () => {
         </section>
       </main>
 
-      {/* Inline CSS to keep everything in one file */}
       <style>{`
         .app-root {
           min-height: 100vh;

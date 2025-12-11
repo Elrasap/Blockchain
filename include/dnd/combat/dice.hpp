@@ -15,13 +15,12 @@ struct DiceRoll {
 };
 
 
-// Ergebnis eines W20-Rolls mit Advantage/Disadvantage
 struct D20Roll {
     int total = 0;
     int natural = 0;
     int modifier = 0;
     AdvantageState advantage = AdvantageState::Normal;
-    int altRoll = 0;          // bei Advantage/Disadvantage zweiter Wurf
+    int altRoll = 0;
 };
 
 class Dice {
@@ -31,13 +30,10 @@ public:
 
     void reseed(uint64_t seed);
 
-    // Genereller Ausdruck: "XdY+Z", "d20+5", "2d6-1" etc.
     DiceRoll rollExpr(const std::string& expr);
 
-    // W20 mit Advantage/Disadvantage
     D20Roll rollD20(int modifier = 0, AdvantageState adv = AdvantageState::Normal);
 
-    // Helper: einfacher Wurf XdY ohne +/-
     DiceRoll roll(int count, int sides, int modifier = 0);
     int roll(const std::string& expr);
 
@@ -54,5 +50,5 @@ void from_json(const nlohmann::json& j, DiceRoll& r);
 void to_json(nlohmann::json& j, const D20Roll& r);
 void from_json(const nlohmann::json& j, D20Roll& r);
 
-} // namespace dnd::combat
+}
 
