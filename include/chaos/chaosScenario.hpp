@@ -1,0 +1,18 @@
+#pragma once
+#include <string>
+#include <vector>
+#include <chrono>
+#include "chaos/chaosFault.hpp"
+
+struct ScenarioStep {
+    std::chrono::milliseconds at;
+    ChaosFault fault;
+};
+
+struct ChaosScenario {
+    std::string name;
+    std::vector<ScenarioStep> steps;
+    std::chrono::milliseconds budgetRTO{std::chrono::seconds(10)};
+    std::chrono::milliseconds budgetFinalityLag{std::chrono::seconds(5)};
+};
+

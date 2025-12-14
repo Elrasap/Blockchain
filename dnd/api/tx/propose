@@ -1,0 +1,56 @@
+void DndApi::handleProposeTx(const httplib::Request& req,
+                             httplib::Response& res)
+{
+    if (req.body.empty()) {
+        res.status = 400;
+        res.set_content("Empty body", "text/plain");
+        return;
+    }
+
+    json j;
+    try {
+        j = json::parse(req.body);
+    } catch (...) {
+        res.status = 400;
+        res.set_content("Invalid JSON", "text/plain");
+        return;
+    }
+
+    // JSON → DndEventTx
+    dnd::DndEventTx evt = j.get<dnd::DndEventTx>();
+
+    // DnD Event signatur prüfen
+    std::string err;
+    if (!dnd::verifyDndEventSignature(evt, err)) {
+        res.status = 403;
+        res.set_content("Bad signature: " + err, "text/plain");
+        return;
+    }
+
+    // DnD State- / Encounter-Regeln prüfen
+    if (!validator_.validate(evt, err)) {
+        res.status = 403;
+        res.set_content("DnD validation failed: " + err, "text/plain");
+        return;
+    }
+
+    // In generic Transaction packen
+    Transaction tx = dnd::wrapDndTxIntoTransaction(evt);
+
+    if (!tx.verifySignature()) {
+        res.status = 403;
+        res.set_content("Generic transaction signature invalid", "text/plain");
+        return;
+    }
+
+    // In Mempool pushen
+    if (!mempool_.addTransactionValidated(tx, err)) {
+        res.status = 400;
+        res.set_content("Tx rejected: " + err, "text/plain");
+        return;
+    }
+
+    res.status = 200;
+    res.set_content("{\"status\":\"ok\"}", "application/json");
+}
+

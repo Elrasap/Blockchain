@@ -1,0 +1,15 @@
+=== DND BLOCKCHAIN NODE STARTING ===
+[Config] Using DM keys from config.json
+[Blockchain] Loading blocks from disk...
+[Blockchain] Loaded 1 valid blocks.
+[DndState] Rebuilding...
+[DndState] Rebuild complete. Characters: 0 Monsters: 0 Encounters: 0
+[DndState] Rebuilding...
+[DndState] Rebuild complete. Characters: 0 Monsters: 0 Encounters: 0
+[Mempool] Restored 0 transactions from mempool.json
+[PeerManager] Created on port 9000
+PeerManager listening on port 9000
+[GossipServer] Listening on port 8090
+[MetricsServer] Attaching /metrics + /health to main HTTP server
+[HTTP] Starting server on port 8080...
+[DndApi] Exception in handler 'createCharacter': std::bad_alloc

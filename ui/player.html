@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Player UI</title>
+    <link rel="stylesheet" href="/ui/style.css">
+    <script src="/ui/app.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <h1>Player Interface</h1>
+
+    <p>Spieler-ID:
+        <b id="pid"></b>
+    </p>
+
+    <div class="card">
+        <label>Encounter ID:</label>
+        <input id="enc-player" value="t1"><br><br>
+
+        <button onclick="playerAction('initiative')">Initiative</button>
+        <button onclick="playerAction('hit')">Hit</button>
+        <button onclick="playerAction('damage')">Damage</button>
+        <button onclick="playerAction('skillCheck')">Skill Check</button>
+
+        <h3>Output:</h3>
+        <pre id="p-out"></pre>
+    </div>
+</div>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+document.getElementById("pid").textContent = urlParams.get("id");
+</script>
+
+</body>
+</html>
+
