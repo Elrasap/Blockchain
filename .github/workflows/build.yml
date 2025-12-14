@@ -22,7 +22,8 @@ jobs:
             libcurl4-openssl-dev \
             libsodium-dev \
             sqlite3 \
-            libsqlite3-dev
+            libsqlite3-dev \
+            nlohmann-json3-dev
 
       - name: Configure & Build
         run: |
