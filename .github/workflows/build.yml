@@ -15,11 +15,18 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y cmake g++ libssl-dev libsodium-dev sqlite3 libsqlite3-dev
+          sudo apt install -y \
+            cmake \
+            g++ \
+            libssl-dev \
+            libcurl4-openssl-dev \
+            libsodium-dev \
+            sqlite3 \
+            libsqlite3-dev
 
       - name: Configure & Build
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build -- -j$(nproc)
 
       - name: Compute SHA256
