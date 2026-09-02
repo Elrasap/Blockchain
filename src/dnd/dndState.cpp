@@ -1,299 +1,211 @@
 #include "dnd/dndState.hpp"
-#include "dnd/stateSnapshot.hpp"
-#include "dnd/dndPayload.hpp"
-#include "core/blockchain.hpp"
-#include <iostream>
 
-using dnd::combat::CombatActorKind;
+#include <algorithm>
 
 namespace dnd {
 
-// ============================================================================
-//  HP-Helper
-// ============================================================================
+namespace {
 
-void DndState::setMonsterHp(const std::string& id, int hp)
+combat::CombatActorKind actorKind(int type)
 {
-    if (hp < 0) hp = 0;
-
-    auto& mon = monsters[id];
-    if (mon.id.empty())
-        mon.id = id;
-
-    mon.hp = hp;
-    if (mon.maxHp < hp)
-        mon.maxHp = hp;
+    return type == 1 ? combat::CombatActorKind::Monster
+                     : combat::CombatActorKind::Character;
 }
+
+void rememberActor(EncounterState& encounter,
+                   const std::string& id,
+                   int type,
+                   int initiative = 0)
+{
+    if (id.empty()) return;
+
+    auto it = std::find_if(encounter.actors.begin(), encounter.actors.end(),
+        [&](const combat::CombatActorRef& actor) {
+            return actor.id == id && actor.kind == actorKind(type);
+        });
+
+    if (it == encounter.actors.end()) {
+        encounter.actors.push_back({id, actorKind(type), initiative});
+    } else if (initiative > 0) {
+        it->initiative = initiative;
+    }
+}
+
+} // namespace
 
 int DndState::getMonsterHp(const std::string& id) const
 {
     auto it = monsters.find(id);
-    if (it == monsters.end())
-        return 0;
-    return it->second.hp;
-}
-
-void DndState::setCharacterHp(const std::string& id, int hp)
-{
-    if (hp < 0) hp = 0;
-
-    auto& cs = characters[id];
-    cs.sheet.hpCurrent = hp;
+    return it == monsters.end() ? 0 : it->second.hp;
 }
 
 int DndState::getCharacterHp(const std::string& id) const
 {
     auto it = characters.find(id);
-    if (it == characters.end())
-        return 0;
-    return it->second.sheet.hpCurrent;
+    return it == characters.end() ? 0 : it->second.sheet.hpCurrent;
 }
-
-// ============================================================================
-//  apply() – verarbeitet jedes Event basierend auf actorType & note
-// ============================================================================
 
 bool DndState::apply(const DndEventTx& evt, std::string& err)
 {
-    // ======================================================
-    // 0) Event typ prüfen
-    // ======================================================
-    switch(evt.eventType)
-    {
-        case DndEventType::CreateCharacter:
-            break;
-        case DndEventType::SpawnMonster:
-            break;
-        case DndEventType::StartEncounter:
-            break;
-        case DndEventType::Initiative:
-            break;
-        case DndEventType::Hit:
-            break;
-        case DndEventType::Damage:
-            break;
-        case DndEventType::SkillCheck:
-            break;
-        case DndEventType::EndEncounter:
-            break;
-        default:
-            err = "Unknown eventType";
+    err.clear();
+
+    if (evt.actorType < 0 || evt.actorType > 1 ||
+        evt.targetType < 0 || evt.targetType > 1) {
+        err = "Invalid actor or target type";
+        return false;
+    }
+
+    if (evt.eventType == DndEventType::CreateCharacter) {
+        if (evt.actorId.empty() || characterExists(evt.actorId) ||
+            (!evt.ownerPubKey.empty() && evt.ownerPubKey.size() != 32)) {
+            err = evt.actorId.empty() ? "Character id required"
+                : characterExists(evt.actorId) ? "Character already exists"
+                                               : "Invalid character owner key";
             return false;
+        }
+
+        CharacterState character;
+        character.sheet = makeDefaultCharacter(evt.actorId, evt.actorId,
+                                               evt.actorId,
+                                               CharacterClass::Custom,
+                                               Race::Custom);
+        character.ownerPubKey = evt.ownerPubKey.empty()
+            ? evt.senderPubKey : evt.ownerPubKey;
+        characters.emplace(evt.actorId, std::move(character));
+        return true;
     }
 
-    // ======================================================
-    // 1) Encounter automatisch erstellen
-    // ======================================================
-    auto encIt = encounters.find(evt.encounterId);
-    if (encIt == encounters.end()) {
-        encounters[evt.encounterId] = EncounterState{
-            evt.encounterId,
-            true,
-            1,
-            0,
-            {},
-            {}
-        };
-        encIt = encounters.find(evt.encounterId);
+    if (evt.eventType == DndEventType::SpawnMonster) {
+        if (evt.actorId.empty() || monsterExists(evt.actorId)) {
+            err = evt.actorId.empty() ? "Monster id required"
+                                      : "Monster already exists";
+            return false;
+        }
+        monsters.emplace(evt.actorId, MonsterState{evt.actorId, 10, 10});
+        return true;
     }
 
-    EncounterState& enc = encIt->second;
-
-    // Event ins Log aufnehmen
-    enc.events.push_back(evt);
-
-    // ======================================================
-    // EventType Dispatch
-    // ======================================================
-
-    switch(evt.eventType)
-    {
-        // --------------------------------------------------
-        // CHARACTER CREATION
-        // --------------------------------------------------
-        case DndEventType::CreateCharacter:
-        {
-            auto& cs = characters[evt.actorId];
-
-            // default HP
-            if (cs.sheet.hpCurrent == 0)
-                cs.sheet.hpCurrent = 10;
-
-            if (cs.ownerPubKey.empty() && !evt.senderPubKey.empty())
-                cs.ownerPubKey = evt.senderPubKey;
-
-            return true;
+    if (evt.eventType == DndEventType::StartEncounter) {
+        if (evt.encounterId.empty() || encounterExists(evt.encounterId)) {
+            err = evt.encounterId.empty() ? "Encounter id required"
+                                          : "Encounter already exists";
+            return false;
         }
+        EncounterState encounter;
+        encounter.id = evt.encounterId;
+        encounter.active = true;
+        encounter.round = 1;
+        encounter.turnIndex = 0;
+        encounter.events.push_back(evt);
+        encounters.emplace(evt.encounterId, std::move(encounter));
+        return true;
+    }
 
-        // --------------------------------------------------
-        // SPAWN MONSTER
-        // --------------------------------------------------
-        case DndEventType::SpawnMonster:
-        {
-            auto& mon = monsters[evt.actorId];
-            mon.id = evt.actorId;
+    auto encounterIt = encounters.find(evt.encounterId);
+    if (encounterIt == encounters.end()) {
+        err = "Encounter not found";
+        return false;
+    }
+    if (!encounterIt->second.active) {
+        err = "Encounter is not active";
+        return false;
+    }
 
-            if (mon.maxHp == 0)
-                mon.maxHp = 10;
+    EncounterState& encounter = encounterIt->second;
 
-            mon.hp = mon.maxHp;
-            return true;
+    if (!evt.actorId.empty()) {
+        const bool actorExists = evt.actorType == 1
+            ? monsterExists(evt.actorId) : characterExists(evt.actorId);
+        if (!actorExists) {
+            err = "Actor not found";
+            return false;
         }
+    }
 
-        // --------------------------------------------------
-        // START ENCOUNTER
-        // --------------------------------------------------
-        case DndEventType::StartEncounter:
-        {
-            enc.active = true;
-            enc.round = 1;
-            enc.turnIndex = 0;
-            return true;
+    if (!evt.targetId.empty()) {
+        const bool targetExists = evt.targetType == 1
+            ? monsterExists(evt.targetId) : characterExists(evt.targetId);
+        if (!targetExists) {
+            err = "Target not found";
+            return false;
         }
+    }
 
-        // --------------------------------------------------
-        // INITIATIVE (nur Logging)
-        // --------------------------------------------------
-        case DndEventType::Initiative:
-            return true;
+    switch (evt.eventType) {
+    case DndEventType::Initiative:
+        if (evt.actorId.empty() || evt.roll < 1 || evt.roll > 20) {
+            err = "Invalid initiative";
+            return false;
+        }
+        rememberActor(encounter, evt.actorId, evt.actorType, evt.roll);
+        std::stable_sort(encounter.actors.begin(), encounter.actors.end(),
+            [](const combat::CombatActorRef& left,
+               const combat::CombatActorRef& right) {
+                return left.initiative > right.initiative;
+            });
+        break;
 
-        // --------------------------------------------------
-        // HIT (nur Flag, keine HP Änderung)
-        // --------------------------------------------------
-        case DndEventType::Hit:
-            return true;
+    case DndEventType::Hit:
+        if (evt.actorId.empty() || evt.targetId.empty()) {
+            err = "Hit requires actor and target";
+            return false;
+        }
+        rememberActor(encounter, evt.actorId, evt.actorType);
+        rememberActor(encounter, evt.targetId, evt.targetType);
+        break;
 
-        // --------------------------------------------------
-        // DAMAGE (HP ändern)
-        // --------------------------------------------------
-        case DndEventType::Damage:
-        {
-            if (evt.damage <= 0)
-                return true;
+    case DndEventType::Damage: {
+        if (evt.targetId.empty() || evt.damage < 0) {
+            err = "Invalid damage event";
+            return false;
+        }
+        rememberActor(encounter, evt.actorId, evt.actorType);
+        rememberActor(encounter, evt.targetId, evt.targetType);
 
-            // character
-            if (evt.targetType == 0)
-            {
-                auto& cs = characters[evt.targetId];
-                if (cs.sheet.hpCurrent == 0)
-                    cs.sheet.hpCurrent = 10;
+        if (evt.targetType == 0) {
+            auto& hp = characters.at(evt.targetId).sheet.hpCurrent;
+            hp = std::max(0, hp - evt.damage);
+        } else {
+            auto& hp = monsters.at(evt.targetId).hp;
+            hp = std::max(0, hp - evt.damage);
 
-                cs.sheet.hpCurrent -= evt.damage;
-                if (cs.sheet.hpCurrent < 0)
-                    cs.sheet.hpCurrent = 0;
-
-                return true;
-            }
-
-            // monster
-            if (evt.targetType == 1)
-            {
-                auto& mon = monsters[evt.targetId];
-                if (mon.maxHp == 0)
-                    mon.maxHp = 10;
-                if (mon.hp == 0)
-                    mon.hp = mon.maxHp;
-
-                mon.hp -= evt.damage;
-                if (mon.hp < 0)
-                    mon.hp = 0;
-
-                if (mon.hp == 0)
-                {
-                    // wenn alle Monster tot → Encounter enden
-                    bool allDead = true;
-
-                    for (const auto& ev : enc.events)
-                    {
-                        if (ev.targetType == 1)
-                        {
-                            auto it = monsters.find(ev.targetId);
-                            if (it != monsters.end() && it->second.hp > 0)
-                            {
-                                allDead = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (allDead)
-                        enc.active = false;
+            bool hasMonster = false;
+            bool allMonstersDead = true;
+            for (const auto& actor : encounter.actors) {
+                if (actor.kind != combat::CombatActorKind::Monster)
+                    continue;
+                hasMonster = true;
+                auto it = monsters.find(actor.id);
+                if (it != monsters.end() && it->second.hp > 0) {
+                    allMonstersDead = false;
+                    break;
                 }
-
-                return true;
             }
+            if (hasMonster && allMonstersDead)
+                encounter.active = false;
+        }
+        break;
+    }
 
-            err = "Invalid targetType";
+    case DndEventType::SkillCheck:
+        if (evt.actorId.empty() || evt.roll < 1 || evt.roll > 20) {
+            err = "Invalid skill check";
             return false;
         }
+        rememberActor(encounter, evt.actorId, evt.actorType);
+        break;
 
-        // --------------------------------------------------
-        // SKILL CHECK (nur Logging)
-        // --------------------------------------------------
-        case DndEventType::SkillCheck:
-            return true;
+    case DndEventType::EndEncounter:
+        encounter.active = false;
+        break;
 
-        // --------------------------------------------------
-        // END ENCOUNTER
-        // --------------------------------------------------
-        case DndEventType::EndEncounter:
-        {
-            enc.active = false;
-            return true;
-        }
-    }
-
-    return true;
-}
-
-// ============================================================================
-// Snapshots
-// ============================================================================
-
-bool DndState::saveSnapshot(const std::string& path, std::string& err) const
-{
-    if (!writeSnapshot(*this, path)) {
-        err = "Failed to write snapshot";
+    default:
+        err = "Unknown eventType";
         return false;
     }
-    return true;
-}
 
-bool DndState::loadSnapshot(const std::string& path, std::string& err)
-{
-    if (!dnd::loadSnapshot(*this, path)) {
-        err = "Failed to load snapshot";
-        return false;
-    }
-    return true;
-}
-
-// ============================================================================
-// State aus Blockchain rekonstruieren
-// ============================================================================
-
-bool DndState::rebuildFromChain(const ::Blockchain& chain, std::string& err)
-{
-    clear();
-
-    for (const auto& block : chain.getChain())
-    {
-        for (const auto& tx : block.transactions)
-        {
-            if (!dnd::isDndPayload(tx.payload))
-                continue;
-
-            auto evt = dnd::decodeDndTx(tx.payload);
-            evt.senderPubKey = tx.senderPubkey;
-            evt.signature    = tx.signature;
-
-            if (!apply(evt, err))
-                return false;
-        }
-    }
-
+    encounter.events.push_back(evt);
     return true;
 }
 
 } // namespace dnd
-

@@ -6,6 +6,8 @@
 #include "thirdparty/httplib.h"
 #include <nlohmann/json.hpp>
 
+#include <algorithm>
+#include <ctime>
 #include <iostream>
 #include <set>
 #include <unordered_map>
@@ -32,13 +34,11 @@ namespace dnd {
 DndApi::DndApi(Blockchain& chain,
                Mempool& mempool,
                PeerManager* peers,
-               dnd::DndTxValidator& validator,
                const std::vector<uint8_t>& dmPriv,
                const std::vector<uint8_t>& dmPub)
     : chain_(chain),
       mempool_(mempool),
       peers_(peers),
-      validator_(validator),
       dmPriv_(dmPriv),
       dmPub_(dmPub)
 {
@@ -77,10 +77,10 @@ bool DndApi::parseJsonToEvent(const httplib::Request& req,
                               DndEventTx& evt,
                               std::string& errOut)
 {
-    std::cerr << "[DndApi] parseJsonToEvent: raw body size="
-              << req.body.size() << "\n";
-    std::cerr << "[DndApi] parseJsonToEvent: body='"
-              << req.body << "'\n";
+    if (req.body.size() > Transaction::MAX_PAYLOAD_SIZE * 2) {
+        errOut = "request body too large";
+        return false;
+    }
 
     json j;
     try {
@@ -97,8 +97,6 @@ bool DndApi::parseJsonToEvent(const httplib::Request& req,
         return false;
     }
 
-    std::cerr << "[DndApi] JSON parse OK\n";
-
     if (!j.contains("encounterId")) {
         errOut = "missing encounterId";
         return false;
@@ -107,10 +105,6 @@ bool DndApi::parseJsonToEvent(const httplib::Request& req,
         errOut = "missing actorId";
         return false;
     }
-
-    // LOG jedes Feld
-    std::cerr << "[DndApi] encounterId=" << j.value("encounterId", "") << "\n";
-    std::cerr << "[DndApi] actorId=" << j.value("actorId", "") << "\n";
 
     // eventType
     int et = j.value("eventType", 0);
@@ -136,13 +130,13 @@ bool DndApi::parseJsonToEvent(const httplib::Request& req,
     else
         evt.senderPubKey.clear();
 
-    // Event signature IMMER leeren
-    evt.signature.clear();
+    if (j.contains("signature"))
+        evt.signature = j["signature"].get<std::vector<uint8_t>>();
+    else
+        evt.signature.clear();
 
-    // KEIN Fallback auf dmPub_ mehr hier.
-    // Das machen wir zentral in wrapAndInsert(), wo wir try/catch haben.
-
-    std::cerr << "[DndApi] parseJsonToEvent DONE\n";
+    evt.ownerPubKey = j.value("ownerPubKey", std::vector<uint8_t>{});
+    evt.transactionNonce = j.value("nonce", uint64_t{0});
     return true;
 
 }
@@ -153,24 +147,23 @@ bool DndApi::parseJsonToEvent(const httplib::Request& req,
 //    KEIN decodeDndTx mehr hier.
 // -----------------------------------------------------------
 bool DndApi::wrapAndInsert(const DndEventTx& evtInput,
+                           bool allowDmSigning,
                            std::string& errOut)
 {
     try {
         // 1. Lokale Kopie, damit wir evtInput nicht verändern
         DndEventTx evt = evtInput;
 
-        // Fallback: wenn kein senderPubKey -> DM übernimmt
-                // Fallback: wenn kein senderPubKey -> DM übernimmt
-        if (evt.senderPubKey.empty()) {
-            std::cerr << "[DndApi] wrapAndInsert: senderPubKey empty, using dmPub_ (size="
-                      << dmPub_.size() << ")\n";
-
-            if (dmPub_.size() != crypto_sign_PUBLICKEYBYTES) {
-                errOut = "server misconfigured: dmPub_ has invalid size " +
-                         std::to_string(dmPub_.size());
+        const bool clientSigned = !evt.signature.empty();
+        if (!clientSigned) {
+            if (!allowDmSigning) {
+                errOut = "remote requests must include a signed transaction";
                 return false;
             }
-
+            if (!evt.senderPubKey.empty() && evt.senderPubKey != dmPub_) {
+                errOut = "server cannot sign for a player key";
+                return false;
+            }
             evt.senderPubKey = dmPub_;
         }
 
@@ -181,9 +174,12 @@ bool DndApi::wrapAndInsert(const DndEventTx& evtInput,
         // kompakter DnD-Body (magic 0xD1, eventType etc.)
         tx.payload      = dnd::encodeDndTx(evt);
         tx.senderPubkey = evt.senderPubKey;
+        tx.nonce = evt.transactionNonce;
 
-        // Signatur: DM signiert die TX
-        tx.sign(dmPriv_);
+        if (clientSigned)
+            tx.signature = evt.signature;
+        else
+            tx.sign(dmPriv_);
 
         // 3. In den Mempool (hier KEIN weiterer DnD-Decode mehr)
         if (!mempool_.addTransactionValidated(tx, errOut)) {
@@ -216,7 +212,7 @@ bool DndApi::wrapAndInsert(const DndEventTx& evtInput,
 // -----------------------------------------------------------
 httplib::Response DndApi::getEncounterHistory(const std::string& encId)
 {
-    const DndState& st = chain_.getDndState();
+    const DndState st = chain_.getDndState();
 
     auto it = st.encounters.find(encId);
     if (it == st.encounters.end()) {
@@ -244,6 +240,7 @@ httplib::Response DndApi::getEncounterHistory(const std::string& encId)
         ev["hit"]         = e.hit;
         ev["note"]        = e.note;
         ev["timestamp"]   = e.timestamp;
+        ev["eventType"]   = static_cast<int>(e.eventType);
         events.push_back(ev);
     }
 
@@ -257,7 +254,7 @@ httplib::Response DndApi::getEncounterHistory(const std::string& encId)
 // -----------------------------------------------------------
 httplib::Response DndApi::getState()
 {
-    const DndState& st = chain_.getDndState();
+    const DndState st = chain_.getDndState();
 
     // -------------------------------
     // Aggregationsstrukturen
@@ -271,6 +268,15 @@ httplib::Response DndApi::getState()
 
     std::set<std::string> characterIds;
     std::set<std::string> monsterIds;
+
+    for (const auto& [id, ignored] : st.characters) {
+        (void)ignored;
+        characterIds.insert(id);
+    }
+    for (const auto& [id, ignored] : st.monsters) {
+        (void)ignored;
+        monsterIds.insert(id);
+    }
 
     std::unordered_map<std::string, Agg> charAgg;
     std::unordered_map<std::string, Agg> monAgg;
@@ -353,8 +359,10 @@ httplib::Response DndApi::getState()
             a = it->second;
         }
 
-        int maxHp = hpNow + a.damageTaken;
-        if (maxHp <= 0) maxHp = 10;
+        const auto stateIt = st.characters.find(id);
+        int maxHp = stateIt == st.characters.end()
+            ? std::max(10, hpNow + a.damageTaken)
+            : stateIt->second.sheet.hpMax;
 
         json c;
         c["id"]           = id;
@@ -367,6 +375,8 @@ httplib::Response DndApi::getState()
         c["damageDealt"]  = a.damageDealt;
         c["hits"]         = a.hits;
         c["misses"]       = a.misses;
+        c["ownerPubKey"]  = stateIt == st.characters.end()
+            ? std::vector<uint8_t>{} : stateIt->second.ownerPubKey;
 
         // Alte Dummy-Attribute zur Kompatibilität
         c["ac"]     = 12;
@@ -390,8 +400,10 @@ httplib::Response DndApi::getState()
             a = it->second;
         }
 
-        int maxHp = hpNow + a.damageTaken;
-        if (maxHp <= 0) maxHp = 12;
+        const auto stateIt = st.monsters.find(id);
+        int maxHp = stateIt == st.monsters.end()
+            ? std::max(10, hpNow + a.damageTaken)
+            : stateIt->second.maxHp;
 
         json m;
         m["id"]          = id;
@@ -462,7 +474,11 @@ void DndApi::install(httplib::Server& server)
 
                 evt.eventType = type;
 
-                if (!wrapAndInsert(evt, err)) {
+                const std::string remote = req.get_header_value("REMOTE_ADDR");
+                const bool localRequest = remote == "127.0.0.1" ||
+                                          remote == "::1" ||
+                                          remote == "localhost";
+                if (!wrapAndInsert(evt, localRequest, err)) {
                     res = jsonError(endpointName + ": " + err, 400);
                     return;
                 }
@@ -523,4 +539,3 @@ void DndApi::install(httplib::Server& server)
 
 
 } // namespace dnd
-

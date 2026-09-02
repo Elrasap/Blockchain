@@ -2,20 +2,20 @@ name: Build and Verify
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y \
+          sudo apt-get update
+          sudo apt-get install -y \
             cmake \
             g++ \
             libssl-dev \
@@ -25,18 +25,68 @@ jobs:
             libsqlite3-dev \
             nlohmann-json3-dev
 
-      - name: Configure & Build
-        run: |
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build -- -j$(nproc)
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
 
-      - name: Compute SHA256
-        run: sha256sum build/blockchain_node > blockchain_node.sha256
+      - name: Build
+        run: cmake --build build --parallel 2
 
-      - name: Upload artifacts
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Compute checksum
+        run: sha256sum build/blockchain_node > build/blockchain_node.sha256
+
+      - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
-          name: blockchain-binaries
+          name: blockchain-node
           path: |
             build/blockchain_node
-            blockchain_node.sha256
+            build/blockchain_node.sha256
+
+  sanitizers:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: address-undefined
+            sanitizers: address,undefined
+          - name: thread
+            sanitizers: thread
+    name: sanitizer-${{ matrix.name }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake \
+            g++ \
+            libssl-dev \
+            libcurl4-openssl-dev \
+            libsodium-dev \
+            sqlite3 \
+            libsqlite3-dev \
+            nlohmann-json3-dev
+
+      - name: Configure
+        run: >-
+          cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=Debug
+          -DBUILD_TESTING=ON
+          -DENABLE_SANITIZERS=ON
+          -DSANITIZERS=${{ matrix.sanitizers }}
+
+      - name: Build
+        run: cmake --build build --parallel 2
+
+      - name: Run tests
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+          TSAN_OPTIONS: halt_on_error=1
+        run: ctest --test-dir build --output-on-failure

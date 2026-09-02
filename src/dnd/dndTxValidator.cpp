@@ -33,6 +33,11 @@ bool DndTxValidator::validate(const DndEventTx& evt, std::string& error) const {
 bool DndTxValidator::validateSemantic(const DndEventTx& evt,
                                       std::string& error) const
 {
+    if (evt.actorType < 0 || evt.actorType > 1 ||
+        evt.targetType < 0 || evt.targetType > 1) {
+        error = "actorType and targetType must be 0 or 1";
+        return false;
+    }
     // Basis-Checks, die für fast alles gelten
     if (evt.encounterId.empty() &&
         evt.eventType != DndEventType::CreateCharacter &&
@@ -53,7 +58,14 @@ bool DndTxValidator::validateSemantic(const DndEventTx& evt,
             error = "CreateCharacter must have actorType=0 (character)";
             return false;
         }
-        // Target, roll, damage, hit sind hier semantisch egal
+        if (!evt.ownerPubKey.empty() && evt.ownerPubKey.size() != 32) {
+            error = "CreateCharacter ownerPubKey must be 32 bytes";
+            return false;
+        }
+        if (ctx_.characterExists && ctx_.characterExists(evt.actorId)) {
+            error = "Character already exists: " + evt.actorId;
+            return false;
+        }
         return true;
     }
 
@@ -66,6 +78,10 @@ bool DndTxValidator::validateSemantic(const DndEventTx& evt,
             error = "SpawnMonster must have actorType=1 (monster)";
             return false;
         }
+        if (ctx_.monsterExists && ctx_.monsterExists(evt.actorId)) {
+            error = "Monster already exists: " + evt.actorId;
+            return false;
+        }
         return true;
     }
 
@@ -74,7 +90,10 @@ bool DndTxValidator::validateSemantic(const DndEventTx& evt,
             error = "StartEncounter requires encounterId";
             return false;
         }
-        // Optional: actorId/actorType können leer sein (DM-only Event)
+        if (ctx_.encounterExists && ctx_.encounterExists(evt.encounterId)) {
+            error = "Encounter already exists: " + evt.encounterId;
+            return false;
+        }
         return true;
     }
 
@@ -144,12 +163,8 @@ bool DndTxValidator::validateSemantic(const DndEventTx& evt,
 
     case DndEventType::Unknown:
     default:
-        // Unknown-Events sind erlaubt, aber sehr restriktiv:
-        if (evt.actorId.empty() && evt.targetId.empty()) {
-            error = "Unknown eventType requires at least actorId or targetId";
-            return false;
-        }
-        return true;
+        error = "Unknown eventType";
+        return false;
     }
 }
 
@@ -160,12 +175,14 @@ bool DndTxValidator::validateActorExists(const DndEventTx& evt,
     if (!ctx_.characterExists || !ctx_.monsterExists)
         return true;
 
-    bool isSpawnLike =
+    bool actorNotRequired =
         evt.eventType == DndEventType::CreateCharacter ||
-        evt.eventType == DndEventType::SpawnMonster;
+        evt.eventType == DndEventType::SpawnMonster ||
+        evt.eventType == DndEventType::StartEncounter ||
+        evt.eventType == DndEventType::EndEncounter;
 
     // Spawn/Create erzeugt den Actor → keine Existenzprüfung
-    if (isSpawnLike) {
+    if (actorNotRequired) {
         return true;
     }
 
@@ -257,11 +274,28 @@ bool DndTxValidator::validatePermissions(const DndEventTx& evt,
 {
     bool isMonster = (evt.actorType == 1);
 
-    if (!ctx_.hasControlPermission)
+    const bool dmOnly =
+        evt.eventType == DndEventType::CreateCharacter ||
+        evt.eventType == DndEventType::SpawnMonster ||
+        evt.eventType == DndEventType::StartEncounter ||
+        evt.eventType == DndEventType::EndEncounter ||
+        isMonster || evt.actorId.empty();
+
+    if (dmOnly) {
+        if (!ctx_.isDungeonMaster || !ctx_.isDungeonMaster(evt.senderPubKey)) {
+            error = "Dungeon Master permission required";
+            return false;
+        }
+        return true;
+    }
+
+    if (ctx_.isDungeonMaster && ctx_.isDungeonMaster(evt.senderPubKey))
         return true;
 
-    if (evt.actorId.empty())
-        return true; // z.B. DM-only Events wie StartEncounter
+    if (!ctx_.hasControlPermission) {
+        error = "No character permission provider configured";
+        return false;
+    }
 
     if (!ctx_.hasControlPermission(evt.actorId, evt.senderPubKey, isMonster)) {
         error = "permission denied for actorId=" + evt.actorId;
@@ -274,6 +308,9 @@ bool DndTxValidator::validatePermissions(const DndEventTx& evt,
 
 bool DndTxValidator::validateTimestamp(const DndEventTx& evt,
                                        std::string& error) const {
+    if (!ctx_.checkTimestamp)
+        return true;
+
     uint64_t now = ctx_.nowOverride ? ctx_.nowOverride :
                                       static_cast<uint64_t>(std::time(nullptr));
 
@@ -282,7 +319,7 @@ bool DndTxValidator::validateTimestamp(const DndEventTx& evt,
         return false;
     }
 
-    if (evt.timestamp + ctx_.maxPastAgeSec < now) {
+    if (evt.timestamp < now && now - evt.timestamp > ctx_.maxPastAgeSec) {
         error = "Event timestamp too old";
         return false;
     }
@@ -290,4 +327,3 @@ bool DndTxValidator::validateTimestamp(const DndEventTx& evt,
 }
 
 } // namespace dnd
-

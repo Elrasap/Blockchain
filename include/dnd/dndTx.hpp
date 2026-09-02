@@ -40,9 +40,18 @@ struct DndEventTx {
 
     DndEventType eventType = DndEventType::Unknown;
 
+    // Set by the DM when a character is created. It is part of the
+    // signed payload and becomes the character's controller key.
+    std::vector<uint8_t> ownerPubKey;
+
 
     std::vector<uint8_t> senderPubKey;
+    // Signature of the complete canonical Transaction envelope.
     std::vector<uint8_t> signature;
+
+    // Envelope metadata used by HTTP clients. It is serialized by
+    // Transaction, not by the DnD payload codec.
+    uint64_t transactionNonce = 0;
 };
 
 
@@ -76,7 +85,11 @@ inline void to_json(json& j, const DndEventTx& e)
         {"hit",         e.hit},
         {"note",        e.note},
         {"timestamp",   e.timestamp},
-        {"eventType",   static_cast<int>(e.eventType)}
+        {"eventType",   static_cast<int>(e.eventType)},
+        {"ownerPubKey", e.ownerPubKey},
+        {"senderPubKey", e.senderPubKey},
+        {"signature", e.signature},
+        {"nonce", e.transactionNonce}
 
     };
 }
@@ -99,10 +112,10 @@ inline void from_json(const json& j, DndEventTx& e)
         et = j.at("eventType").get<int>();
     e.eventType = static_cast<DndEventType>(et);
 
-
-    e.senderPubKey.clear();
-    e.signature.clear();
+    e.ownerPubKey = j.value("ownerPubKey", std::vector<uint8_t>{});
+    e.senderPubKey = j.value("senderPubKey", std::vector<uint8_t>{});
+    e.signature = j.value("signature", std::vector<uint8_t>{});
+    e.transactionNonce = j.value("nonce", uint64_t{0});
 }
 
 }
-

@@ -1,401 +1,364 @@
 #include "network/peerManager.hpp"
-#include "network/syncManager.hpp"
-#include "core/mempool.hpp"
-#include "network/messages.hpp"
-#include "core/transaction.hpp"
-#include "core/block.hpp"
 
-#include <iostream>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <thread>
-#include <fcntl.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <cstring>
+#include "core/mempool.hpp"
+#include "network/syncManager.hpp"
+
 #include <algorithm>
+#include <arpa/inet.h>
+#include <array>
+#include <cerrno>
+#include <chrono>
+#include <cstring>
+#include <iostream>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <stdexcept>
 #include <ctime>
 
-using namespace std;
-
-// global_sync wird in syncManager.cpp definiert
-extern SyncManager* global_sync;
-
-// --------------------------------------------------------
-// Konstruktoren
-// --------------------------------------------------------
-
 PeerManager::PeerManager(int port, SyncManager* syncManager)
-    : listen_port(port), sync(syncManager)
+    : listenPort_(port), sync(syncManager)
 {
-    cout << "[PeerManager] Created with sync at port " << port << endl;
 }
 
 PeerManager::PeerManager(int port)
-    : listen_port(port)
+    : listenPort_(port)
 {
-    cout << "[PeerManager] Created on port " << port << endl;
 }
 
+PeerManager::~PeerManager()
+{
+    stop();
+}
 
-// --------------------------------------------------------
-// Peer list logic
-// --------------------------------------------------------
-
-void PeerManager::addPeer(const std::string& addr) {
-    std::lock_guard<std::mutex> lock(mtx);
-
-    for (auto& p : peers) {
-        if (p.address == addr)
+void PeerManager::addPeer(const std::string& address)
+{
+    std::lock_guard<std::mutex> lock(peerMutex_);
+    for (auto& peer : peers_)
+        if (peer.address == address)
             return;
-    }
-
-    PeerInfo p;
-    p.address = addr;
-    p.lastSeen = time(nullptr);
-    peers.push_back(p);
+    peers_.push_back({address, 0, static_cast<uint64_t>(std::time(nullptr))});
 }
 
-std::vector<PeerInfo> PeerManager::getPeers() const {
-    std::lock_guard<std::mutex> lock(mtx);
-    return peers;
+std::vector<PeerInfo> PeerManager::getPeers() const
+{
+    std::lock_guard<std::mutex> lock(peerMutex_);
+    return peers_;
 }
 
-void PeerManager::updatePeerHeight(const std::string& addr, uint64_t height) {
-    std::lock_guard<std::mutex> lock(mtx);
-    for (auto& p : peers)
-        if (p.address == addr)
-            p.height = height;
+void PeerManager::updatePeerHeight(const std::string& address, uint64_t height)
+{
+    std::lock_guard<std::mutex> lock(peerMutex_);
+    for (auto& peer : peers_)
+        if (peer.address == address)
+            peer.height = height;
 }
 
-void PeerManager::markSeen(const std::string& addr) {
-    std::lock_guard<std::mutex> lock(mtx);
-    for (auto& p : peers)
-        if (p.address == addr)
-            p.lastSeen = time(nullptr);
+void PeerManager::markSeen(const std::string& address)
+{
+    std::lock_guard<std::mutex> lock(peerMutex_);
+    for (auto& peer : peers_)
+        if (peer.address == address)
+            peer.lastSeen = static_cast<uint64_t>(std::time(nullptr));
 }
 
-
-// --------------------------------------------------------
-// Peer count
-// --------------------------------------------------------
-
-int PeerManager::peerCount() const {
-    std::lock_guard<std::mutex> lock(mtx);
-    return static_cast<int>(peers.size());
+int PeerManager::peerCount() const
+{
+    std::lock_guard<std::mutex> lock(connectionMutex_);
+    return static_cast<int>(sockets_.size());
 }
-
-
-// --------------------------------------------------------
-// Networking: start/stop server
-// --------------------------------------------------------
 
 void PeerManager::startServer()
 {
-    running = true;
-    serverThread = std::thread(&PeerManager::serverLoop, this);
+    bool expected = false;
+    if (!running_.compare_exchange_strong(expected, true))
+        return;
+    serverThread_ = std::thread(&PeerManager::serverLoop, this);
 }
 
 void PeerManager::stop()
 {
-    shutdownAllConnections();
-    running = false;
+    running_ = false;
 
-    {
-        std::lock_guard<std::mutex> lock(connMutex);
-        for (auto& [fd, _] : sockets)
-            close(fd);
-        sockets.clear();
+    const int server = serverFd_.exchange(-1);
+    if (server >= 0) {
+        ::shutdown(server, SHUT_RDWR);
+        ::close(server);
     }
+    shutdownAllConnections();
 
-    if (serverThread.joinable())
-        serverThread.join();
+    if (serverThread_.joinable())
+        serverThread_.join();
+
+    std::lock_guard<std::mutex> lock(threadMutex_);
+    for (auto& thread : clientThreads_)
+        if (thread.joinable())
+            thread.join();
+    clientThreads_.clear();
 }
-
-
-// --------------------------------------------------------
-// Connect to peer (outgoing)
-// --------------------------------------------------------
 
 void PeerManager::connectToPeer(const std::string& host, int port)
 {
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (sock < 0) {
-        cerr << "[PeerManager] Failed to create socket\n";
+    const int socketFd = ::socket(AF_INET, SOCK_STREAM, 0);
+    if (socketFd < 0) {
+        std::cerr << "[PeerManager] Failed to create socket\n";
         return;
     }
 
-    struct sockaddr_in addr{};
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-
-    if (inet_pton(AF_INET, host.c_str(), &addr.sin_addr) <= 0) {
-        cerr << "[PeerManager] Invalid address: " << host << endl;
-        close(sock);
+    sockaddr_in address{};
+    address.sin_family = AF_INET;
+    address.sin_port = htons(port);
+    if (::inet_pton(AF_INET, host.c_str(), &address.sin_addr) != 1 ||
+        ::connect(socketFd, reinterpret_cast<sockaddr*>(&address), sizeof(address)) < 0) {
+        std::cerr << "[PeerManager] Connection failed to "
+                  << host << ':' << port << "\n";
+        ::close(socketFd);
         return;
     }
 
-    if (connect(sock, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
-        cerr << "[PeerManager] Connection failed to "
-             << host << ":" << port << endl;
-        close(sock);
-        return;
-    }
-
+    timeval timeout{3, 0};
+    ::setsockopt(socketFd, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
     {
-        std::lock_guard<std::mutex> lock(connMutex);
-        sockets[sock] = port;
+        std::lock_guard<std::mutex> lock(connectionMutex_);
+        sockets_[socketFd] = port;
     }
-
     addPeer(host + ":" + std::to_string(port));
-
-    cout << "[PeerManager] Connected to peer "
-         << host << ":" << port << endl;
+    startReader(socketFd);
+    if (sync) sync->sendTip(socketFd);
 }
 
-
-// --------------------------------------------------------
-// Mempool attach
-// --------------------------------------------------------
-
-void PeerManager::setMempool(Mempool* mp)
+bool PeerManager::sendAll(int fd, const uint8_t* data, std::size_t size)
 {
-    mempool = mp;
+    std::size_t sent = 0;
+    while (sent < size && running_) {
+        const ssize_t result = ::send(fd, data + sent, size - sent, MSG_NOSIGNAL);
+        if (result > 0) {
+            sent += static_cast<std::size_t>(result);
+            continue;
+        }
+        if (result < 0 && errno == EINTR)
+            continue;
+        return false;
+    }
+    return sent == size;
 }
 
-
-// --------------------------------------------------------
-// broadcast transaction
-// --------------------------------------------------------
-
-void PeerManager::broadcastTransaction(const Transaction& tx)
+bool PeerManager::sendTo(int peerFd, const Message& msg)
 {
-    std::vector<uint8_t> serialized = tx.serialize();
-
-    Message msg;
-    msg.type = MessageType::TX_BROADCAST;
-    msg.payload = serialized;
-
-    auto encoded = encodeMessage(msg);
-
-    std::lock_guard<std::mutex> lock(connMutex);
-
-    for (auto& [fd, _] : sockets) {
-        send(fd, encoded.data(), encoded.size(), 0);
+    try {
+        const auto encoded = encodeMessage(msg);
+        return sendAll(peerFd, encoded.data(), encoded.size());
+    } catch (const std::exception& ex) {
+        std::cerr << "[PeerManager] Could not encode message: "
+                  << ex.what() << "\n";
+        return false;
     }
 }
-
-
-// --------------------------------------------------------
-// broadcast generic message
-// --------------------------------------------------------
 
 void PeerManager::broadcast(const Message& msg)
 {
-    auto encoded = encodeMessage(msg);
-
-    std::lock_guard<std::mutex> lock(connMutex);
-
-    for (auto& [fd, _] : sockets) {
-        send(fd, encoded.data(), encoded.size(), 0);
-    }
-}
-
-
-// --------------------------------------------------------
-// Server loop
-// --------------------------------------------------------
-
-void PeerManager::serverLoop()
-{
-    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_fd < 0) {
-        cerr << "Failed to create server socket\n";
-        return;
-    }
-
-    sockaddr_in addr{};
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(listen_port);
-    addr.sin_addr.s_addr = INADDR_ANY;
-
-    int opt = 1;
-    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
-    fcntl(server_fd, F_SETFL, O_NONBLOCK);
-
-    if (bind(server_fd, (sockaddr*)&addr, sizeof(addr)) < 0) {
-        cerr << "Bind failed\n";
-        close(server_fd);
-        return;
-    }
-
-    listen(server_fd, 10);
-
-    cout << "PeerManager listening on port " << listen_port << "\n";
-
-    while (running) {
-        sockaddr_in client_addr{};
-        socklen_t len = sizeof(client_addr);
-
-        int client_fd = accept(server_fd, (sockaddr*)&client_addr, &len);
-
-        if (client_fd < 0) {
-            if (!running)
-                break;
-            continue;
-        }
-
-        {
-            std::lock_guard<std::mutex> lock(connMutex);
-            sockets[client_fd] = ntohs(client_addr.sin_port);
-        }
-
-        std::thread(&PeerManager::handleClient, this, client_fd).detach();
-    }
-
-    close(server_fd);
-}
-
-
-// --------------------------------------------------------
-// Handle incoming peer
-// --------------------------------------------------------
-
-void PeerManager::handleClient(int client_fd)
-{
-    char buffer[4096];
-
-    while (running) {
-        ssize_t bytes = recv(client_fd, buffer, sizeof(buffer), 0);
-        if (bytes <= 0)
-            break;
-
-        std::vector<uint8_t> data(buffer, buffer + bytes);
-        Message msg = decodeMessage(data);
-
-        if (msg.type == MessageType::TX_BROADCAST) {
-
-            Transaction tx;
-            tx.deserialize(msg.payload);
-
-            if (mempool) {
-                std::string err;
-                if (!mempool->addTransactionValidated(tx, err)) {
-                    std::cerr << "[PeerManager] Rejected incoming TX: "
-                              << err << "\n";
-                }
-            }
-
-            cout << "Received TX_BROADCAST on port "
-                 << listen_port << endl;
-        }
-        else if (msg.type == MessageType::INV ||
-                 msg.type == MessageType::GETBLOCK ||
-                 msg.type == MessageType::BLOCK ||
-                 msg.type == MessageType::HEADER) {
-
-            handleMessage(client_fd, msg);
-        }
-    }
-
-    close(client_fd);
-
+    std::vector<int> sockets;
     {
-        std::lock_guard<std::mutex> lock(connMutex);
-        sockets.erase(client_fd);
+        std::lock_guard<std::mutex> lock(connectionMutex_);
+        for (const auto& [fd, ignored] : sockets_) {
+            (void)ignored;
+            sockets.push_back(fd);
+        }
     }
+    for (int fd : sockets)
+        sendTo(fd, msg);
 }
 
-
-// --------------------------------------------------------
-// Sync messages
-// --------------------------------------------------------
-
-void PeerManager::handleMessage(int fd, const Message& msg)
+void PeerManager::broadcastTransaction(const Transaction& tx)
 {
-    if (msg.type == MessageType::HEADER) {
-        BlockHeader h = decodeHeader(msg.payload);
-        if (fastSync) fastSync->handleHeader(h);
-        return;
-    }
-
-    if (!global_sync)
-        return;
-
-    if (msg.type == MessageType::INV) {
-        std::array<uint8_t,32> h{};
-        memcpy(h.data(), msg.payload.data(), 32);
-        global_sync->handleInv(h);
-    }
-    else if (msg.type == MessageType::GETBLOCK) {
-        std::array<uint8_t,32> h{};
-        memcpy(h.data(), msg.payload.data(), 32);
-        global_sync->handleGetBlock(h, fd);
-    }
-    else if (msg.type == MessageType::BLOCK) {
-        Block b;
-        b.deserialize(msg.payload);
-        global_sync->handleBlock(b);
-    }
+    broadcast({MessageType::TX_BROADCAST, tx.serialize()});
 }
-
-
-// --------------------------------------------------------
-// Shutdown
-// --------------------------------------------------------
-
-void PeerManager::shutdownAllConnections()
-{
-    std::lock_guard<std::mutex> lock(connMutex);
-
-    for (auto& [fd, _] : sockets)
-        shutdown(fd, SHUT_RDWR);
-}
-
-
-// --------------------------------------------------------
-// BLOCK BROADCAST
-// --------------------------------------------------------
 
 void PeerManager::broadcastBlock(const Block& block)
 {
-    std::vector<uint8_t> bytes = block.serialize();
-
-    Message msg;
-    msg.type = MessageType::BLOCK;
-    msg.payload = bytes;
-
-    std::vector<uint8_t> encoded = encodeMessage(msg);
-
-    std::lock_guard<std::mutex> lock(connMutex);
-
-    for (auto& [fd, _] : sockets) {
-        send(fd, encoded.data(), encoded.size(), 0);
-    }
-
-    std::cout << "[PeerManager] broadcastBlock height="
-              << block.header.height
-              << " to " << sockets.size()
-              << " peers\n";
+    broadcast({MessageType::BLOCK, block.serialize()});
 }
 
 void PeerManager::broadcastRaw(const std::vector<uint8_t>& data)
 {
-    std::lock_guard<std::mutex> lock(connMutex);
-    for (auto& [fd, _] : sockets)
-        send(fd, data.data(), data.size(), 0);
+    std::vector<int> sockets;
+    {
+        std::lock_guard<std::mutex> lock(connectionMutex_);
+        for (const auto& [fd, ignored] : sockets_) {
+            (void)ignored;
+            sockets.push_back(fd);
+        }
+    }
+    for (int fd : sockets)
+        sendAll(fd, data.data(), data.size());
+}
+
+void PeerManager::serverLoop()
+{
+    const int server = ::socket(AF_INET, SOCK_STREAM, 0);
+    if (server < 0) {
+        running_ = false;
+        return;
+    }
+    serverFd_ = server;
+
+    int reuse = 1;
+    ::setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
+    sockaddr_in address{};
+    address.sin_family = AF_INET;
+    address.sin_port = htons(listenPort_);
+    address.sin_addr.s_addr = INADDR_ANY;
+
+    if (::bind(server, reinterpret_cast<sockaddr*>(&address), sizeof(address)) < 0 ||
+        ::listen(server, 16) < 0) {
+        std::cerr << "[PeerManager] Could not listen on port "
+                  << listenPort_ << "\n";
+        running_ = false;
+        ::close(server);
+        serverFd_ = -1;
+        return;
+    }
+
+    while (running_) {
+        sockaddr_in clientAddress{};
+        socklen_t length = sizeof(clientAddress);
+        const int client = ::accept(server,
+            reinterpret_cast<sockaddr*>(&clientAddress), &length);
+        if (client < 0) {
+            if (running_ && errno == EINTR) continue;
+            break;
+        }
+
+        timeval timeout{3, 0};
+        ::setsockopt(client, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+        {
+            std::lock_guard<std::mutex> lock(connectionMutex_);
+            sockets_[client] = ntohs(clientAddress.sin_port);
+        }
+        startReader(client);
+        if (sync) sync->sendTip(client);
+    }
+
+    if (serverFd_.exchange(-1) == server)
+        ::close(server);
+}
+
+void PeerManager::startReader(int fd)
+{
+    std::lock_guard<std::mutex> lock(threadMutex_);
+    clientThreads_.emplace_back(&PeerManager::handleClient, this, fd);
+}
+
+void PeerManager::handleClient(int clientFd)
+{
+    std::vector<uint8_t> receiveBuffer;
+    receiveBuffer.reserve(8192);
+    std::array<uint8_t, 4096> chunk{};
+
+    bool validConnection = true;
+    while (running_ && validConnection) {
+        const ssize_t count = ::recv(clientFd, chunk.data(), chunk.size(), 0);
+        if (count == 0) break;
+        if (count < 0) {
+            if (errno == EINTR) continue;
+            break;
+        }
+
+        receiveBuffer.insert(receiveBuffer.end(), chunk.begin(),
+                             chunk.begin() + count);
+        if (receiveBuffer.size() >
+            MAX_MESSAGE_PAYLOAD + MESSAGE_HEADER_SIZE + chunk.size()) {
+            std::cerr << "[PeerManager] Peer exceeded receive limit\n";
+            break;
+        }
+
+        while (!receiveBuffer.empty()) {
+            Message message;
+            std::size_t consumed = 0;
+            std::string error;
+            const auto result = tryDecodeMessageFrame(receiveBuffer, message,
+                                                      consumed, error);
+            if (result == FrameDecodeResult::NeedMoreData)
+                break;
+            if (result == FrameDecodeResult::Invalid) {
+                std::cerr << "[PeerManager] Invalid frame: " << error << "\n";
+                validConnection = false;
+                break;
+            }
+
+            try {
+                handleMessage(clientFd, message);
+            } catch (const std::exception& ex) {
+                std::cerr << "[PeerManager] Rejected message: "
+                          << ex.what() << "\n";
+            }
+            receiveBuffer.erase(receiveBuffer.begin(),
+                                receiveBuffer.begin() + static_cast<std::ptrdiff_t>(consumed));
+        }
+    }
+
+    ::shutdown(clientFd, SHUT_RDWR);
+    ::close(clientFd);
+    std::lock_guard<std::mutex> lock(connectionMutex_);
+    sockets_.erase(clientFd);
+}
+
+void PeerManager::handleMessage(int fd, const Message& msg)
+{
+    if (msg.type == MessageType::TX_BROADCAST) {
+        if (!mempool) return;
+        Transaction tx;
+        std::string error;
+        if (!Transaction::deserialize(msg.payload, tx, error) ||
+            !mempool->addTransactionValidated(tx, error)) {
+            std::cerr << "[PeerManager] Rejected transaction: "
+                      << error << "\n";
+        }
+        return;
+    }
+
+    if (msg.type == MessageType::HEADER) {
+        BlockHeader header = decodeHeader(msg.payload);
+        if (fastSync) fastSync->handleHeader(header);
+        return;
+    }
+
+    if (!sync) return;
+
+    if (msg.type == MessageType::INV || msg.type == MessageType::GETBLOCK) {
+        if (msg.payload.size() != 32)
+            throw std::runtime_error("block hash message must contain 32 bytes");
+        std::array<uint8_t, 32> hash{};
+        std::copy(msg.payload.begin(), msg.payload.end(), hash.begin());
+        if (msg.type == MessageType::INV)
+            sync->handleInv(hash);
+        else
+            sync->handleGetBlock(hash, fd);
+        return;
+    }
+
+    if (msg.type == MessageType::BLOCK) {
+        Block block;
+        std::string error;
+        if (!Block::deserialize(msg.payload, block, error))
+            throw std::runtime_error(error);
+        sync->handleBlock(block);
+    }
+}
+
+void PeerManager::shutdownAllConnections()
+{
+    std::lock_guard<std::mutex> lock(connectionMutex_);
+    for (const auto& [fd, ignored] : sockets_) {
+        (void)ignored;
+        ::shutdown(fd, SHUT_RDWR);
+    }
 }
 
 bool PeerManager::isConnected(const std::string& host, int port) const
 {
-    std::lock_guard<std::mutex> lock(connMutex);
-
-    std::string full = host + ":" + std::to_string(port);
-
-    for (auto& p : peers)
-        if (p.address == full)
-            return true;
-
-    return false;
+    const std::string expected = host + ":" + std::to_string(port);
+    std::lock_guard<std::mutex> lock(peerMutex_);
+    return std::any_of(peers_.begin(), peers_.end(),
+        [&](const PeerInfo& peer) { return peer.address == expected; });
 }
-

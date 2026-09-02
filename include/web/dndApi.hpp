@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "dnd/dndTx.hpp"
-#include "dnd/dndTxValidator.hpp"
 
 class Blockchain;
 class Mempool;
@@ -23,7 +22,6 @@ public:
     DndApi(Blockchain& chain,
            Mempool& mempool,
            PeerManager* peers,
-           dnd::DndTxValidator& validator,
            const std::vector<uint8_t>& dmPriv,
            const std::vector<uint8_t>& dmPub);
 
@@ -34,8 +32,6 @@ private:
     Blockchain&          chain_;
     Mempool&             mempool_;
     PeerManager*         peers_;
-    dnd::DndTxValidator& validator_;
-
     std::vector<uint8_t> dmPriv_;
     std::vector<uint8_t> dmPub_;
 
@@ -50,6 +46,7 @@ private:
 
     // DnD-Event als Transaction wrappen, TX signieren, validieren, in Mempool legen, broadcasten
     bool wrapAndInsert(const DndEventTx& evtInput,
+                       bool allowDmSigning,
                        std::string& errOut);
 
     // GET /dnd/history/<encId>
@@ -60,4 +57,3 @@ private:
 };
 
 } // namespace dnd
-

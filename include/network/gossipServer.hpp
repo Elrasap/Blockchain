@@ -6,17 +6,12 @@
 #include "network/peerManager.hpp"
 #include "thirdparty/httplib.h"
 
-namespace dnd {
-class DndTxValidator;
-}
-
 class GossipServer {
 public:
     GossipServer(int port,
                  Blockchain& chain,
                  Mempool& mempool,
-                 PeerManager* peers = nullptr,
-                 dnd::DndTxValidator* validator = nullptr);
+                 PeerManager* peers = nullptr);
 
     void start();
     void stop();
@@ -26,10 +21,7 @@ private:
     Blockchain& chain_;
     Mempool& mempool_;
     PeerManager* peers_;
-    dnd::DndTxValidator* validator_;
-
     httplib::Server server;
 
     bool running = false;
 };
-

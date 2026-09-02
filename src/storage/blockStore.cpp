@@ -38,15 +38,28 @@ std::string BlockStore::filenameForHeight(uint64_t height) const {
 bool BlockStore::appendBlock(const Block& block) {
     try {
         const std::string path = filenameForHeight(block.header.height);
+        const std::string temporary = path + ".tmp";
         nlohmann::json j = block;
 
-        std::ofstream out(path);
+        if (fs::exists(path)) {
+            std::cerr << "[BlockStore] Refusing to overwrite block at height "
+                      << block.header.height << "\n";
+            return false;
+        }
+
+        std::ofstream out(temporary, std::ios::trunc);
         if (!out.is_open()) {
             std::cerr << "[BlockStore] Failed to open file for write: " << path << "\n";
             return false;
         }
 
         out << j.dump(2);
+        out.close();
+        if (!out) {
+            fs::remove(temporary);
+            return false;
+        }
+        fs::rename(temporary, path);
         return true;
     } catch (const std::exception& ex) {
         std::cerr << "[BlockStore] appendBlock exception: " << ex.what() << "\n";
@@ -125,4 +138,3 @@ void BlockStore::clear() {
         }
     }
 }
-

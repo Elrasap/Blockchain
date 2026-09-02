@@ -6,9 +6,11 @@ using namespace std;
 namespace Validation {
 
 bool validateTransaction(const Transaction& tx) {
-    // Aktuell: nur Signatur prüfen.
-    // Später kannst du hier Nonce, Fee, Policy etc. prüfen.
-    return tx.verifySignature();
+    return tx.senderPubkey.size() == Transaction::PUBLIC_KEY_SIZE &&
+           tx.signature.size() == Transaction::SIGNATURE_SIZE &&
+           !tx.payload.empty() &&
+           tx.payload.size() <= Transaction::MAX_PAYLOAD_SIZE &&
+           tx.verifySignature();
 }
 
 bool validateBlock(const Block& block, const Block& prev) {
@@ -27,13 +29,8 @@ bool validateBlock(const Block& block, const Block& prev) {
         return false;
     }
 
-    // Header-Signatur (falls gesetzt)
-    if (!block.header.validatorPubKey.empty() ||
-        !block.header.signature.empty()) {
-        if (!verifyBlockHeaderSignature(block.header)) {
-            return false;
-        }
-    }
+    if (!verifyBlockHeaderSignature(block.header))
+        return false;
 
     return true;
 }
@@ -55,4 +52,3 @@ bool validateBlockPoA(const Block& block,
 }
 
 } // namespace Validation
-

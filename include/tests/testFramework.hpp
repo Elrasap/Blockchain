@@ -24,6 +24,9 @@ struct is_std_array : std::false_type {};
 template<typename U, std::size_t N>
 struct is_std_array<std::array<U, N>> : std::true_type {};
 
+template<typename T>
+inline std::string toString(const T& v);
+
 /* ============================================================
    BYTE → HEX Helper
    ============================================================ */
@@ -168,4 +171,3 @@ inline std::vector<std::pair<std::string, void(*)()>>& getTests() {
 inline void registerTest(const std::string& name, void(*f)()) {
     getTests().push_back({name, f});
 }
-

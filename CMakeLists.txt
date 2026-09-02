@@ -3,26 +3,24 @@ project(DndBlockchain CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# -------------------------------------------------------
-# Sanitizer (korrekt!)
-# -------------------------------------------------------
-if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    add_compile_options(-fsanitize=address -fno-omit-frame-pointer)
-    add_link_options(-fsanitize=address -fno-omit-frame-pointer)
+option(ENABLE_SANITIZERS "Build with runtime sanitizers" OFF)
+set(SANITIZERS "address,undefined" CACHE STRING
+    "Comma-separated sanitizer list used when ENABLE_SANITIZERS is ON")
+
+if(ENABLE_SANITIZERS AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    add_compile_options(-fsanitize=${SANITIZERS} -fno-omit-frame-pointer)
+    add_link_options(-fsanitize=${SANITIZERS} -fno-omit-frame-pointer)
 endif()
 
-# -------------------------------------------------------
-# Dependencies
-# -------------------------------------------------------
 find_package(Threads REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(CURL REQUIRED)
+find_library(SODIUM_LIB sodium REQUIRED)
+find_library(SQLITE3_LIB sqlite3 REQUIRED)
 
-find_library(SODIUM_LIB sodium)
-find_library(SQLITE3_LIB sqlite3)
-
-include_directories(
+set(PROJECT_INCLUDE_DIRS
     include
     include/core
     include/network
@@ -37,10 +35,7 @@ include_directories(
     include/thirdparty
 )
 
-# -------------------------------------------------------
-# Node sources
-# -------------------------------------------------------
-file(GLOB_RECURSE NODE_SRC
+file(GLOB_RECURSE NODE_SRC CONFIGURE_DEPENDS
     src/core/*.cpp
     src/network/*.cpp
     src/web/*.cpp
@@ -54,20 +49,12 @@ file(GLOB_RECURSE NODE_SRC
     src/release/*.cpp
     src/obs/*.cpp
 )
+list(FILTER NODE_SRC EXCLUDE REGEX "/backup/")
+list(FILTER NODE_SRC EXCLUDE REGEX "/agent/")
 
-# Remove unused legacy dirs
-list(FILTER NODE_SRC EXCLUDE REGEX "backup")
-list(FILTER NODE_SRC EXCLUDE REGEX "agent")
-
-# -------------------------------------------------------
-# Node executable
-# -------------------------------------------------------
-add_executable(blockchain_node
-    ${NODE_SRC}
-    src/main.cpp
-)
-
-target_link_libraries(blockchain_node
+add_library(dnd_blockchain STATIC ${NODE_SRC})
+target_include_directories(dnd_blockchain PUBLIC ${PROJECT_INCLUDE_DIRS})
+target_link_libraries(dnd_blockchain PUBLIC
     Threads::Threads
     OpenSSL::Crypto
     OpenSSL::SSL
@@ -76,8 +63,17 @@ target_link_libraries(blockchain_node
     CURL::libcurl
 )
 
-# -------------------------------------------------------
-# No tests in this version
-# -------------------------------------------------------
-message(STATUS "Tests disabled – Option A active")
+add_executable(blockchain_node src/main.cpp)
+target_link_libraries(blockchain_node PRIVATE dnd_blockchain)
 
+include(CTest)
+if(BUILD_TESTING)
+    add_executable(blockchain_tests
+        src/tests/testRunner.cpp
+        src/tests/hardening_tests.cpp
+        src/tests/fuzz_encounter_state.cpp
+    )
+    target_link_libraries(blockchain_tests PRIVATE dnd_blockchain)
+    add_test(NAME blockchain_tests COMMAND blockchain_tests)
+    set_tests_properties(blockchain_tests PROPERTIES TIMEOUT 60)
+endif()

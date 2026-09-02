@@ -42,6 +42,9 @@ KeyPair generateKeyPair() {
 vector<uint8_t> sign(const vector<uint8_t>& msg,
                      const vector<uint8_t>& priv) {
 
+    if (priv.size() != crypto_sign_SECRETKEYBYTES)
+        throw runtime_error("invalid Ed25519 private key size");
+
     vector<uint8_t> sig(crypto_sign_BYTES);
     unsigned long long siglen;
 
@@ -58,6 +61,10 @@ bool verify(const vector<uint8_t>& msg,
             const vector<uint8_t>& sig,
             const vector<uint8_t>& pub) {
 
+    if (sig.size() != crypto_sign_BYTES ||
+        pub.size() != crypto_sign_PUBLICKEYBYTES)
+        return false;
+
     return crypto_sign_verify_detached(
         sig.data(), msg.data(), msg.size(),
         pub.data()
@@ -65,12 +72,6 @@ bool verify(const vector<uint8_t>& msg,
 }
 
 } // namespace crypto
-// ======================
-// Simple Base64 encoder
-// ======================
-// ======================
-// Correct Base64 encoder
-// ======================
 static const char b64_table[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -81,38 +82,24 @@ std::string crypto::toBase64(const std::vector<uint8_t>& data)
 
     size_t i = 0;
     while (i < data.size()) {
-        uint32_t a = i < data.size() ? data[i++] : 0;
-        uint32_t b = i < data.size() ? data[i++] : 0;
-        uint32_t c = i < data.size() ? data[i++] : 0;
+        const size_t remaining = data.size() - i;
+        uint32_t a = data[i++];
+        uint32_t b = remaining > 1 ? data[i++] : 0;
+        uint32_t c = remaining > 2 ? data[i++] : 0;
 
         uint32_t triple = (a << 16) | (b << 8) | c;
 
         out.push_back(b64_table[(triple >> 18) & 0x3F]);
         out.push_back(b64_table[(triple >> 12) & 0x3F]);
 
-        if (i - 1 > data.size()) {
-            out.push_back('=');
-        } else {
-            out.push_back(b64_table[(triple >> 6) & 0x3F]);
-        }
-
-        if (i > data.size()) {
-            out.push_back('=');
-        } else {
-            out.push_back(b64_table[triple & 0x3F]);
-        }
+        out.push_back(remaining > 1 ? b64_table[(triple >> 6) & 0x3F] : '=');
+        out.push_back(remaining > 2 ? b64_table[triple & 0x3F] : '=');
     }
 
     return out;
 }
 
 
-// ======================
-// Simple Base64 decoder
-// ======================
-// ======================
-// Correct Base64 decoder
-// ======================
 static inline uint8_t b64_index(char c)
 {
     if (c >= 'A' && c <= 'Z') return c - 'A';
@@ -130,10 +117,22 @@ std::vector<uint8_t> crypto::fromBase64(const std::string& s)
     if (len % 4 != 0)
         throw std::runtime_error("invalid base64 length");
 
+    const auto padding = len == 0 ? 0u :
+        static_cast<unsigned>((s[len - 1] == '=') +
+                              (len > 1 && s[len - 2] == '='));
+    if (padding > 2)
+        throw std::runtime_error("invalid base64 padding");
+
     std::vector<uint8_t> out;
     out.reserve((len * 3) / 4);
 
     for (size_t i = 0; i < len; i += 4) {
+        const bool finalGroup = i + 4 == len;
+        if ((!finalGroup && (s[i + 2] == '=' || s[i + 3] == '=')) ||
+            s[i] == '=' || s[i + 1] == '=' ||
+            (s[i + 2] == '=' && s[i + 3] != '='))
+            throw std::runtime_error("invalid base64 padding");
+
         uint32_t v =
             (b64_index(s[i])   << 18) |
             (b64_index(s[i+1]) << 12) |
@@ -145,6 +144,8 @@ std::vector<uint8_t> crypto::fromBase64(const std::string& s)
         if (s[i+3] != '=') out.push_back(v & 0xFF);
     }
 
+    if (padding > 0 && out.size() != (len / 4) * 3 - padding)
+        throw std::runtime_error("invalid base64 data");
+
     return out;
 }
-

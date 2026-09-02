@@ -6,11 +6,9 @@ struct Config {
     int httpPort = 8080;
     int gossipPort = 8090;
 
-    std::vector<uint8_t> dmPrivKey;
-    std::vector<uint8_t> dmPubKey;
+    std::string dmKeyFile = "keys/dm.key";
 
     std::vector<std::string> peers;
 
     static Config load(const std::string& path);
 };
-

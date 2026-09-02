@@ -7,10 +7,6 @@
 
 #include "core/block.hpp"
 #include "core/transaction.hpp"
-#include "dnd/dndTx.hpp"
-#include "dnd/dndTxCodec.hpp"
-#include "dnd/dndTxValidator.hpp"
-#include "dnd/dndPayload.hpp"
 
 using json = nlohmann::json;
 
@@ -41,13 +37,11 @@ static void setJsonOk(httplib::Response& res,
 GossipServer::GossipServer(int port,
                            Blockchain& chain,
                            Mempool& mempool,
-                           PeerManager* peers,
-                           dnd::DndTxValidator* validator)
+                           PeerManager* peers)
     : port_(port)
     , chain_(chain)
     , mempool_(mempool)
     , peers_(peers)
-    , validator_(validator)
 {}
 
 // ---------------------------------------------------------
@@ -70,60 +64,33 @@ void GossipServer::start()
 
         if (req.body.empty())
             return setJsonError(res, "empty body");
+        if (req.body.size() > Block::MAX_BLOCK_SIZE * 2)
+            return setJsonError(res, "request body too large", 413);
 
         json in;
         try { in = json::parse(req.body); }
         catch(...) { return setJsonError(res, "invalid JSON"); }
 
         Transaction tx;
-
-        bool fullTx =
-            in.contains("payload") &&
-            in.contains("senderPubKey") &&
-            in.contains("signature");
-
-        if (fullTx) {
+        if (in.contains("wire")) {
             try {
-                tx.payload      = in["payload"].get<std::vector<uint8_t>>();
-                tx.senderPubkey = in["senderPubKey"].get<std::vector<uint8_t>>();
-                tx.signature    = in["signature"].get<std::vector<uint8_t>>();
-            } catch(...) {
+                std::string error;
+                if (!Transaction::deserialize(
+                        in["wire"].get<std::vector<uint8_t>>(), tx, error))
+                    return setJsonError(res, error);
+            } catch (...) {
                 return setJsonError(res, "invalid tx format");
             }
         } else {
-            dnd::DndEventTx evt;
-
-            evt.encounterId = in.value("encounterId", "");
-            evt.actorId     = in.value("actorId", "");
-            evt.targetId    = in.value("targetId", "");
-
-            evt.actorType  = in.value("actorType", 0);
-            evt.targetType = in.value("targetType", 0);
-
-            evt.roll   = in.value("roll", 0);
-            evt.damage = in.value("damage", 0);
-            evt.hit    = in.value("hit", false);
-
-            if (in.contains("timestamp"))
-                evt.timestamp = in["timestamp"].get<uint64_t>();
-            else
-                evt.timestamp = time(nullptr);
-
-            if (in.contains("senderPubKey"))
-                evt.senderPubKey = in["senderPubKey"].get<std::vector<uint8_t>>();
-
-            if (in.contains("signature"))
-                evt.signature = in["signature"].get<std::vector<uint8_t>>();
-
-            if (validator_) {
-                std::string err;
-                if (!validator_->validate(evt, err))
-                    return setJsonError(res, "DnD validation failed: " + err);
+            try {
+                tx.payload = in.at("payload").get<std::vector<uint8_t>>();
+                tx.senderPubkey = in.at("senderPubKey").get<std::vector<uint8_t>>();
+                tx.signature = in.at("signature").get<std::vector<uint8_t>>();
+                tx.nonce = in.value("nonce", uint64_t{0});
+                tx.fee = in.value("fee", uint64_t{0});
+            } catch (...) {
+                return setJsonError(res, "complete signed transaction required");
             }
-
-            tx.payload      = dnd::encodeDndTx(evt);
-            tx.senderPubkey = evt.senderPubKey;
-            tx.signature    = evt.signature;
         }
 
         // → Mempool
@@ -145,13 +112,15 @@ void GossipServer::start()
 
         if (req.body.empty())
             return setJsonError(res, "empty body");
+        if (req.body.size() > Block::MAX_BLOCK_SIZE)
+            return setJsonError(res, "block too large", 413);
 
         std::vector<uint8_t> buf(req.body.begin(), req.body.end());
 
-        Block block = Block::deserialize(buf);
-
-        if (!verifyBlockHeaderSignature(block.header))
-            return setJsonError(res, "invalid block header signature");
+        Block block;
+        std::string decodeError;
+        if (!Block::deserialize(buf, block, decodeError))
+            return setJsonError(res, decodeError);
 
         const auto& chainVec = chain_.getChain();
 
@@ -172,6 +141,8 @@ void GossipServer::start()
 
         if (!chain_.appendBlock(block))
             return setJsonError(res, "appendBlock failed");
+
+        mempool_.remove(block.transactions);
 
         if (peers_)
             peers_->broadcastBlock(block);
@@ -199,4 +170,3 @@ void GossipServer::stop()
 
     server.stop();
 }
-

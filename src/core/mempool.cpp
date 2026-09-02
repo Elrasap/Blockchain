@@ -1,104 +1,90 @@
 #include "core/mempool.hpp"
+#include "core/transactionValidator.hpp"
 
-#include "dnd/dndTxValidator.hpp"
-#include "dnd/dndTxCodec.hpp"
-#include "dnd/dndPayload.hpp"   // <-- WICHTIG: damit isDndPayload gefunden wird
-
-#include <sodium.h>
 #include <nlohmann/json.hpp>
-#include "core/crypto.hpp"
 
+#include <algorithm>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <utility>
 
 using json = nlohmann::json;
 
-// ==========================================================
-// Konstruktor
-// ==========================================================
-
-Mempool::Mempool(dnd::DndTxValidator* validator)
-    : validator_(validator)
+Mempool::Mempool(
+    const TransactionValidator& validator,
+    std::function<dnd::DndState()> stateProvider,
+    std::function<bool(const std::array<uint8_t, 32>&)> committedProvider)
+    : validator_(validator),
+      stateProvider_(std::move(stateProvider)),
+      committedProvider_(std::move(committedProvider))
 {
 }
 
-// ==========================================================
-// Validierte Transaktion hinzufügen
-// ==========================================================
+std::string Mempool::hashToStr(const std::array<uint8_t, 32>& hash) const
+{
+    static const char* hex = "0123456789abcdef";
+    std::string out;
+    out.reserve(64);
+    for (auto byte : hash) {
+        out.push_back(hex[(byte >> 4) & 0xF]);
+        out.push_back(hex[byte & 0xF]);
+    }
+    return out;
+}
 
 bool Mempool::addTransactionValidated(const Transaction& tx, std::string& err)
 {
-    // Hash als String
-    auto h   = tx.hash();
-    std::string key = hashToStr(h);
+    std::lock_guard<std::mutex> admissionLock(admissionMutex_);
+    std::array<uint8_t, 32> hash{};
+    try {
+        hash = tx.hash();
+    } catch (const std::exception& ex) {
+        err = ex.what();
+        return false;
+    }
+    const std::string key = hashToStr(hash);
 
-    // ------------------------------------
-    // 0) Duplikate verhindern
-    // ------------------------------------
+    std::vector<Transaction> pending;
     {
         std::lock_guard<std::mutex> lock(mtx_);
-        if (knownHashes_.count(key) != 0) {
+        if (knownHashes_.contains(key)) {
             err = "duplicate tx";
             return false;
         }
+        pending = txs_;
     }
 
-    // ------------------------------------
-    // 1) Signatur prüfen (falls vorhanden)
-    // ------------------------------------
-    if (!tx.signature.empty()) {
-        if (tx.signature.size() != crypto_sign_BYTES) {
-            std::cerr << "[Mempool] invalid signature length: "
-                      << tx.signature.size() << "\n";
-            err = "invalid signature length";
-            return false;
-        }
-
-        try {
-            if (!tx.verifySignature()) {
-                std::cerr << "[Mempool] verifySignature() failed\n";
-                err = "invalid signature";
-                return false;
-            }
-        }
-        catch (const std::exception& e) {
-            std::cerr << "[Mempool] verifySignature exception: "
-                      << e.what() << "\n";
-            err = "signature verify exception";
-            return false;
-        }
-        catch (...) {
-            std::cerr << "[Mempool] verifySignature unknown exception\n";
-            err = "signature verify exception";
-            return false;
-        }
-    } else {
-        // Testmodus: nicht signierte TXs akzeptieren
-        std::cerr << "[Mempool] WARNING: tx without signature accepted (test mode)\n";
+    if (committedProvider_ && committedProvider_(hash)) {
+        err = "transaction already committed";
+        return false;
     }
 
-    // ------------------------------------
-    // 2) KEIN DnD-Validator mehr hier
-    //    -> kein decodeDndTx() im Mempool
-    // ------------------------------------
-    // if (validator_ && dnd::isDndPayload(tx.payload)) { ... }  --> ENTFERNT
+    dnd::DndState projected = stateProvider_ ? stateProvider_() : dnd::DndState{};
+    for (const auto& accepted : pending) {
+        if (committedProvider_ && committedProvider_(accepted.hash()))
+            continue;
+        std::string ignored;
+        if (!validator_.validateAndApply(accepted, projected, ignored, false)) {
+            err = "mempool contains invalid dependency: " + ignored;
+            return false;
+        }
+    }
 
-    // ------------------------------------
-    // 3) In den Mempool aufnehmen
-    // ------------------------------------
+    if (!validator_.validateAndApply(tx, projected, err, true))
+        return false;
+
     {
         std::lock_guard<std::mutex> lock(mtx_);
+        if (knownHashes_.contains(key)) {
+            err = "duplicate tx";
+            return false;
+        }
         txs_.push_back(tx);
         knownHashes_.insert(key);
     }
-
-    std::cout << "[Mempool] added tx " << key << "\n";
     return true;
 }
-
-// ==========================================================
-// Utility + Verwaltung
-// ==========================================================
 
 std::vector<Transaction> Mempool::getAll() const
 {
@@ -108,6 +94,7 @@ std::vector<Transaction> Mempool::getAll() const
 
 void Mempool::clear()
 {
+    std::lock_guard<std::mutex> admissionLock(admissionMutex_);
     std::lock_guard<std::mutex> lock(mtx_);
     txs_.clear();
     knownHashes_.clear();
@@ -115,16 +102,19 @@ void Mempool::clear()
 
 void Mempool::remove(const std::array<uint8_t, 32>& hash)
 {
-    std::string key = hashToStr(hash);
+    std::lock_guard<std::mutex> admissionLock(admissionMutex_);
+    const std::string key = hashToStr(hash);
     std::lock_guard<std::mutex> lock(mtx_);
-
-    auto it = std::remove_if(txs_.begin(), txs_.end(),
-        [&](const Transaction& tx){
-            return hashToStr(tx.hash()) == key;
-        });
-
-    txs_.erase(it, txs_.end());
+    txs_.erase(std::remove_if(txs_.begin(), txs_.end(),
+        [&](const Transaction& tx) { return hashToStr(tx.hash()) == key; }),
+        txs_.end());
     knownHashes_.erase(key);
+}
+
+void Mempool::remove(const std::vector<Transaction>& transactions)
+{
+    for (const auto& tx : transactions)
+        remove(tx.hash());
 }
 
 size_t Mempool::size() const
@@ -133,72 +123,76 @@ size_t Mempool::size() const
     return txs_.size();
 }
 
-// ==========================================================
-// Persistenz (mempool.json)
-// ==========================================================
-
 bool Mempool::saveToFile(const std::string& path) const
 {
-    std::lock_guard<std::mutex> lock(mtx_);
-
-    json j = json::array();
-
-    for (const auto& tx : txs_) {
-        json t;
-        t["payload"]      = tx.payload;
-        t["senderPubKey"] = tx.senderPubkey;
-        t["signature"]    = tx.signature;
-        j.push_back(t);
-    }
-
-    try {
-        std::ofstream out(path, std::ios::binary);
-        if (!out) {
-            std::cerr << "[Mempool] saveToFile failed: cannot open file\n";
-            return false;
+    json root = json::array();
+    {
+        std::lock_guard<std::mutex> lock(mtx_);
+        for (const auto& tx : txs_) {
+            root.push_back({
+                {"payload", tx.payload},
+                {"senderPubKey", tx.senderPubkey},
+                {"signature", tx.signature},
+                {"nonce", tx.nonce},
+                {"fee", tx.fee}
+            });
         }
-        out << j.dump(2);
-        return true;
     }
-    catch (const std::exception& e) {
-        std::cerr << "[Mempool] saveToFile exception: " << e.what() << "\n";
+
+    const std::filesystem::path target(path);
+    const std::filesystem::path temporary = target.string() + ".tmp";
+    try {
+        std::ofstream out(temporary, std::ios::binary | std::ios::trunc);
+        if (!out) return false;
+        out << root.dump(2);
+        out.close();
+        if (!out) return false;
+        std::filesystem::rename(temporary, target);
+        return true;
+    } catch (const std::exception& ex) {
+        std::cerr << "[Mempool] save failed: " << ex.what() << "\n";
+        std::error_code ignored;
+        std::filesystem::remove(temporary, ignored);
         return false;
     }
 }
 
 bool Mempool::loadFromFile(const std::string& path)
 {
-    std::lock_guard<std::mutex> lock(mtx_);
-
     std::ifstream in(path, std::ios::binary);
     if (!in) return false;
 
-    json j;
-    try {
-        in >> j;
-    }
-    catch (const std::exception& e) {
-        std::cerr << "[Mempool] loadFromFile parse error: "
-                  << e.what() << "\n";
+    json root = json::parse(in, nullptr, false);
+    if (!root.is_array()) {
+        std::cerr << "[Mempool] invalid persisted mempool\n";
         return false;
     }
 
-    txs_.clear();
-    knownHashes_.clear();
+    clear();
+    std::size_t restored = 0;
+    for (const auto& entry : root) {
+        try {
+            Transaction tx;
+            tx.payload = entry.value("payload", std::vector<uint8_t>{});
+            tx.senderPubkey = entry.value("senderPubKey", std::vector<uint8_t>{});
+            tx.signature = entry.value("signature", std::vector<uint8_t>{});
+            tx.nonce = entry.value("nonce", uint64_t{0});
+            tx.fee = entry.value("fee", uint64_t{0});
 
-    for (const auto& t : j) {
-        Transaction tx;
-        tx.payload      = t.value("payload",      std::vector<uint8_t>{});
-        tx.senderPubkey = t.value("senderPubKey", std::vector<uint8_t>{});
-        tx.signature    = t.value("signature",    std::vector<uint8_t>{});
-
-        txs_.push_back(tx);
-        knownHashes_.insert(hashToStr(tx.hash()));
+            std::string error;
+            if (addTransactionValidated(tx, error)) {
+                ++restored;
+            } else {
+                std::cerr << "[Mempool] skipped persisted transaction: "
+                          << error << "\n";
+            }
+        } catch (const std::exception& ex) {
+            std::cerr << "[Mempool] skipped malformed entry: "
+                      << ex.what() << "\n";
+        }
     }
 
-    std::cout << "[Mempool] Restored " << txs_.size()
-              << " transactions from " << path << "\n";
-
+    std::cout << "[Mempool] Restored " << restored
+              << " validated transactions from " << path << "\n";
     return true;
 }
-

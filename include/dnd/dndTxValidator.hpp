@@ -19,11 +19,15 @@ struct DndValidationContext {
 
     std::function<bool(const std::string& /*encounterId*/)> encounterActive;
 
+    std::function<bool(const std::string& /*encounterId*/)> encounterExists;
+
 
 
     std::function<bool(const std::string& /*actorId*/,
                        const std::vector<uint8_t>& /*senderPubKey*/,
                        bool /*isMonster*/)> hasControlPermission;
+
+    std::function<bool(const std::vector<uint8_t>& /*senderPubKey*/)> isDungeonMaster;
 
 
     uint64_t maxFutureSkewSec   = 30;
@@ -31,6 +35,7 @@ struct DndValidationContext {
 
 
     uint64_t nowOverride = 0;
+    bool checkTimestamp = true;
 };
 
 class DndTxValidator {
@@ -55,4 +60,3 @@ private:
 };
 
 }
-

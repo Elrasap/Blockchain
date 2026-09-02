@@ -19,13 +19,15 @@ using json = nlohmann::json;
 void to_json(json& j, const CharacterState& cs)
 {
     j = json{
-        {"sheet", cs.sheet}
+        {"sheet", cs.sheet},
+        {"ownerPubKey", cs.ownerPubKey}
     };
 }
 
 void from_json(const json& j, CharacterState& cs)
 {
     cs.sheet = j.at("sheet").get<CharacterSheet>();
+    cs.ownerPubKey = j.value("ownerPubKey", std::vector<uint8_t>{});
 }
 
 // ---- MonsterState ----
@@ -70,6 +72,8 @@ void to_json(json& j, const EncounterState& e)
             {"hit",         evt.hit},
             {"note",        evt.note},
             {"timestamp",   evt.timestamp},
+            {"eventType",   static_cast<int>(evt.eventType)},
+            {"ownerPubKey", evt.ownerPubKey},
             {"senderPubKey", evt.senderPubKey},
             {"signature",    evt.signature}
         };
@@ -102,6 +106,8 @@ void from_json(const json& j, EncounterState& e)
             evt.hit         = ev.value("hit", false);
             evt.note        = ev.value("note", "");
             evt.timestamp   = ev.value("timestamp", (uint64_t)0);
+            evt.eventType   = static_cast<DndEventType>(ev.value("eventType", 0));
+            evt.ownerPubKey = ev.value("ownerPubKey", std::vector<uint8_t>{});
 
             if (ev.contains("senderPubKey"))
                 evt.senderPubKey = ev["senderPubKey"].get<std::vector<uint8_t>>();
@@ -163,4 +169,3 @@ bool loadSnapshot(DndState& state, const std::string& path)
 }
 
 } // namespace dnd
-

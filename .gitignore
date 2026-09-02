@@ -44,3 +44,10 @@
 /build/**
 CMakeCache.txt
 CMakeFiles/
+
+# Local node state and secrets
+config.json
+keys/
+blocks/
+mempool.json
+state_snapshot.json

@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <cstddef>
 #include "core/transaction.hpp"
 #include "core/block.hpp"
 #include "light/merkleProof.hpp"
@@ -27,9 +28,24 @@ struct Message {
     std::vector<uint8_t> payload;
 };
 
+static constexpr std::size_t MESSAGE_HEADER_SIZE = 11;
+static constexpr std::size_t MAX_MESSAGE_PAYLOAD = Block::MAX_BLOCK_SIZE;
+
+enum class FrameDecodeResult {
+    Complete,
+    NeedMoreData,
+    Invalid
+};
 
 std::vector<uint8_t> encodeMessage(const Message& msg);
 Message decodeMessage(const std::vector<uint8_t>& bytes);
+bool decodeMessage(const std::vector<uint8_t>& bytes,
+                   Message& out,
+                   std::string& error);
+FrameDecodeResult tryDecodeMessageFrame(const std::vector<uint8_t>& buffer,
+                                        Message& out,
+                                        std::size_t& consumed,
+                                        std::string& error);
 
 
 std::vector<uint8_t> encodeHeader(const BlockHeader& h);
@@ -45,4 +61,3 @@ uint64_t decodeGetHeader(const std::vector<uint8_t>& bytes);
 
 std::vector<uint8_t> encodeGetProofTx(const std::array<uint8_t,32>& txHash);
 std::array<uint8_t,32> decodeGetProofTx(const std::vector<uint8_t>& bytes);
-

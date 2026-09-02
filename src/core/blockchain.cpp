@@ -1,279 +1,270 @@
 #include "core/blockchain.hpp"
+
+#include "core/crypto.hpp"
 #include "core/poaValidator.hpp"
-#include "core/blockJson.hpp"
 #include "dnd/dndPayload.hpp"
-#include "dnd/dndTxCodec.hpp"
-#include "dnd/dndState.hpp"
+#include "dnd/stateSnapshot.hpp"
 
-#include <iostream>
 #include <ctime>
+#include <iostream>
+#include <unordered_set>
 
-// =====================================================
-// Constructor
-// =====================================================
+namespace {
+
+std::string hashKey(const std::array<uint8_t, 32>& hash)
+{
+    return crypto::toHex(hash);
+}
+
+} // namespace
 
 Blockchain::Blockchain(BlockStore& store,
                        const std::vector<uint8_t>& dmValidatorPubKey)
-    : store_(store), dmPubKey(dmValidatorPubKey)
+    : store_(store),
+      dmPubKey_(dmValidatorPubKey),
+      txValidator_(dmValidatorPubKey)
 {
     loadFromDisk();
-    rebuildState();
 }
 
-// =====================================================
-// Load blocks from disk
-// =====================================================
+void Blockchain::loadFromDisk()
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    auto stored = store_.loadAllBlocks();
 
-void Blockchain::loadFromDisk() {
-    std::cout << "[Blockchain] Loading blocks from disk...\n";
-
-    chain_ = store_.loadAllBlocks();
-
-    if (chain_.empty()) {
-        std::cout << "[Blockchain] No blocks found.\n";
-        return;
-    }
-
-    // validate sequentially
-    for (size_t i = 1; i < chain_.size(); i++) {
-        const auto& prev = chain_[i - 1];
-        const auto& curr = chain_[i];
-
-        if (curr.header.height != prev.header.height + 1) {
-            std::cerr << "[Blockchain] Height mismatch at block "
-                      << i << "\n";
-            chain_.resize(i);
-            break;
-        }
-
-        if (curr.header.prevHash != prev.hash()) {
-            std::cerr << "[Blockchain] prevHash mismatch at block "
-                      << i << "\n";
-            chain_.resize(i);
-            break;
-        }
-
-        if (!validateBlock(curr)) {
-            std::cerr << "[Blockchain] Invalid block at height "
-                      << curr.header.height << "\n";
-            chain_.resize(i);
-            break;
-        }
-    }
-
-    std::cout << "[Blockchain] Loaded "
-              << chain_.size() << " valid blocks.\n";
-}
-
-// =====================================================
-// Rebuild DnD state from chain
-// =====================================================
-
-void Blockchain::rebuildState() {
-    std::cout << "[DndState] Rebuilding...\n";
-
+    chain_.clear();
     dndState_.clear();
+    dnd::DndState projected;
+    std::unordered_set<std::string> transactionHashes;
+
+    for (std::size_t i = 0; i < stored.size(); ++i) {
+        const Block& block = stored[i];
+        const uint64_t expectedHeight = static_cast<uint64_t>(chain_.size());
+
+        if (block.header.height != expectedHeight ||
+            (expectedHeight == 0 && block.header.prevHash != std::array<uint8_t, 32>{}) ||
+            (expectedHeight > 0 && block.header.prevHash != chain_.back().hash()) ||
+            !validateBlockHeader(block)) {
+            std::cerr << "[Blockchain] Ignoring invalid stored chain from height "
+                      << block.header.height << "\n";
+            break;
+        }
+
+        bool validTransactions = true;
+        dnd::DndState blockProjection = projected;
+        std::unordered_set<std::string> blockHashes;
+        for (const auto& tx : block.transactions) {
+            std::string error;
+            std::array<uint8_t, 32> hash{};
+            try {
+                hash = tx.hash();
+            } catch (const std::exception& ex) {
+                error = ex.what();
+            }
+            const std::string key = hashKey(hash);
+            if (!error.empty() || transactionHashes.contains(key) ||
+                !blockHashes.insert(key).second ||
+                !txValidator_.validateAndApply(tx, blockProjection, error, false)) {
+                std::cerr << "[Blockchain] Invalid stored transaction at height "
+                          << block.header.height << ": " << error << "\n";
+                validTransactions = false;
+                break;
+            }
+        }
+        if (!validTransactions)
+            break;
+
+        projected = std::move(blockProjection);
+        transactionHashes.insert(blockHashes.begin(), blockHashes.end());
+        chain_.push_back(block);
+    }
+
+    dndState_ = std::move(projected);
+    std::cout << "[Blockchain] Loaded " << chain_.size()
+              << " validated blocks from disk\n";
+}
+
+void Blockchain::rebuildState()
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    dnd::DndState projected;
 
     for (const auto& block : chain_) {
         for (const auto& tx : block.transactions) {
-            if (!dnd::isDndPayload(tx.payload))
-                continue;
-
-            auto evt = dnd::extractDndEventTx(tx);
-            std::string err;
-
-            // Full DnD validation is optional here (already validated on block add)
-            if (!dndState_.apply(evt, err)) {
-                std::cerr << "[DndState] apply() failed at block "
-                          << block.header.height << ": " << err << "\n";
+            std::string error;
+            if (!txValidator_.validateAndApply(tx, projected, error, false)) {
+                std::cerr << "[DndState] Replay failed at height "
+                          << block.header.height << ": " << error << "\n";
+                return;
             }
         }
     }
-
-    std::cout << "[DndState] Rebuild complete. Characters: "
-              << dndState_.characters.size()
-              << " Monsters: " << dndState_.monsters.size()
-              << " Encounters: " << dndState_.encounters.size()
-              << "\n";
+    dndState_ = std::move(projected);
 }
 
-// =====================================================
-// Height, read
-// =====================================================
-
-uint64_t Blockchain::getHeight() const {
-    if (chain_.empty()) return 0;
-    return chain_.back().header.height;
+uint64_t Blockchain::getHeight() const
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    return chain_.empty() ? 0 : chain_.back().header.height;
 }
 
-Block Blockchain::getLatestBlock() const {
-    if (chain_.empty()) return Block{};
-    return chain_.back();
+Block Blockchain::getLatestBlock() const
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    return chain_.empty() ? Block{} : chain_.back();
 }
 
-Block Blockchain::getBlock(uint64_t height) const {
-    if (height >= chain_.size()) return Block{};
-    return chain_[height];
+Block Blockchain::getBlock(uint64_t height) const
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    return height < chain_.size() ? chain_[height] : Block{};
 }
 
-// =====================================================
-// Validate block
-// =====================================================
+std::vector<Block> Blockchain::getChain() const
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    return chain_;
+}
 
-bool Blockchain::validateBlock(const Block& block) const {
-    const BlockHeader& h = block.header;
+dnd::DndState Blockchain::getDndState() const
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    return dndState_;
+}
 
-    // PoA check
-    if (h.validatorPubKey != dmPubKey) {
-        std::cerr << "[PoA] Unauthorized validator\n";
+bool Blockchain::validateBlockHeader(const Block& block) const
+{
+    const BlockHeader& header = block.header;
+    if (header.validatorPubKey != dmPubKey_ ||
+        !verifyBlockHeaderSignature(header)) {
+        std::cerr << "[PoA] Unauthorized or invalid validator signature\n";
         return false;
     }
-
-    if (!verifyBlockHeaderSignature(h)) {
-        std::cerr << "[PoA] Invalid signature\n";
+    if (block.transactions.size() > Block::MAX_TRANSACTION_COUNT ||
+        header.merkleRoot != block.calculateMerkleRoot()) {
+        std::cerr << "[PoA] Invalid block body commitment\n";
         return false;
     }
-
-    // Merkle root
-    auto calc = block.calculateMerkleRoot();
-    if (calc != h.merkleRoot) {
-        std::cerr << "[PoA] Invalid Merkle root\n";
-        return false;
-    }
-
-    // Time sanity
-    uint64_t now = time(nullptr);
-    if (h.timestamp > now + 30) {
+    const uint64_t now = static_cast<uint64_t>(std::time(nullptr));
+    if (header.timestamp > now + 30) {
         std::cerr << "[PoA] Timestamp too far in future\n";
         return false;
     }
-
     return true;
 }
 
-// =====================================================
-// Validate Transaction
-// =====================================================
+bool Blockchain::validateBlock(const Block& block) const
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    return validateBlockHeader(block);
+}
 
 bool Blockchain::validateTransaction(const Transaction& tx,
                                      std::string& err) const
 {
-    if (!tx.verifySignature()) {
-        err = "TX: invalid signature";
-        return false;
-    }
-
-    if (dnd::isDndPayload(tx.payload)) {
-        auto evt = dnd::decodeDndTx(tx.payload);
-
-        evt.senderPubKey = tx.senderPubkey;
-        evt.signature    = tx.signature;
-
-        // DnD rules sind auf Mempool/Validator-Ebene,
-        // hier nur Basis-TX-Checks.
-    }
-
-    return true;
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    return txValidator_.validate(tx, dndState_, err, true);
 }
 
+bool Blockchain::containsTransactionUnlocked(
+    const std::array<uint8_t, 32>& hash) const
+{
+    for (const auto& block : chain_)
+        for (const auto& tx : block.transactions)
+            if (tx.hash() == hash)
+                return true;
+    return false;
+}
 
-// =====================================================
-// Append Block (mit einfachem Konsens-Konflikt-Handling)
-// =====================================================
+bool Blockchain::hasTransaction(const std::array<uint8_t, 32>& hash) const
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    return containsTransactionUnlocked(hash);
+}
 
 bool Blockchain::appendBlock(const Block& block)
 {
-    uint64_t expectedHeight = chain_.empty() ? 0 : chain_.back().header.height + 1;
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    const uint64_t expectedHeight = static_cast<uint64_t>(chain_.size());
 
-    // ---------- Konsens-Konflikt-Checks ----------
-    // Fall 1: Block ist älter als unsere Chain → sofort reject
     if (block.header.height < expectedHeight) {
-        std::cerr << "[Consensus] Reject block " << block.header.height
-                  << " because we already have a longer chain.\n";
+        if (block.header.height < chain_.size() &&
+            chain_[block.header.height].hash() != block.hash()) {
+            std::cerr << "[Consensus] Validator equivocation detected at height "
+                      << block.header.height << "\n";
+        }
         return false;
     }
-
-    // Fall 2: Block ist in Zukunft → wir haben die Vorgänger nicht
     if (block.header.height > expectedHeight) {
-        std::cerr << "[Consensus] Reject block " << block.header.height
-                  << " because it is ahead of our chain (missing parent).\n";
+        std::cerr << "[Consensus] Missing parent for block "
+                  << block.header.height << "\n";
         return false;
     }
 
-    // Fall 3: Block ist EXAKT auf derselben Höhe → Fork → reject
-    if (!chain_.empty() && block.header.height == chain_.back().header.height) {
-        std::cerr << "[Consensus] Reject block at same height "
-                  << block.header.height << " (fork detected).\n";
+    const std::array<uint8_t, 32> expectedPrevious = chain_.empty()
+        ? std::array<uint8_t, 32>{} : chain_.back().hash();
+    if (block.header.prevHash != expectedPrevious)
         return false;
+    if (!chain_.empty() && block.header.timestamp < chain_.back().header.timestamp)
+        return false;
+    if (!validateBlockHeader(block))
+        return false;
+
+    dnd::DndState projected = dndState_;
+    std::unordered_set<std::string> blockHashes;
+    for (const auto& tx : block.transactions) {
+        std::string error;
+        std::array<uint8_t, 32> hash{};
+        try {
+            hash = tx.hash();
+        } catch (const std::exception& ex) {
+            std::cerr << "[Blockchain] Invalid transaction: " << ex.what() << "\n";
+            return false;
+        }
+
+        if (containsTransactionUnlocked(hash) ||
+            !blockHashes.insert(hashKey(hash)).second) {
+            std::cerr << "[Blockchain] Replayed transaction rejected\n";
+            return false;
+        }
+        if (!txValidator_.validateAndApply(tx, projected, error, false)) {
+            std::cerr << "[Blockchain] Transaction rejected: " << error << "\n";
+            return false;
+        }
     }
-    // ---------------------------------------------
 
-    // Normale Validierung (PoA, Merkle, Timestamp)
-    if (!validateBlock(block)) return false;
-
-    // In persistent storage schreiben
     if (!store_.appendBlock(block)) {
         std::cerr << "[Blockchain] Store append failed\n";
         return false;
     }
 
-    // Zur Chain hinzufügen
     chain_.push_back(block);
-
-    // apply all block txs to state
-    for (const auto& tx : block.transactions) {
-        if (!dnd::isDndPayload(tx.payload))
-            continue;
-
-        auto evt = dnd::extractDndEventTx(tx);
-        std::string err;
-
-        if (!dndState_.apply(evt, err)) {
-            std::cerr << "[DndState] appendBlock apply fail: " << err << "\n";
-        }
-    }
-
+    dndState_ = std::move(projected);
     return true;
 }
 
-
-// =====================================================
-// Genesis
-// =====================================================
-
-bool Blockchain::ensureGenesisBlock(const std::vector<uint8_t>& dmPrivKey) {
+bool Blockchain::ensureGenesisBlock(const std::vector<uint8_t>& dmPrivKey)
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
     if (!chain_.empty()) return true;
 
     Block genesis;
     genesis.header.height = 0;
-    genesis.header.timestamp = time(nullptr);
+    genesis.header.timestamp = static_cast<uint64_t>(std::time(nullptr));
     genesis.header.prevHash.fill(0);
-    genesis.header.merkleRoot.fill(0);
+    genesis.header.merkleRoot = genesis.calculateMerkleRoot();
 
-    signBlockHeader(genesis.header, dmPrivKey, dmPubKey);
-
-    if (!store_.appendBlock(genesis)) return false;
-
-    chain_.push_back(genesis);
-    return true;
-}
-
-// =====================================================
-// Snapshot Write
-// =====================================================
-
-bool Blockchain::writeSnapshot(const std::string& path) const {
-    return dnd::writeSnapshot(dndState_, path);
-}
-
-// =====================================================
-// Snapshot Load
-// =====================================================
-
-bool Blockchain::loadSnapshot(const std::string& path) {
-    if (!dnd::loadSnapshot(dndState_, path))
+    if (!signBlockHeader(genesis.header, dmPrivKey, dmPubKey_) ||
+        !validateBlockHeader(genesis) ||
+        !store_.appendBlock(genesis))
         return false;
 
+    chain_.push_back(std::move(genesis));
     return true;
 }
 
+bool Blockchain::writeSnapshot(const std::string& path) const
+{
+    std::lock_guard<std::recursive_mutex> lock(mutex_);
+    return dnd::writeSnapshot(dndState_, path);
+}

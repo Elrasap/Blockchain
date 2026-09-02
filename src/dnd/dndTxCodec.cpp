@@ -8,6 +8,10 @@ namespace dnd {
 
 namespace {
 
+constexpr uint8_t EXTENDED_FORMAT_MARKER = 0xFF;
+constexpr uint8_t DND_FORMAT_VERSION = 1;
+constexpr uint32_t MAX_STRING_SIZE = 4096;
+
 // ---------- Helpers: Varuint + little-endian ----------
 
 void writeVarUint32(std::vector<uint8_t>& out, uint32_t v) {
@@ -27,6 +31,8 @@ uint32_t readVarUint32(const std::vector<uint8_t>& buf, size_t& off) {
             throw std::runtime_error("decodeDndTx: varuint32 out of range");
 
         uint8_t byte = buf[off++];
+        if (shift == 28 && (byte & 0xF0) != 0)
+            throw std::runtime_error("decodeDndTx: varuint32 too large");
         result |= static_cast<uint32_t>(byte & 0x7F) << shift;
 
         if ((byte & 0x80) == 0)
@@ -79,23 +85,41 @@ uint64_t readUint64LE(const std::vector<uint8_t>& buf, size_t& off) {
 }
 
 void writeString(std::vector<uint8_t>& out, const std::string& s) {
+    if (s.size() > MAX_STRING_SIZE)
+        throw std::runtime_error("encodeDndTx: string too large");
     writeVarUint32(out, static_cast<uint32_t>(s.size()));
     out.insert(out.end(), s.begin(), s.end());
+}
+
+void writeBytes(std::vector<uint8_t>& out, const std::vector<uint8_t>& bytes) {
+    writeVarUint32(out, static_cast<uint32_t>(bytes.size()));
+    out.insert(out.end(), bytes.begin(), bytes.end());
 }
 
 // ❗ Sichere Variante ohne Overflow → kein bad_alloc
 std::string readString(const std::vector<uint8_t>& buf, size_t& off) {
     uint32_t len = readVarUint32(buf, off);
 
-    // Schutz vor size_t overflow & absurden Längen
-    if (len > buf.size() - off) {
+    if (len > MAX_STRING_SIZE || len > buf.size() - off) {
         throw std::runtime_error("decodeDndTx: string length out of range");
     }
 
-    std::string s;
-    s.assign(reinterpret_cast<const char*>(&buf[off]), len);
+    std::string s(buf.begin() + static_cast<std::ptrdiff_t>(off),
+                  buf.begin() + static_cast<std::ptrdiff_t>(off + len));
     off += len;
     return s;
+}
+
+std::vector<uint8_t> readBytes(const std::vector<uint8_t>& buf,
+                               size_t& off,
+                               size_t maximum) {
+    uint32_t len = readVarUint32(buf, off);
+    if (len > maximum || len > buf.size() - off)
+        throw std::runtime_error("decodeDndTx: byte field length out of range");
+    std::vector<uint8_t> bytes(buf.begin() + static_cast<std::ptrdiff_t>(off),
+                               buf.begin() + static_cast<std::ptrdiff_t>(off + len));
+    off += len;
+    return bytes;
 }
 
 } // namespace
@@ -110,6 +134,11 @@ std::vector<uint8_t> encodeDndTx(const DndEventTx& tx)
 
     // Magic
     out.push_back(0xD1);
+
+    // Versioned extension marker. Legacy payloads stored eventType directly
+    // after the magic byte; the decoder still accepts that representation.
+    out.push_back(EXTENDED_FORMAT_MARKER);
+    out.push_back(DND_FORMAT_VERSION);
 
     // Event-Type (semantisch, aber im Body signiert)
     out.push_back(static_cast<uint8_t>(tx.eventType));
@@ -136,6 +165,9 @@ std::vector<uint8_t> encodeDndTx(const DndEventTx& tx)
     // timestamp
     writeUint64LE(out, tx.timestamp);
 
+    // Character controller assigned by the DM on CreateCharacter.
+    writeBytes(out, tx.ownerPubKey);
+
     return out;
 }
 
@@ -158,6 +190,14 @@ DndEventTx decodeDndTx(const std::vector<uint8_t>& buf)
         throw std::runtime_error("decodeDndTx: missing eventType");
 
     uint8_t et = buf[off++];
+    const bool extended = et == EXTENDED_FORMAT_MARKER;
+    if (extended) {
+        if (off >= buf.size() || buf[off++] != DND_FORMAT_VERSION)
+            throw std::runtime_error("decodeDndTx: unsupported version");
+        if (off >= buf.size())
+            throw std::runtime_error("decodeDndTx: missing eventType");
+        et = buf[off++];
+    }
     DndEventType evtType = DndEventType::Unknown;
     switch (et) {
         case 1: evtType = DndEventType::CreateCharacter; break;
@@ -198,6 +238,12 @@ DndEventTx decodeDndTx(const std::vector<uint8_t>& buf)
     tx.note      = readString(buf, off);
     tx.timestamp = readUint64LE(buf, off);
 
+    if (extended)
+        tx.ownerPubKey = readBytes(buf, off, 32);
+
+    if (off != buf.size())
+        throw std::runtime_error("decodeDndTx: trailing bytes");
+
     tx.senderPubKey.clear();
     tx.signature.clear();
 
@@ -205,4 +251,3 @@ DndEventTx decodeDndTx(const std::vector<uint8_t>& buf)
 }
 
 } // namespace dnd
-

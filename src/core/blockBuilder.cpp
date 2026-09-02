@@ -94,9 +94,9 @@ bool BlockBuilder::buildAndAppendFromMempool(Mempool& mempool,
         return false;
     }
 
-    // Nur bei Erfolg: Mempool leeren und Block herausgeben
-    mempool.clear();
+    // Only remove the transactions that were included. New transactions may
+    // have arrived while the block was being built.
+    mempool.remove(txs);
     outBlock = std::move(b);
     return true;
 }
-

@@ -22,7 +22,7 @@ bool PoAValidator::validateBlockHeader(const BlockHeader& header) const {
     }
 
     // === Check 3: Signature valid? ===
-    auto msg = header.toBytes();
+    auto msg = header.toSigningBytes();
 
     if (!crypto::verify(msg, header.signature, header.validatorPubKey)) {
         std::cerr << "[PoA] Invalid block signature!\n";
@@ -31,4 +31,3 @@ bool PoAValidator::validateBlockHeader(const BlockHeader& header) const {
 
     return true;
 }
-

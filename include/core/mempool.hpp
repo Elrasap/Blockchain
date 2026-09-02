@@ -1,56 +1,42 @@
 #pragma once
-#include <vector>
-#include <mutex>
+
 #include <array>
-#include <unordered_set>
+#include <functional>
+#include <mutex>
 #include <string>
+#include <unordered_set>
+#include <vector>
 
 #include "core/transaction.hpp"
+#include "dnd/dndState.hpp"
 
-namespace dnd {
-    class DndTxValidator;
-}
+class TransactionValidator;
 
 class Mempool {
 public:
-    explicit Mempool(dnd::DndTxValidator* validator);
-    bool ignoreSignatureCheck = false;
+    Mempool(const TransactionValidator& validator,
+            std::function<dnd::DndState()> stateProvider,
+            std::function<bool(const std::array<uint8_t, 32>&)> committedProvider = {});
 
     bool addTransactionValidated(const Transaction& tx, std::string& err);
-
-
     std::vector<Transaction> getAll() const;
-
-
     void clear();
-
-
     void remove(const std::array<uint8_t, 32>& hash);
-
-
+    void remove(const std::vector<Transaction>& transactions);
     size_t size() const;
-
 
     bool saveToFile(const std::string& path) const;
     bool loadFromFile(const std::string& path);
 
 private:
     mutable std::mutex mtx_;
+    mutable std::mutex admissionMutex_;
     std::vector<Transaction> txs_;
     std::unordered_set<std::string> knownHashes_;
 
-    dnd::DndTxValidator* validator_ = nullptr;
+    const TransactionValidator& validator_;
+    std::function<dnd::DndState()> stateProvider_;
+    std::function<bool(const std::array<uint8_t, 32>&)> committedProvider_;
 
-    std::string hashToStr(const std::array<uint8_t, 32>& h) const {
-
-        static const char* hex = "0123456789abcdef";
-        std::string out;
-        out.reserve(64);
-        for (auto b : h) {
-            out.push_back(hex[(b >> 4) & 0xF]);
-            out.push_back(hex[b & 0xF]);
-        }
-        return out;
-    }
+    std::string hashToStr(const std::array<uint8_t, 32>& hash) const;
 };
-

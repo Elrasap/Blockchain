@@ -1457,6 +1457,9 @@ inline bool Server::process_request(Stream& strm, bool last_connection, bool& co
         // ret = false;
         connection_close = true;
     }
+    // REMOTE_ADDR is transport metadata. Never retain a client-supplied
+    // header with the same name, because authorization code may rely on it.
+    req.headers.erase("REMOTE_ADDR");
     req.set_header("REMOTE_ADDR", strm.get_remote_addr().c_str());
     // Body
     if (req.method == "POST" || req.method == "PUT") {

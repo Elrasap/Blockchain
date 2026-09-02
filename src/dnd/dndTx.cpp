@@ -1,6 +1,12 @@
 #include "dnd/dndTx.hpp"
 #include "dnd/dndTxCodec.hpp"
 #include "core/crypto.hpp"
+#include "core/transaction.hpp"
+
+#include <sodium.h>
+
+#include <stdexcept>
+#include <utility>
 
 namespace dnd {
 
@@ -13,12 +19,23 @@ bool generatePlayerKeypair(std::vector<uint8_t>& pubOut,
     return true;
 }
 
-// signiert den DnD-Event-Body (encodeDndTx) mit privKey
 void signDndEvent(DndEventTx& evt,
                   const std::vector<uint8_t>& privKey)
 {
-    std::vector<uint8_t> body = encodeDndTx(evt);
-    evt.signature = crypto::sign(body, privKey);
+    if (privKey.size() != crypto_sign_SECRETKEYBYTES)
+        throw std::runtime_error("invalid Ed25519 private key size");
+
+    evt.senderPubKey.resize(crypto_sign_PUBLICKEYBYTES);
+    if (crypto_sign_ed25519_sk_to_pk(evt.senderPubKey.data(),
+                                     privKey.data()) != 0)
+        throw std::runtime_error("could not derive Ed25519 public key");
+
+    Transaction tx;
+    tx.payload = encodeDndTx(evt);
+    tx.senderPubkey = evt.senderPubKey;
+    tx.nonce = evt.transactionNonce;
+    tx.sign(privKey);
+    evt.signature = std::move(tx.signature);
 }
 
 bool verifyDndEventSignature(const DndEventTx& evt,
@@ -33,9 +50,13 @@ bool verifyDndEventSignature(const DndEventTx& evt,
         return false;
     }
 
-    std::vector<uint8_t> body = encodeDndTx(evt);
-    if (!crypto::verify(body, evt.signature, evt.senderPubKey)) {
-        err = "invalid DnD event signature";
+    Transaction tx;
+    tx.payload = encodeDndTx(evt);
+    tx.senderPubkey = evt.senderPubKey;
+    tx.signature = evt.signature;
+    tx.nonce = evt.transactionNonce;
+    if (!tx.verifySignature()) {
+        err = "invalid canonical transaction signature";
         return false;
     }
 
@@ -43,4 +64,3 @@ bool verifyDndEventSignature(const DndEventTx& evt,
 }
 
 } // namespace dnd
-

@@ -1,105 +1,112 @@
 #include "core/dmKeyManager.hpp"
 #include "core/crypto.hpp"
 
+#include <sodium.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#include <algorithm>
+#include <array>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 
-using namespace std;
-
 namespace {
 
-bool readUint64(ifstream& in, uint64_t& out) {
-    in.read(reinterpret_cast<char*>(&out), sizeof(out));
-    return static_cast<bool>(in);
-}
+constexpr std::array<char, 8> KEY_MAGIC{'D', 'N', 'D', 'K', 'E', 'Y', '0', '1'};
 
-bool writeUint64(ofstream& out, uint64_t v) {
-    out.write(reinterpret_cast<const char*>(&v), sizeof(v));
-    return static_cast<bool>(out);
+bool readExistingKey(const std::filesystem::path& path, DmKeyPair& out)
+{
+    if (std::filesystem::is_symlink(std::filesystem::symlink_status(path))) {
+        std::cerr << "[DmKeyManager] Refusing symlinked key file\n";
+        return false;
+    }
+
+    std::ifstream input(path, std::ios::binary);
+    std::array<char, KEY_MAGIC.size()> magic{};
+    input.read(magic.data(), magic.size());
+    if (!input || magic != KEY_MAGIC) {
+        std::cerr << "[DmKeyManager] Invalid key file format\n";
+        return false;
+    }
+
+    out.publicKey.resize(crypto_sign_PUBLICKEYBYTES);
+    out.privateKey.resize(crypto_sign_SECRETKEYBYTES);
+    input.read(reinterpret_cast<char*>(out.publicKey.data()), out.publicKey.size());
+    input.read(reinterpret_cast<char*>(out.privateKey.data()), out.privateKey.size());
+    if (!input || input.peek() != std::ifstream::traits_type::eof()) {
+        std::cerr << "[DmKeyManager] Truncated or oversized key file\n";
+        return false;
+    }
+
+    std::array<uint8_t, crypto_sign_PUBLICKEYBYTES> derived{};
+    if (crypto_sign_ed25519_sk_to_pk(derived.data(), out.privateKey.data()) != 0 ||
+        !std::equal(derived.begin(), derived.end(), out.publicKey.begin())) {
+        std::cerr << "[DmKeyManager] Public/private key mismatch\n";
+        return false;
+    }
+
+    ::chmod(path.c_str(), S_IRUSR | S_IWUSR);
+    return true;
 }
 
 } // namespace
 
-bool loadOrCreateDmKey(const std::string& path, DmKeyPair& out) {
-    static constexpr uint64_t DM_PUBKEY_BYTES  = 32;
-    static constexpr uint64_t DM_PRIVKEY_BYTES = 64;
+bool loadOrCreateDmKey(const std::string& pathString, DmKeyPair& out)
+{
+    const std::filesystem::path path(pathString);
+    std::error_code error;
+    if (std::filesystem::exists(path, error))
+        return !error && readExistingKey(path, out);
 
-    // 1. Versuchen zu laden
-    {
-        ifstream in(path, ios::binary);
-        if (in.is_open()) {
-            uint64_t pubLen = 0;
-            uint64_t privLen = 0;
-
-            if (readUint64(in, pubLen) && readUint64(in, privLen) &&
-                pubLen == DM_PUBKEY_BYTES &&
-                privLen == DM_PRIVKEY_BYTES) {
-
-                out.publicKey.resize(static_cast<size_t>(pubLen));
-                out.privateKey.resize(static_cast<size_t>(privLen));
-
-                in.read(reinterpret_cast<char*>(out.publicKey.data()), pubLen);
-                in.read(reinterpret_cast<char*>(out.privateKey.data()), privLen);
-
-                if (in) {
-                    return true; // erfolgreich geladen
-                }
-
-                std::cerr << "[DmKeyManager] Failed to read key bytes from "
-                          << path << " – regenerating.\n";
-            } else {
-                std::cerr << "[DmKeyManager] Invalid key lengths in " << path
-                          << " (pub=" << pubLen << ", priv=" << privLen
-                          << ") – regenerating.\n";
-            }
-        }
-    }
-
-    // 2. Neu generieren
-    try {
-        auto kp = crypto::generateKeyPair();
-        out.publicKey  = kp.publicKey;
-        out.privateKey = kp.privateKey;
-
-        if (out.publicKey.size() != DM_PUBKEY_BYTES ||
-            out.privateKey.size() != DM_PRIVKEY_BYTES) {
-            std::cerr << "[DmKeyManager] Generated keypair has unexpected sizes "
-                      << "(pub=" << out.publicKey.size()
-                      << ", priv=" << out.privateKey.size() << ")\n";
+    const auto parent = path.parent_path();
+    if (!parent.empty()) {
+        std::filesystem::create_directories(parent, error);
+        if (error) {
+            std::cerr << "[DmKeyManager] Could not create key directory: "
+                      << error.message() << "\n";
             return false;
         }
+        ::chmod(parent.c_str(), S_IRWXU);
+    }
+
+    try {
+        auto generated = crypto::generateKeyPair();
+        out.publicKey = std::move(generated.publicKey);
+        out.privateKey = std::move(generated.privateKey);
     } catch (const std::exception& ex) {
-        std::cerr << "[DmKeyManager] Key generation failed: " << ex.what() << "\n";
+        std::cerr << "[DmKeyManager] Key generation failed: "
+                  << ex.what() << "\n";
         return false;
     }
 
-    // 3. Speichern (unverändert wie bei dir)
+    const std::filesystem::path temporary =
+        path.string() + ".tmp." + std::to_string(::getpid());
     {
-        ofstream outFile(path, ios::binary | ios::trunc);
-        if (!outFile.is_open()) {
-            std::cerr << "[DmKeyManager] Failed to open key file for writing: " << path << "\n";
-            return false;
-        }
-
-        uint64_t pubLen  = out.publicKey.size();
-        uint64_t privLen = out.privateKey.size();
-
-        if (!writeUint64(outFile, pubLen) ||
-            !writeUint64(outFile, privLen)) {
-            std::cerr << "[DmKeyManager] Failed to write key lengths.\n";
-            return false;
-        }
-
-        outFile.write(reinterpret_cast<const char*>(out.publicKey.data()), pubLen);
-        outFile.write(reinterpret_cast<const char*>(out.privateKey.data()), privLen);
-
-        if (!outFile) {
-            std::cerr << "[DmKeyManager] Failed to write key bytes.\n";
+        std::ofstream output(temporary,
+                             std::ios::binary | std::ios::trunc);
+        if (!output) return false;
+        output.write(KEY_MAGIC.data(), KEY_MAGIC.size());
+        output.write(reinterpret_cast<const char*>(out.publicKey.data()),
+                     out.publicKey.size());
+        output.write(reinterpret_cast<const char*>(out.privateKey.data()),
+                     out.privateKey.size());
+        output.close();
+        if (!output) {
+            std::filesystem::remove(temporary, error);
             return false;
         }
     }
 
-    std::cout << "[DmKeyManager] Generated new DM key and stored at: " << path << "\n";
+    ::chmod(temporary.c_str(), S_IRUSR | S_IWUSR);
+    std::filesystem::rename(temporary, path, error);
+    if (error) {
+        std::cerr << "[DmKeyManager] Could not install key file: "
+                  << error.message() << "\n";
+        std::filesystem::remove(temporary, error);
+        return false;
+    }
+
+    std::cout << "[DmKeyManager] Generated DM key at " << path << "\n";
     return true;
 }
-

@@ -23,13 +23,9 @@ inline DndEventTx extractDndEventTx(const Transaction& tx)
 {
     auto evt = decodeDndTx(tx.payload);
     evt.senderPubKey = tx.senderPubkey;
-
-
-
-    evt.signature.clear();
+    evt.signature = tx.signature;
 
     return evt;
 }
 
 }
-

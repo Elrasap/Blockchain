@@ -1,15 +1,16 @@
 #pragma once
 
-#include <string>
+#include <atomic>
 #include <map>
 #include <mutex>
+#include <string>
 #include <thread>
 #include <vector>
 
-#include "core/transaction.hpp"
 #include "core/block.hpp"
-#include "network/messages.hpp"
+#include "core/transaction.hpp"
 #include "network/fastSyncManager.hpp"
+#include "network/messages.hpp"
 
 class Mempool;
 class SyncManager;
@@ -22,13 +23,13 @@ struct PeerInfo {
 
 class PeerManager {
 public:
+    PeerManager(int port, SyncManager* syncManager);
+    explicit PeerManager(int port);
+    ~PeerManager();
 
-    void setSync(SyncManager* s) { sync = s; }
-
-    FastSyncManager* fastSync = nullptr;
-
-    PeerManager(int port, SyncManager* sync);
-    PeerManager(int port);
+    void setSync(SyncManager* manager) { sync = manager; }
+    void setMempool(Mempool* pool) { mempool = pool; }
+    void attachFastSync(FastSyncManager* manager) { fastSync = manager; }
 
     void startServer();
     void stop();
@@ -36,42 +37,40 @@ public:
 
     void broadcastTransaction(const Transaction& tx);
     void broadcast(const Message& msg);
-    void sendTo(int peer_fd, const Message& msg);
-
+    bool sendTo(int peerFd, const Message& msg);
     void broadcastBlock(const Block& block);
     void broadcastRaw(const std::vector<uint8_t>& data);
 
-    void setMempool(Mempool* mp);
-
-    int  peerCount() const;
-    int  getPort() const { return listen_port; }
-
-    void addPeer(const std::string& addr);
+    int peerCount() const;
+    int getPort() const { return listenPort_; }
+    void addPeer(const std::string& address);
     std::vector<PeerInfo> getPeers() const;
-    void updatePeerHeight(const std::string& addr, uint64_t height);
-    void markSeen(const std::string& addr);
-
-    void attachFastSync(FastSyncManager* f) { fastSync = f; }
+    void updatePeerHeight(const std::string& address, uint64_t height);
+    void markSeen(const std::string& address);
     bool isConnected(const std::string& host, int port) const;
 
 private:
-    int  listen_port;
-    bool running = false;
-
-    std::thread serverThread;
-
-    std::map<int, int> sockets;
-    mutable std::mutex connMutex;
-
-    std::vector<PeerInfo> peers;
-    mutable std::mutex mtx;
-
-    Mempool*     mempool = nullptr;
-    SyncManager* sync    = nullptr;
-
     void serverLoop();
-    void handleClient(int client_fd);
+    void startReader(int fd);
+    void handleClient(int fd);
     void handleMessage(int fd, const Message& msg);
     void shutdownAllConnections();
-};
+    bool sendAll(int fd, const uint8_t* data, std::size_t size);
 
+    int listenPort_;
+    std::atomic<bool> running_{false};
+    std::atomic<int> serverFd_{-1};
+    std::thread serverThread_;
+
+    std::map<int, int> sockets_;
+    mutable std::mutex connectionMutex_;
+    std::vector<std::thread> clientThreads_;
+    mutable std::mutex threadMutex_;
+
+    std::vector<PeerInfo> peers_;
+    mutable std::mutex peerMutex_;
+
+    Mempool* mempool = nullptr;
+    SyncManager* sync = nullptr;
+    FastSyncManager* fastSync = nullptr;
+};
